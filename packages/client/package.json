@@ -1,7 +1,7 @@
 {
   "name": "@feathersjs-offline/client",
   "version": "0.1.0-alpha.3+4fd7cc8",
-  "description": "The full collection of the feathersjs-offline utilities.",
+  "description": "Client part of implementation of the own-data / own-net principles for supporting offline-first functionality for Feathers (mobile) applications.",
   "keywords": [
     "feathers",
     "offline",

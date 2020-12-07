@@ -1,7 +1,7 @@
 {
   "name": "@feathersjs-offline/server",
   "version": "0.1.0-alpha.3+4fd7cc8",
-  "description": "Wrapper for services under offline control",
+  "description": "Server part of implementation of the own-data / own-net principles for supporting offline-first functionality for Feathers (mobile) applications.",
   "keywords": [
     "Feathersjs",
     "offline",
