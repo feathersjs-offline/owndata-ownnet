@@ -42,7 +42,7 @@ owndataWrapper(app, path, [options])
 ```
 Returns a new wrapped service instance initialized with the given options.
 
-``` js(2,6,10})
+``` js
 import memory from 'feathers-memory');
 import { owndataWrapper } from '@feathersjs-offline/client');
 

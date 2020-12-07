@@ -34,8 +34,8 @@
     "mocha": "rm -rf ./.scratch; nyc mocha --config ../../.mocharc.ts.json  test/*.test.js"
   },
   "author": {
-    "name": "Michael Hillerstroem",
-    "email": "michael(at)hillerstrom.name",
+    "name": "Feathersjs-offline contributors",
+    "email": "feathersjs-offline@hillerstrom.name",
     "url": "https://github.com/mhillerstrom"
   },
   "contributors": [],
