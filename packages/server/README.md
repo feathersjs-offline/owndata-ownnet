@@ -58,7 +58,7 @@ $ npm install @feathersjs/feathers @feathersjs/express @feathersjs/socketio @fea
 
 In app.js:
 
-``` js{4,26}
+``` js
 const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 const socketio = require('@feathersjs/socketio');

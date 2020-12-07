@@ -84,7 +84,7 @@ $ npm install @feathersjs/feathers @feathersjs/express @feathersjs/socketio @fea
 
 In app.js:
 
-``` js{7,17-22}
+``` js
 const feathers = require('@feathersjs/feathers');
 const io = require('socket.io-client');
 const port = 3030;
@@ -139,7 +139,7 @@ ownnetWrapper(app, path, [options])
 ```
 Returns a new wrapped service instance initialized with the given options.
 
-``` js{2,6,10}
+``` js
 import memory from 'feathers-memory');
 import { ownnetWrapper } from '@feathersjs-offline/client');
 
@@ -175,7 +175,7 @@ $ npm install @feathersjs/feathers @feathersjs/express @feathersjs/socketio @fea
 
 In app.js:
 
-``` js{7,17-22}
+``` js
 const feathers = require('@feathersjs/feathers');
 const io = require('socket.io-client');
 const port = 3030;
