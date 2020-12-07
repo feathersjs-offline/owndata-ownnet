@@ -1,6 +1,6 @@
 {
   "name": "@feathersjs-offline/client",
-  "version": "0.1.0-alpha.2+3432b4d",
+  "version": "0.1.0-alpha.3+4fd7cc8",
   "description": "The full collection of the feathersjs-offline utilities.",
   "keywords": [
     "feathers",
@@ -72,5 +72,5 @@
     "typescript": "^4.0.5",
     "uuid": "3.1.0"
   },
-  "gitHead": "3432b4d2c1484edfd0ce443ae582820d69b925eb"
+  "gitHead": "4fd7cc8a64ca8fdbe1c80d5964beb5ee74409982"
 }
