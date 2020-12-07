@@ -164,7 +164,7 @@ All options available for the wrapped adapter can be used in addition to:
 - `whitelist` (optional) - A list of additional query parameters to allow.
 - `multi` (optional) - Allow create with arrays and update and remove with id null to change multiple items. Can be true for all methods or an array of allowed methods (e.g. [ 'remove', 'create' ]).
 - `useShortUuid` (optional, default `true`) - Generate short `uuid`s. If `false` long `uuid`s are generated. This option should match whatever you choose on the client.
-- `adapterTest` (optional, default `false`) - This is usually only used for running adapter tests as it suppresses the generation of `uuid`, and updating of `onServerAt`.
+- `adapterTest` (optional, default `false`) - This is usually only used for running adapter tests as it suppresses the generation of `uuid` and updating of `onServerAt`.
 
 ### Example
 Here is an example of a FeathersJS client with a messages own-net service that supports pagination:
@@ -221,7 +221,7 @@ You can read the original docs [here](https://auk.docs.feathersjs.com/guides/off
 >
 > `own-net` on the other hand will only play the end result of all queued event to the server. If a record (document) is mutated 5 times only the result will reach the server when connection is established. If a record is patched and finally removed while still offline, the server will never see the mutations. The server may still react on each event (mutation), but bear in mind the changes are possibly only 'net' changes.
 
-For `own-data` / `onw-net` implementations you must assure that the table (or collection) under control *must* implement attributes `uuid`, `updatedAt`, `onServerAt`, and `deletedAt`.
+For `own-data` / `onw-net` implementations you must assure that the table (or collection) under control *must* implement attributes `uuid,` `updatedAt,` `onServerAt,` and `deletedAt`.
 
 > **Pro tip:** If your key is not `uuid` then you have to manually set the key on the client *before* calling `create` as you have no guarantee that the backend answers. You set your key with the `id` parameter.
 
@@ -231,7 +231,7 @@ Also, updates to the client from a requested sync will not execute any hooks on 
 
 This wrapper works properly only in conjunction with the server counterpart `import { realtimeWrapper } from '@feathersjs-offline/server';` configured correctly on the servers service.
 
-> **Pro tip:** `owndataWrapper`, `ownnetWrapper`, and `realtimeWrapper` works on both a Feathers client and a Feathers server.
+> **Pro tip:** `owndataWrapper,` `ownnetWrapper,` and `realtimeWrapper` works on both a Feathers client and a Feathers server.
 
 ## License
 
