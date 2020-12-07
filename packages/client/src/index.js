@@ -1,3 +1,4 @@
+// Main module for client
 const { to, isObject, stripProps, genUuid, hash, hashOfRecord } = require('./common');
 const { Owndata, owndataWrapper } = require('./owndata');
 const { Ownnet, ownnetWrapper } = require('./ownnet');

@@ -33,6 +33,7 @@ dist/
 packages/**/lib/*
 ls.data/*
 .scratch/*
+.env
 packages/**/.scratch/*
 packages/**/tmp*.js
 packages/*/app*.js
