@@ -1,0 +1,75 @@
+{
+  "name": "@feathersjs-offline/client",
+  "version": "0.0.1",
+  "description": "The full collection of the feathersjs-offline utilities.",
+  "keywords": [
+    "feathers",
+    "offline",
+    "realtime",
+    "mobile.first"
+  ],
+  "homepage": "https://github.com/mhillerstrom/feathersjs-offline/tree/master/packages/client#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/feathers"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feathersjs-offline/client.git"
+  },
+  "scripts": {
+    "prepublish": "npm run compile",
+    "compile": "shx rm -rf lib/ && tsc",
+    "test": "npm run compile && npm run mocha",
+    "mocha": "rm -rf ./.scratch; nyc mocha --config ../../.mocharc.ts.json  test/*.test.js"
+  },
+  "author": {
+    "name": "Michael Hillerstroem",
+    "email": "michael(at)hillerstrom.name",
+    "url": "https://github.com/mhillerstrom"
+  },
+  "contributors": [],
+  "bugs": {
+    "url": "https://github.com/mhillerstrom/feathersjs-offline/issues"
+  },
+  "dependencies": {
+    "@feathersjs/commons": "^4.5.9",
+    "@feathersjs/adapter-commons": "^4.5.7",
+    "debug": "^4.2.0",
+    "feathers-localstorage": "^5.1.1",
+    "feathers-mongoose": "^8.3.1",
+    "node-localstorage": "^2.1.6"
+  },
+  "devDependencies": {
+    "@feathersjs/adapter-tests": "^4.5.4",
+    "@feathersjs/express": "^4.5.9",
+    "@feathersjs/feathers": "^4.5.9",
+    "@feathersjs/socketio": "^4.5.9",
+    "@feathersjs/socketio-client": "^4.5.9",
+    "@types/debug": "^4.1.5",
+    "@types/mocha": "^8.0.3",
+    "@types/node": "^14.14.6",
+    "@types/uuid": "^8.3.0",
+    "chai": "^4.2.0",
+    "feathers-hooks-common": "^5.0.4",
+    "feathers-memory": "^4.1.0",
+    "md5": "2.3.0",
+    "mocha": "^8.2.0",
+    "shx": "^0.3.3",
+    "shortid": "2.2.16",
+    "sift": "^13.3.5",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.5",
+    "uuid": "3.1.0"
+  }
+}
