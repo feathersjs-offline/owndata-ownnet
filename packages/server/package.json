@@ -1,6 +1,6 @@
 {
   "name": "@feathersjs-offline/server",
-  "version": "0.1.0-alpha.8+c00d99c",
+  "version": "0.1.0-alpha.9+fc2c165",
   "description": "Server part of implementation of the own-data / own-net principles for supporting offline-first functionality for Feathers (mobile) applications.",
   "keywords": [
     "Feathersjs",
@@ -61,5 +61,5 @@
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5"
   },
-  "gitHead": "c00d99c7f81e0afbb52ee5c1b27ed46a168c4292"
+  "gitHead": "fc2c1658f5c1300ddb1e6a59837d4fce3a35e33c"
 }
