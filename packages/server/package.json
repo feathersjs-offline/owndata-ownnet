@@ -1,6 +1,6 @@
 {
   "name": "@feathersjs-offline/server",
-  "version": "0.1.0-alpha.1+0bd94fa",
+  "version": "0.1.0-alpha.2+3432b4d",
   "description": "Wrapper for services under offline control",
   "keywords": [
     "Feathersjs",
@@ -61,5 +61,5 @@
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5"
   },
-  "gitHead": "0bd94fa904e679eaace62c12fd589a97e02b12c4"
+  "gitHead": "3432b4d2c1484edfd0ce443ae582820d69b925eb"
 }
