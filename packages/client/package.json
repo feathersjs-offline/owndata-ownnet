@@ -1,6 +1,6 @@
 {
   "name": "@feathersjs-offline/client",
-  "version": "0.0.1",
+  "version": "0.1.0-alpha.1+0bd94fa",
   "description": "The full collection of the feathersjs-offline utilities.",
   "keywords": [
     "feathers",
@@ -43,8 +43,8 @@
     "url": "https://github.com/mhillerstrom/feathersjs-offline/issues"
   },
   "dependencies": {
-    "@feathersjs/commons": "^4.5.9",
     "@feathersjs/adapter-commons": "^4.5.7",
+    "@feathersjs/commons": "^4.5.9",
     "debug": "^4.2.0",
     "feathers-localstorage": "^5.1.1",
     "feathers-mongoose": "^8.3.1",
@@ -65,11 +65,12 @@
     "feathers-memory": "^4.1.0",
     "md5": "2.3.0",
     "mocha": "^8.2.0",
-    "shx": "^0.3.3",
     "shortid": "2.2.16",
+    "shx": "^0.3.3",
     "sift": "^13.3.5",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5",
     "uuid": "3.1.0"
-  }
+  },
+  "gitHead": "0bd94fa904e679eaace62c12fd589a97e02b12c4"
 }

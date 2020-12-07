@@ -1,6 +1,6 @@
 {
   "name": "@feathersjs-offline/server",
-  "version": "0.0.1",
+  "version": "0.1.0-alpha.1+0bd94fa",
   "description": "Wrapper for services under offline control",
   "keywords": [
     "Feathersjs",
@@ -20,9 +20,16 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/feathers"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mhillerstrom/feathersjs-offline.git"
+    "url": "git+https://github.com/feathersjs-offline/server.git"
   },
   "scripts": {
     "prepublish": "npm run compile",
@@ -53,5 +60,6 @@
     "shx": "^0.3.3",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5"
-  }
+  },
+  "gitHead": "0bd94fa904e679eaace62c12fd589a97e02b12c4"
 }
