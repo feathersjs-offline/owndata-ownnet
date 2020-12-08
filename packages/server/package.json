@@ -34,6 +34,7 @@
   "scripts": {
     "prepublish": "npm run compile",
     "compile": "shx rm -rf lib/ && tsc",
+    "unit": "npm run mocha",
     "test": "npm run compile && npm run mocha",
     "mocha": "rm -rf ./.scratch; nyc mocha --config ../../.mocharc.ts.json --recursive test/**.test.ts test/**/*.test.ts test/**.test.js test/**/*.test.js"
   },
