@@ -1,5 +1,8 @@
 # @feathersjs-offline/client
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/maintainability)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/test_coverage)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/test_coverage)
+
 [![Build Status](https://travis-ci.org/feathersjs-offline/feathersjs-offline-client.png?branch=master)](https://travis-ci.org/feathersjs-offline/feathersjs-offline-client)
 [![Code Climate](https://codeclimate.com/github/feathersjs-offline/feathersjs-offline-client/badges/gpa.svg)](https://codeclimate.com/github/feathersjs-offline/feathersjs-offline-client)
 [![Test Coverage](https://codeclimate.com/github/feathersjs-offline/feathersjs-offline-client/badges/coverage.svg)](https://codeclimate.com/github/feathersjs-offline/feathersjs-offline-client/coverage)
