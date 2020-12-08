@@ -3,7 +3,7 @@
   "packages": [
     "packages/*"
   ],
-  "version": "0.1.0-alpha.14",
+  "version": "0.1.0",
   "useWorkspaces": false,
   "command": {
     "bootstrap": {
