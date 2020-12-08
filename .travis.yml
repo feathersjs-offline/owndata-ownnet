@@ -1,18 +1,22 @@
 # single test suite, non-parallel build.
-language: ruby
+language: node_js
 
-env:
-  global:
-    CC_TEST_REPORTER_ID=4d1c202579660ce52a244c95eaaf8f6d3ade1207340584c6257455a9fba79659
-
-rvm:
-  - 2.2.0
+node_js:
+  - 11.10.1
+dist: trusty
+addons:
+  chrome: stable
 before_script:
+  - yarn global add nyc
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
-  - bundle init
+
 script:
-  - bundle exec rspec
+  - nyc --reporter=lcov yarn run unit
+
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
+notifications:
+  email: false
