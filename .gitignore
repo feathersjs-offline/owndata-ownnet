@@ -36,4 +36,5 @@ ls.data/*
 .env
 packages/**/.scratch/*
 packages/**/tmp*.js
-packages/*/app*.js
+packages/*/app*
+package-lock.json
