@@ -19,7 +19,7 @@ function createConfig (name, isProduction = false) {
       library: `feathersjsOffline${name.substr(0,1).toUpperCase()}${name.substr(1)}`,
       libraryTarget: 'var', // 'umd',
       globalObject: 'this',
-      path: path.resolve(__dirname, 'dist'),
+      path: path.resolve(__dirname, 'packages', `${name}`, 'dist'),
       filename: `${output}.js`
     },
     // resolve: {
