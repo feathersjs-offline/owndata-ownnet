@@ -38,3 +38,4 @@ packages/**/.scratch/*
 packages/**/tmp*.js
 packages/*/app*
 package-lock.json
+.vscode/**
