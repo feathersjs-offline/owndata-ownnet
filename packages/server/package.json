@@ -12,7 +12,7 @@
   "author": "Michael Hillerström <michael(at)hillerstrom.name>",
   "homepage": "https://github.com/feathersjs-offline/owndata-ownnet/tree/master/packages/server#readme",
   "license": "MIT",
-  "main": "lib/server.js",
+  "main": "lib/index.js",
   "directories": {
     "lib": "lib",
     "test": "test"

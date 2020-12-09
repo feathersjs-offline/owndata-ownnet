@@ -1,4 +1,4 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/maintainability)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/maintainability)
+Server [![Maintainability](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/maintainability)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/test_coverage)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/test_coverage)
 [![Build Status](https://travis-ci.com/feathersjs-offline/owndata-ownnet.svg?branch=main)](https://travis-ci.com/feathersjs-offline/owndata-ownnet)
 [![Dependency Status](https://david-dm.org/feathersjs-offline/owndata-ownnet.svg?style=flat-square&path=packages/server/)](https://david-dm.org/feathersjs-offline/owndata-ownnet/tree/main/packages/server)
@@ -30,7 +30,7 @@ You can read the original docs [here](https://auk.docs.feathersjs.com/guides/off
 
 > _Summary:_
 > 
-> `own-data`/ `own-net` are two related strategies implemented in Feathers Offline-first. Both strategies queues CRUD events for a wrapped service until the device have connection to the server.
+> `own-data`/ `own-net` are two related strategies implemented in Feathers Offline-first. Both strategies queues CRUD events for a wrapped service until the device have connection to the server, but to the user the CRUD events are executed immediately using optimistic mutation strategy.
 >
 > `own-data` will re-play all queued event to the server in the order they were performed in offline mode. This allows the the server to react on each event (mutation). It may, for example, run hooks which send emails on certain mutations.
 >

@@ -5,6 +5,7 @@
 [![Build Status](https://travis-ci.com/feathersjs-offline/owndata-ownnet.svg?branch=main)](https://travis-ci.com/feathersjs-offline/owndata-ownnet)
 [![Dependency Status](https://david-dm.org/feathersjs-offline/owndata-ownnet.svg?style=flat-square&path=packages/client/)](https://david-dm.org/feathersjs-offline/owndata-ownnet/tree/main/packages/client)
 [![Download Status](https://img.shields.io/npm/dm/@feathersjs-offline/client.svg?style=flat-square)](https://www.npmjs.com/package/@feathersjs-offline/client)
+![jsDelivr hits (npm)](https://img.shields.io/jsdelivr/npm/hm/feathersjs-offline-client)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/feathersjs-offline/owndata-ownnet/badge.svg)](https://snyk.io/test/github/feathersjs-offline/owndata-ownnet)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
@@ -217,7 +218,7 @@ You can read the original docs [here](https://auk.docs.feathersjs.com/guides/off
 
 > _Summary:_
 >
-> `own-data`/ `own-net` are two related strategies implemented in Feathers Offline-first. Both strategies queues CRUD events for a wrapped service until the device have connection to the server.
+> `own-data`/ `own-net` are two related strategies implemented in Feathers Offline-first. Both strategies queues CRUD events for a wrapped service until the device have connection to the server, but to the user the CRUD events are executed immediately using optimistic mutation strategy.
 >
 > `own-data` will re-play all queued event to the server in the order they were performed in offline mode. This allows the the server to react on each event (mutation). It may, for example, run hooks which send emails on certain mutations.
 >
@@ -227,7 +228,7 @@ For `own-data` / `onw-net` implementations you must assure that the table (or co
 
 > **Pro tip:** If your key is not `uuid` then you have to manually set the key on the client *before* calling `create` as you have no guarantee that the backend answers. You set your key with the `id` parameter.
 
-> **Pro tip:** If you want the back-end to hold all users' data in one table (or collection), then all rows (or documents) must include a user identification (e.g. '`_id`' of `users`) and an appropriate query should be set in the `query` parameter when registering the replicator (e.g. `{query: {userId: <whatever-the-value-is>}}`).
+> **Pro tip:** If you want the back-end to hold all users' data in one table (or collection), then all rows (or documents) must include an user identification (e.g. '`_id`' of `users`) and the servers CRUD methods should be appropriately be guarded with a query (e.g. `{query: {userId: <whatever-the-value-is>}}`).
 
 Also, updates to the client from a requested sync will not execute any hooks on the client but any queued events on the device will trigger hooks on the server (both on back-end and possibly on any other devices depending on your channels set-up).
 
