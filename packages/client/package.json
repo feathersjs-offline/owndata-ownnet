@@ -49,7 +49,10 @@
     "debug": "^4.2.0",
     "feathers-localstorage": "^5.1.1",
     "feathers-mongoose": "^8.3.1",
-    "node-localstorage": "^2.1.6"
+    "md5": "2.3.0",
+    "node-localstorage": "^2.1.6",
+    "shortid": "2.2.16",
+    "uuid": "3.1.0"
   },
   "devDependencies": {
     "@feathersjs/adapter-tests": "^4.5.4",
@@ -64,7 +67,6 @@
     "chai": "^4.2.0",
     "feathers-hooks-common": "^5.0.4",
     "feathers-memory": "^4.1.0",
-    "md5": "2.3.0",
     "mocha": "^8.2.0",
     "shortid": "2.2.16",
     "shx": "^0.3.3",
