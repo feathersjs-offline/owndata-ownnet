@@ -1,12 +1,11 @@
 # @feathersjs-offline/server
+[![Maintainability](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/maintainability)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/test_coverage)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/test_coverage)
+[![Build Status](https://travis-ci.com/feathersjs-offline/owndata-ownnet.svg?branch=main)](https://travis-ci.com/feathersjs-offline/owndata-ownnet)
+[![Dependency Status](https://david-dm.org/feathersjs-offline/owndata-ownnet.svg?style=flat-square&path=packages/server/)](https://david-dm.org/feathersjs-offline/owndata-ownnet/tree/main/packages/server)
+[![Download Status](https://img.shields.io/npm/dm/@feathersjs-offline/server.svg?style=flat-square)](https://www.npmjs.com/package/@feathersjs-offline/server)
 
-
-
-[![Build Status](https://travis-ci.org/feahtersjs-offline/feathersjs-offline-server.png?branch=master)](https://travis-ci.org/feahtersjs-offline/feathersjs-offline-server)
-[![Code Climate](https://codeclimate.com/github/feahtersjs-offline/feathersjs-offline-server/badges/gpa.svg)](https://codeclimate.com/github/feahtersjs-offline/feathersjs-offline-server)
-[![Test Coverage](https://codeclimate.com/github/feahtersjs-offline/feathersjs-offline-server/badges/coverage.svg)](https://codeclimate.com/github/feahtersjs-offline/feathersjs-offline-server/coverage)
-[![Dependency Status](https://img.shields.io/david/feahtersjs-offline/feathersjs-offline-server.svg?style=flat-square)](https://david-dm.org/feahtersjs-offline/feathersjs-offline-server)
-[![Download Status](https://img.shields.io/npm/dm/feathersjs-offline-server.svg?style=flat-square)](https://www.npmjs.com/package/feathersjs-offline-server)
+[![Known Vulnerabilities](https://snyk.io/test/github/feathersjs-offline/owndata-ownnet/badge.svg)](https://snyk.io/test/github/feathersjs-offline/owndata-ownnet)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
 
@@ -28,7 +27,7 @@ All options available for the wrapped adapter can be used in addition to:
 
 ## Documentation
 
-You can read the original docs [here](https://auk.docs.feathersjs.com/guides/offline-first). The new and updated documentation is available [here](https://feathersjs-offline.github.io/docs).
+You can read the original docs [here](https://auk.docs.feathersjs.com/guides/offline-first/readme.html). The new and updated documentation is available [here](https://feathersjs-offline.github.io/docs).
 
 > _Summary:_
 > 

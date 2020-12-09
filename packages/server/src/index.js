@@ -1,4 +1,4 @@
-// Main module for server
+// Main module for server.
 import EventEmitter from 'component-emitter';
 import sift from 'sift';
 import { sorter, select, AdapterService } from '@feathersjs/adapter-commons';

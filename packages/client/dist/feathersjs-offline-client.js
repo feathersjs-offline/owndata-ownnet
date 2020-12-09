@@ -14593,7 +14593,7 @@ module.exports = to;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Main module for client
+// Main module for client.
 var _require = __webpack_require__(/*! ./common */ "./packages/client/lib/common/index.js"),
     to = _require.to,
     isObject = _require.isObject,

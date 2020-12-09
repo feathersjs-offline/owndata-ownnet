@@ -2,12 +2,11 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/maintainability)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/test_coverage)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/test_coverage)
+[![Build Status](https://travis-ci.com/feathersjs-offline/owndata-ownnet.svg?branch=main)](https://travis-ci.com/feathersjs-offline/owndata-ownnet)
+[![Dependency Status](https://david-dm.org/feathersjs-offline/owndata-ownnet.svg?style=flat-square&path=packages/client/)](https://david-dm.org/feathersjs-offline/owndata-ownnet/tree/main/packages/client)
+[![Download Status](https://img.shields.io/npm/dm/@feathersjs-offline/client.svg?style=flat-square)](https://www.npmjs.com/package/@feathersjs-offline/client)
 
-[![Build Status](https://travis-ci.org/feathersjs-offline/feathersjs-offline-client.png?branch=master)](https://travis-ci.org/feathersjs-offline/feathersjs-offline-client)
-[![Code Climate](https://codeclimate.com/github/feathersjs-offline/feathersjs-offline-client/badges/gpa.svg)](https://codeclimate.com/github/feathersjs-offline/feathersjs-offline-client)
-[![Test Coverage](https://codeclimate.com/github/feathersjs-offline/feathersjs-offline-client/badges/coverage.svg)](https://codeclimate.com/github/feathersjs-offline/feathersjs-offline-client/coverage)
-[![Dependency Status](https://img.shields.io/david/feathersjs-offline/feathersjs-offline-client.svg?style=flat-square)](https://david-dm.org/feathersjs-offline/feathersjs-offline-client)
-[![Download Status](https://img.shields.io/npm/dm/feathersjs-offline-client.svg?style=flat-square)](https://www.npmjs.com/package/feathersjs-offline-client)
+[![Known Vulnerabilities](https://snyk.io/test/github/feathersjs-offline/owndata-ownnet/badge.svg)](https://snyk.io/test/github/feathersjs-offline/owndata-ownnet)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
 
@@ -214,7 +213,7 @@ For at more useful example [see this](https://github.com/feathersjs-offline/ownd
 
 ## Documentation
 
-You can read the original docs [here](https://auk.docs.feathersjs.com/guides/offline-first). The new and updated documentation is available [here](https://feathersjs-offline.github.io/docs).
+You can read the original docs [here](https://auk.docs.feathersjs.com/guides/offline-first/readme.html). The new and updated documentation is available [here](https://feathersjs-offline.github.io/docs).
 
 > _Summary:_
 >

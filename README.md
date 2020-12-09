@@ -1,3 +1,19 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/maintainability)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/test_coverage)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/test_coverage)
+[![Build Status](https://travis-ci.com/feathersjs-offline/owndata-ownnet.svg?branch=main)](https://travis-ci.com/feathersjs-offline/owndata-ownnet)
+[![Dependency Status](https://david-dm.org/feathersjs-offline/owndata-ownnet.svg?style=flat-square&path=packages/server/)](https://david-dm.org/feathersjs-offline/owndata-ownnet/tree/main/packages/server)
+[![Download Status](https://img.shields.io/npm/dm/@feathersjs-offline/server.svg?style=flat-square)](https://www.npmjs.com/package/@feathersjs-offline/server)
+[![Known Vulnerabilities](https://snyk.io/test/github/feathersjs-offline/owndata-ownnet/badge.svg)](https://snyk.io/test/github/feathersjs-offline/owndata-ownnet)
+[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+
+Client [![Maintainability](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/maintainability)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/22509121003eefaf32c5/test_coverage)](https://codeclimate.com/github/feathersjs-offline/owndata-ownnet/test_coverage)
+[![Build Status](https://travis-ci.com/feathersjs-offline/owndata-ownnet.svg?branch=main)](https://travis-ci.com/feathersjs-offline/owndata-ownnet)
+[![Dependency Status](https://david-dm.org/feathersjs-offline/owndata-ownnet.svg?style=flat-square&path=packages/client/)](https://david-dm.org/feathersjs-offline/owndata-ownnet/tree/main/packages/client)
+[![Download Status](https://img.shields.io/npm/dm/@feathersjs-offline/client.svg?style=flat-square)](https://www.npmjs.com/package/@feathersjs-offline/client)
+[![Known Vulnerabilities](https://snyk.io/test/github/feathersjs-offline/owndata-ownnet/badge.svg)](https://snyk.io/test/github/feathersjs-offline/owndata-ownnet)
+[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+
 # Feathers offline-first own-data / own-net
 These packages implements the offline-first `own-data` / `own-net` principles on CRUD methods on any Feathers database adapter. It consist of two parts; on for the server services and one for the client counterparts.
 
