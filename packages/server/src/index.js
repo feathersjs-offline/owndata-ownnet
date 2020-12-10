@@ -18,7 +18,7 @@ const defOptions = {
  * contains 'onServerAt' and to provide a getSyncInfo() function to support proper sync'ing of clients.
  */
 class RealtimeClass extends AdapterService {
-  constructor(opts) {
+  constructor (opts) {
     let newOpts = Object.assign({}, defOptions, opts);
 
     debug(`Constructor started, newOpts = ${JSON.stringify(newOpts)}`);
@@ -32,12 +32,12 @@ class RealtimeClass extends AdapterService {
     debug('  Done.');
   }
 
-  async _setup(app, path) {  // This will be removed for future versions of Feathers
+  async _setup (app, path) {  // This will be removed for future versions of Feathers
     debug(`_SetUp('${path}') started`);
     return this.setup(app, path);
   }
 
-  async setup(app, path) {
+  async setup (app, path) {
     debug(`SetUp('${path}') started`);
 
     if (this._setupPerformed)  return;
@@ -86,7 +86,7 @@ class RealtimeClass extends AdapterService {
     return true;
   }
 
-  _listenOptions() {
+  _listenOptions () {
     // This is necessary if we get updates to options (e.g. .options.multi = ['patch'])
 
     let self = this;
@@ -103,7 +103,7 @@ class RealtimeClass extends AdapterService {
 
   }
 
-  async _get(id, params) {
+  async _get (id, params) {
     const { newParams, offline } = fixParams(params);
     debug(`Calling _get(${id}, ${JSON.stringify(newParams)}) params=${JSON.stringify(params)}`);
     return this.remoteService.get(id, newParams)
@@ -111,7 +111,7 @@ class RealtimeClass extends AdapterService {
       .then(this._select(newParams));
     }
 
-  async _find(params) {
+  async _find (params) {
     const { newParams, offline } = fixParams(params);
     debug(`Calling _find(${JSON.stringify(newParams)})`);
     return this.remoteService.find(newParams)
@@ -119,7 +119,7 @@ class RealtimeClass extends AdapterService {
       .then(this._select(newParams));
     }
 
-  async _create(data, params = {}, ts = null) {
+  async _create (data, params = {}, ts = null) {
     const { newParams, offline } = fixParams(params);
     debug(`Calling _create(${JSON.stringify(data)}, ${JSON.stringify(params)}),  newParams=${JSON.stringify(newParams)}`);
     if (Array.isArray(data)) {
@@ -149,7 +149,7 @@ class RealtimeClass extends AdapterService {
       .then(this._select(newParams));
     }
 
-  async _update(id, data, params) {
+  async _update (id, data, params) {
     debug(`Calling0 _update(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)})`);
     const { newParams, offline } = fixParams(params);
     let newData = shallowClone(data);
@@ -173,7 +173,7 @@ class RealtimeClass extends AdapterService {
       }
   }
 
-  async _patch(id, data, params = {}, ts = null) {
+  async _patch (id, data, params = {}, ts = null) {
     const { newParams, offline } = fixParams(params);
     debug(`Calling _patch(${id}, ${JSON.stringify(data)}, ${JSON.stringify(newParams)})`);
     if (id === null) {
@@ -209,7 +209,7 @@ class RealtimeClass extends AdapterService {
       }
   }
 
-  async _remove(id, params = {}, ts = null) {
+  async _remove (id, params = {}, ts = null) {
     const { newParams, offline } = fixParams(params);
     debug(`Calling _remove(${id}, ${JSON.stringify(newParams)})`);
     if (id === null) {
@@ -248,14 +248,12 @@ class RealtimeClass extends AdapterService {
   }
 };
 
-
 let init = (options, app) => {
   return new RealtimeClass(options, app);
 }
 init.Service = RealtimeClass;
 
 let Realtime = init;
-
 
 /**
  * A realtimeWrapper is a SERVER adapter wrapping for FeathersJS services extending them to
@@ -279,7 +277,7 @@ let Realtime = init;
  * @param {object} options The options for the serviceAdaptor AND the realtimeWrapper
  *
  */
-function realtimeWrapper(app, path, options = {}) {
+function realtimeWrapper (app, path, options = {}) {
   debug(`realtimeWrapper started on path '${path}'`)
   if (!(app && app.version && app.service && app.services))
     throw new errors.Unavailable(`The FeathersJS app must be supplied as first argument`);
@@ -304,8 +302,6 @@ function realtimeWrapper(app, path, options = {}) {
 
 module.exports = { init, Realtime, realtimeWrapper };
 
-
-
 // --- Helper functions
 
 /**
@@ -313,7 +309,7 @@ module.exports = { init, Realtime, realtimeWrapper };
  * @param {object} obj
  * @returns {object} The copy object
  */
-function shallowClone(obj) {
+function shallowClone (obj) {
   return Object.assign({}, obj);
 };
 

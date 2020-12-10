@@ -1,6 +1,6 @@
 // Simply "stolen" from feathers-offline-xxx
 const md5 = require('md5');
-const uuidV4 = require('uuid/v4');
+const { v4: uuidV4 } = require('uuid');
 const shortid = require('shortid');
 const { stripProps } = require('./misc');
 

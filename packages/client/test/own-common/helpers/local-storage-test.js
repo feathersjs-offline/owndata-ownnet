@@ -15,8 +15,7 @@ module.exports = (desc, _app, _errors, wrapper, serviceName, verbose, isBaseClas
 
   let clientService;
 
-
-  function setupServices() {
+  function setupServices () {
     app = feathers();
     app.use(serviceName, memory({ multi: true, storage: new LocalStorage() }));
     clientService = wrapper(app, serviceName);

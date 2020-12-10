@@ -91,17 +91,17 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
       it('gracefully ignores multiple setup()', () => {
         let path = newServicePath();
         let service = service2(wrapper, path);
-        let flag = "";
+        let flag = '';
         let err = {name: 'All is fine', message: 'No comments.'};
         try {
         service.setup(app, path);
         service.setup(app, path);
-        flag = "OK";
+        flag = 'OK';
         } catch (error) {
           err = error;
-          flag = "ERROR"
+          flag = 'ERROR'
         }
-        expect(flag).to.equal("OK", `Unexpectedly failed to ignore multiple setup() err=${err.name}, ${err.message}`);
+        expect(flag).to.equal('OK', `Unexpectedly failed to ignore multiple setup() err=${err.name}, ${err.message}`);
       });
 
       it('create adds missing uuid, updatedAt, and onServerAt', () => {
@@ -190,7 +190,6 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
           expect(error.name).to.equal('Forbidden', 'Forbidden was thrown as expected');
         }
       });
-
 
       it('_patchIfNotRemoved() failure', async () => {
         let service = service1(wrapper);

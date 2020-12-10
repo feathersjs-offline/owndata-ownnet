@@ -13,13 +13,13 @@ module.exports = (desc, _app, _errors, wrapper, serviceName, verbose) => {
 
   let clientService;
 
-  async function getRows(service) {
+  async function getRows (service) {
     let gRows = null;
     gRows = await service.find({ query: { id: { $gte: 0 }, $sort: { order: 1 } } });
     return gRows;
   }
 
-  function setupServices() {
+  function setupServices () {
     clientService = service2(wrapper, serviceName);
     setUpHooks('REMOTE', serviceName, clientService.remote, true, verbose);
     setUpHooks('CLIENT', serviceName, clientService.local, false, verbose);

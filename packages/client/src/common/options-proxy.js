@@ -1,11 +1,10 @@
 
-
 let depends = {};
 let watchingFn = [];
 let ix = 0;
 
 module.exports = class OptionsProxy {
-  constructor(name) {
+  constructor (name) {
     if (name === undefined) {
       throw new Error(`OptionsProxy: Sorry, you must supply a name to proxy.`);
     }
@@ -22,17 +21,17 @@ module.exports = class OptionsProxy {
    * relevant recipes registered with watcher().
    * @param {object} data The data object to observe
    */
-  observe(data) {
+  observe (data) {
     let self = this;
     return new Proxy(data, {
-      get(obj, key) {
+      get (obj, key) {
         if (watchingFn[self.name]) {
           if (!depends[self.name][key]) depends[self.name][key] = [];
           depends[self.name][key].push(watchingFn[self.name]);
         }
         return obj[key];
       },
-      set(obj, key, val) {
+      set (obj, key, val) {
         obj[key] = val;
         if (depends[self.name][key])
           depends[self.name][key].forEach(cb => cb());
@@ -45,7 +44,7 @@ module.exports = class OptionsProxy {
    * Register a handler for the observer proxy
    * @param {function} target The handler function
    */
-  watcher(target) {
+  watcher (target) {
     watchingFn[this.name] = target;
     target();
     watchingFn[this.name] = null;

@@ -6,7 +6,6 @@ import OwnClass from '../own-common';
 const debug = require('debug')('@feathersjs-offline:owndata:service-wrapper');
 const BOT = new Date(0).toISOString();
 
-
 class OwndataClass extends OwnClass {
   constructor (opts) {
     debug(`Constructor started, opts = ${JSON.stringify(opts)}`);

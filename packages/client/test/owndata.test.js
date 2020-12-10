@@ -29,5 +29,4 @@ describe(`${package}Wrapper tests`, () => {
 
   owndataOnlyTests(`${package}Wrapper only functionality`, app, errors, owndataWrapper, 'wrapperOnly', verbose);
 
-
 })

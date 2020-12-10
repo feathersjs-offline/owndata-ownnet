@@ -10,20 +10,19 @@ const delay = require('./delay');
 const assertDeepEqualExcept = require('./assert-deep-equal-except');
 import errors from '@feathersjs/errors';
 
-
 const sampleLen = 5; // Size of test database (backend)
 
 module.exports = (desc, _app, _errors, wrapper, serviceName, verbose, isBaseClass = false) => {
 
   let clientService;
 
-  async function getRows(service) {
+  async function getRows (service) {
     let gRows = null;
     gRows = await service.find({ query: { id: { $gte: 0 }, $sort: { order: 1 } } });
     return gRows;
   }
 
-  function setupServices() {
+  function setupServices () {
     clientService = service2(wrapper, serviceName);
     setUpHooks('REMOTE', serviceName, clientService.remote, true, verbose);
     setUpHooks('CLIENT', serviceName, clientService.local, false, verbose);
