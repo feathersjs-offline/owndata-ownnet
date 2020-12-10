@@ -27,6 +27,9 @@
     "type": "git",
     "url": "git+https://github.com/feathersjs-offline/owndata-ownnet/packages/client.git"
   },
+  "engines": {
+    "node": ">= 10"
+  },
   "scripts": {
     "prepublish": "npm run compile",
     "compile": "shx rm -rf lib/ && tsc",

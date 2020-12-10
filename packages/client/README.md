@@ -5,8 +5,7 @@
 [![Build Status](https://travis-ci.com/feathersjs-offline/owndata-ownnet.svg?branch=main)](https://travis-ci.com/feathersjs-offline/owndata-ownnet)
 [![Dependency Status](https://david-dm.org/feathersjs-offline/owndata-ownnet.svg?style=flat-square&path=packages/client/)](https://david-dm.org/feathersjs-offline/owndata-ownnet/tree/main/packages/client)
 [![Download Status](https://img.shields.io/npm/dm/@feathersjs-offline/client.svg?style=flat-square)](https://www.npmjs.com/package/@feathersjs-offline/client)
-![jsDelivr hits (npm)](https://img.shields.io/jsdelivr/npm/hm/feathersjs-offline-client)
-
+[![](https://data.jsdelivr.com/v1/package/npm/@feathersjs-offline/client/badge?style=rounded)](https://www.jsdelivr.com/package/npm/@feathersjs-offline/client)
 [![Known Vulnerabilities](https://snyk.io/test/github/feathersjs-offline/owndata-ownnet/badge.svg)](https://snyk.io/test/github/feathersjs-offline/owndata-ownnet)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
