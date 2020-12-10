@@ -46,9 +46,9 @@
     "@feathersjs/commons": "^4.5.11",
     "@feathersjs/errors": "^4.5.11",
     "debug": "^4.3.1",
-    "md5": "2.3.0",
-    "shortid": "2.2.16",
-    "uuid": "8.3.2"
+    "md5": "^2.3.0",
+    "shortid": "^2.2.16",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@feathersjs/adapter-tests": "^4.5.11",
