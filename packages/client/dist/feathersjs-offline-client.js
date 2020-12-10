@@ -2462,9 +2462,20 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
             switch (_context6.prev = _context6.next) {
               case 0:
                 debug("Calling find(".concat(JSON.stringify(params), "})"));
+                _context6.t0 = debug;
+                _context6.t1 = "  rows=";
+                _context6.t2 = JSON;
+                _context6.next = 6;
+                return this.getEntries();
+
+              case 6:
+                _context6.t3 = _context6.sent;
+                _context6.t4 = _context6.t2.stringify.call(_context6.t2, _context6.t3);
+                _context6.t5 = _context6.t1.concat.call(_context6.t1, _context6.t4);
+                (0, _context6.t0)(_context6.t5);
                 return _context6.abrupt("return", this._find(params));
 
-              case 2:
+              case 11:
               case "end":
                 return _context6.stop();
             }
@@ -2622,7 +2633,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                         switch (_context9.prev = _context9.next) {
                           case 0:
                             _context9.next = 2;
-                            return self._removeQueuedEvent('_create0', queueId, newData, newData.updatedAt);
+                            return common_1.to(self._removeQueuedEvent('_create0', queueId, newData, newData.updatedAt));
 
                           case 2:
                             _context9.next = 4;
@@ -2632,7 +2643,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                             // Ok, we have connection - empty queue if we have any items queued
                             self.allowInternalProcessing('_create0');
                             _context9.next = 7;
-                            return self._processQueuedEvents();
+                            return common_1.to(self._processQueuedEvents());
 
                           case 7:
                           case "end":
@@ -2653,13 +2664,13 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                             }
 
                             _context10.next = 3;
-                            return self._removeQueuedEvent('_create1', queueId, rerr.message
+                            return common_1.to(self._removeQueuedEvent('_create1', queueId, rerr.message
                             /*newData*/
-                            , newData.updatedAt);
+                            , newData.updatedAt));
 
                           case 3:
                             _context10.next = 5;
-                            return self.localService.remove(res[self.id], params);
+                            return common_1.to(self.localService.remove(res[self.id], params));
 
                           case 5:
                             self.allowInternalProcessing('_create1');
@@ -2677,7 +2688,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
 
               case 36:
                 _context11.next = 38;
-                return this._removeQueuedEvent('_create2', queueId, newData, newData.updatedAt);
+                return common_1.to(this._removeQueuedEvent('_create2', queueId, newData, newData.updatedAt));
 
               case 38:
                 this.allowInternalProcessing('_create2');
@@ -2799,7 +2810,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                         switch (_context13.prev = _context13.next) {
                           case 0:
                             _context13.next = 2;
-                            return self._removeQueuedEvent('_update0', queueId, newData, res.updatedAt);
+                            return common_1.to(self._removeQueuedEvent('_update0', queueId, newData, res.updatedAt));
 
                           case 2:
                             _context13.next = 4;
@@ -2808,7 +2819,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                           case 4:
                             self.allowInternalProcessing('_update0');
                             _context13.next = 7;
-                            return self._processQueuedEvents();
+                            return common_1.to(self._processQueuedEvents());
 
                           case 7:
                           case "end":
@@ -2837,11 +2848,11 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                           case 4:
                             debug("_update ERROR: ".concat(rerr.name, ", ").concat(rerr.message));
                             _context14.next = 7;
-                            return self._removeQueuedEvent('_update1', queueId, newData, res.updatedAt);
+                            return common_1.to(self._removeQueuedEvent('_update1', queueId, newData, res.updatedAt));
 
                           case 7:
                             _context14.next = 9;
-                            return self.localService.patch(id, beforeRecord);
+                            return common_1.to(self.localService.patch(id, beforeRecord));
 
                           case 9:
                             self.allowInternalProcessing('_update1');
@@ -2859,7 +2870,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
 
               case 32:
                 _context15.next = 34;
-                return this._removeQueuedEvent('_update2', queueId, newData, newData.updatedAt);
+                return common_1.to(this._removeQueuedEvent('_update2', queueId, newData, newData.updatedAt));
 
               case 34:
                 this.allowInternalProcessing('_update2');
@@ -3000,7 +3011,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                         switch (_context17.prev = _context17.next) {
                           case 0:
                             _context17.next = 2;
-                            return self._removeQueuedEvent('_patch0', queueId, rres, res.updatedAt);
+                            return common_1.to(self._removeQueuedEvent('_patch0', queueId, rres, res.updatedAt));
 
                           case 2:
                             _context17.next = 4;
@@ -3009,7 +3020,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                           case 4:
                             self.allowInternalProcessing('_patch0');
                             _context17.next = 7;
-                            return self._processQueuedEvents();
+                            return common_1.to(self._processQueuedEvents());
 
                           case 7:
                           case "end":
@@ -3038,11 +3049,11 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                           case 4:
                             debug("_patch ERROR: ".concat(rerr.name, ", ").concat(rerr.message));
                             _context18.next = 7;
-                            return self._removeQueuedEvent('_patch1', queueId, newData, res.updatedAt);
+                            return common_1.to(self._removeQueuedEvent('_patch1', queueId, newData, res.updatedAt));
 
                           case 7:
                             _context18.next = 9;
-                            return self.localService.patch(id, beforeRecord);
+                            return common_1.to(self.localService.patch(id, beforeRecord));
 
                           case 9:
                             self.allowInternalProcessing('_patch1');
@@ -3060,7 +3071,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
 
               case 34:
                 _context19.next = 36;
-                return this._removeQueuedEvent('_patch2', queueId, newData, newData.updatedAt);
+                return common_1.to(this._removeQueuedEvent('_patch2', queueId, newData, newData.updatedAt));
 
               case 36:
                 this.allowInternalProcessing('_patch2');
@@ -3228,7 +3239,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                           case 2:
                             self.allowInternalProcessing('_remove0');
                             _context22.next = 5;
-                            return self._processQueuedEvents();
+                            return common_1.to(self._processQueuedEvents());
 
                           case 5:
                           case "end":
@@ -3260,7 +3271,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                             // We have to restore the record to  the local DB
 
                             _context23.next = 7;
-                            return self._removeQueuedEvent('_remove1', queueId, beforeRecord, null);
+                            return common_1.to(self._removeQueuedEvent('_remove1', queueId, beforeRecord, null));
 
                           case 7:
                             _context23.next = 9;
@@ -3282,7 +3293,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
 
               case 30:
                 _context24.next = 32;
-                return this._removeQueuedEvent('_remove2', queueId, beforeRecord, null);
+                return common_1.to(this._removeQueuedEvent('_remove2', queueId, beforeRecord, null));
 
               case 32:
                 this.allowInternalProcessing('_remove2');

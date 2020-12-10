@@ -8,7 +8,7 @@ const failCountHook = require('./fail-count-hook');
 const clone = require('./clone');
 const delay = require('./delay');
 const assertDeepEqualExcept = require('./assert-deep-equal-except');
-import errors from '@feathersjs/errors';
+const errors = require('@feathersjs/errors');
 
 const sampleLen = 5; // Size of test database (backend)
 

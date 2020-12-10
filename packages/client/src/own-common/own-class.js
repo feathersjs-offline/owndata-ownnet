@@ -208,6 +208,7 @@ class OwnClass extends AdapterService {
 
   async find (params) {
     debug(`Calling find(${JSON.stringify(params)}})`);
+    debug(`  rows=${JSON.stringify(await this.getEntries())}`);
     return this._find(params);
   }
 
@@ -274,27 +275,27 @@ class OwnClass extends AdapterService {
     if (res) {
       this.remoteService.create(res, clone(params))
         .then(async rres => {
-          await self._removeQueuedEvent('_create0', queueId, newData, newData.updatedAt);
+          await to(self._removeQueuedEvent('_create0', queueId, newData, newData.updatedAt));
           await self._patchIfNotRemoved(rres[self.id], rres);
 
           // Ok, we have connection - empty queue if we have any items queued
           self.allowInternalProcessing('_create0');
-          await self._processQueuedEvents();
+          await to( self._processQueuedEvents() );
         })
         .catch(async rerr => {
           if (rerr.name !== 'Timeout') {
             // Let's silently ignore missing connection to server -
             // we'll catch-up next time we get a connection
             // In all other cases do the following:
-            await self._removeQueuedEvent('_create1', queueId, rerr.message/*newData*/, newData.updatedAt);
-            await self.localService.remove(res[self.id], params);
+            await to(self._removeQueuedEvent('_create1', queueId, rerr.message/*newData*/, newData.updatedAt));
+            await to(self.localService.remove(res[self.id], params));
           }
 
           self.allowInternalProcessing('_create1');
         });
     }
     else {
-      await this._removeQueuedEvent('_create2', queueId, newData, newData.updatedAt);
+      await to(this._removeQueuedEvent('_create2', queueId, newData, newData.updatedAt));
       this.allowInternalProcessing('_create2');
       throw err;
     }
@@ -348,11 +349,11 @@ class OwnClass extends AdapterService {
     if (!err) {
       this.remoteService.update(id, res, clone(params))
         .then(async rres => {
-          await self._removeQueuedEvent('_update0', queueId, newData, res.updatedAt);
+          await to(self._removeQueuedEvent('_update0', queueId, newData, res.updatedAt));
           await self._patchIfNotRemoved(rres[self.id], rres)
 
           self.allowInternalProcessing('_update0');
-          await self._processQueuedEvents();
+          await to( self._processQueuedEvents() );
         })
         .catch(async rerr => {
           if (rerr.name === 'Timeout') {
@@ -361,14 +362,14 @@ class OwnClass extends AdapterService {
             // We'll catch-up next time we get a connection
           } else {
             debug(`_update ERROR: ${rerr.name}, ${rerr.message}`);
-            await self._removeQueuedEvent('_update1', queueId, newData, res.updatedAt);
-            await self.localService.patch(id, beforeRecord);
+            await to(self._removeQueuedEvent('_update1', queueId, newData, res.updatedAt));
+            await to(self.localService.patch(id, beforeRecord));
           }
           self.allowInternalProcessing('_update1');
         });
     }
     else {
-      await this._removeQueuedEvent('_update2', queueId, newData, newData.updatedAt);
+      await to(this._removeQueuedEvent('_update2', queueId, newData, newData.updatedAt));
       this.allowInternalProcessing('_update2');
       throw err;
     }
@@ -429,11 +430,11 @@ class OwnClass extends AdapterService {
     if (res) {
       this.remoteService.patch(id, res, clone(params))
         .then(async rres => {
-          await self._removeQueuedEvent('_patch0', queueId, rres, res.updatedAt)
-          await self._patchIfNotRemoved(rres[self.id], rres)
+          await to(self._removeQueuedEvent('_patch0', queueId, rres, res.updatedAt));
+          await self._patchIfNotRemoved(rres[self.id], rres);
 
           self.allowInternalProcessing('_patch0');
-          await self._processQueuedEvents();
+          await to( self._processQueuedEvents() );
         })
         .catch(async rerr => {
           if (rerr.name === 'Timeout') {
@@ -442,14 +443,14 @@ class OwnClass extends AdapterService {
             // We'll catch-up next time we get a connection
           } else {
             debug(`_patch ERROR: ${rerr.name}, ${rerr.message}`);
-            await self._removeQueuedEvent('_patch1', queueId, newData, res.updatedAt);
-            await self.localService.patch(id, beforeRecord);
+            await to(self._removeQueuedEvent('_patch1', queueId, newData, res.updatedAt));
+            await to(self.localService.patch(id, beforeRecord));
           }
           self.allowInternalProcessing('_patch1');
         });
     }
     else {
-      await this._removeQueuedEvent('_patch2', queueId, newData, newData.updatedAt);
+      await to(this._removeQueuedEvent('_patch2', queueId, newData, newData.updatedAt));
       this.allowInternalProcessing('_patch2');
       throw err;
     }
@@ -518,7 +519,7 @@ class OwnClass extends AdapterService {
         .then(async rres => {
           await to(self._removeQueuedEvent('_remove0', queueId, beforeRecord, null));
           self.allowInternalProcessing('_remove0');
-          await self._processQueuedEvents();
+          await to( self._processQueuedEvents() );
         })
         .catch(async rerr => {
           if (rerr.name === 'Timeout') {
@@ -530,7 +531,7 @@ class OwnClass extends AdapterService {
               // so we choose to silently ignore this situation
             // } else {
               // We have to restore the record to  the local DB
-              await self._removeQueuedEvent('_remove1', queueId, beforeRecord, null);
+              await to(self._removeQueuedEvent('_remove1', queueId, beforeRecord, null));
               await to(self.localService.create(beforeRecord, null));
             // }
           }
@@ -538,7 +539,7 @@ class OwnClass extends AdapterService {
         });
     }
     else {
-      await this._removeQueuedEvent('_remove2', queueId, beforeRecord, null);
+      await to(this._removeQueuedEvent('_remove2', queueId, beforeRecord, null));
       this.allowInternalProcessing('_remove2');
       throw err;
     }

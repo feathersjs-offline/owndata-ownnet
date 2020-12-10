@@ -1,4 +1,4 @@
-import errors from '@feathersjs/errors';
+const errors = require('@feathersjs/errors');
 
 /**
  * This sets up a before hook for a given method in a given service. The hook
