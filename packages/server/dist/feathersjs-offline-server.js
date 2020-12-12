@@ -2152,7 +2152,7 @@ var RealtimeClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
 
               case 5:
                 ts = ts || new Date();
-                newData = shallowClone(data); // We require a 'uuid' attribute along with 'updatedAt' and 'onServerAt'
+                newData = clone(data); // We require a 'uuid' attribute along with 'updatedAt' and 'onServerAt'
 
                 if (!('uuid' in newData)) {
                   newData.uuid = cryptographic_1.genUuid(this.options.useShortUuid);
@@ -2188,7 +2188,7 @@ var RealtimeClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
               case 0:
                 debug("Calling0 _update(".concat(id, ", ").concat(JSON.stringify(data), ", ").concat(JSON.stringify(params), ")"));
                 _fixParams4 = fixParams(params), newParams = _fixParams4.newParams, offline = _fixParams4.offline;
-                newData = shallowClone(data);
+                newData = clone(data);
                 _context6.next = 5;
                 return this.remoteService.get(id, newParams);
 
@@ -2271,7 +2271,7 @@ var RealtimeClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                 }));
 
               case 8:
-                newData = shallowClone(data);
+                newData = clone(data);
                 _context7.next = 11;
                 return this.remoteService.get(id, newParams);
 
@@ -2434,16 +2434,15 @@ module.exports = {
 }; // --- Helper functions
 
 /**
- * Make a shallow clone of any given object
+ * Make a full clone of any given object
  * @param {object} obj
  * @returns {object} The copy object
  */
 
-function shallowClone(obj) {
-  return Object.assign({}, obj);
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
 }
 
-;
 var _adapterTestStrip = ['uuid', 'updatedAt', 'onServerAt', 'deletedAt'];
 
 var attrStrip = function attrStrip() {
@@ -2457,14 +2456,14 @@ var attrStrip = function attrStrip() {
     if (Array.isArray(res)) {
       result = [];
       res.map(function (v, i, arr) {
-        var obj = shallowClone(arr[i]);
+        var obj = clone(arr[i]);
         attr.forEach(function (a) {
           return delete obj[a];
         });
         result.push(obj);
       });
     } else {
-      result = shallowClone(res);
+      result = clone(res);
       attr.forEach(function (a) {
         return delete result[a];
       });

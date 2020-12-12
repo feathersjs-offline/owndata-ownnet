@@ -129,7 +129,7 @@ class RealtimeClass extends AdapterService {
 
     ts = ts || new Date();
 
-    let newData = shallowClone(data);
+    let newData = clone(data);
 
     // We require a 'uuid' attribute along with 'updatedAt' and 'onServerAt'
     if (!('uuid' in newData)) {
@@ -152,7 +152,7 @@ class RealtimeClass extends AdapterService {
   async _update (id, data, params) {
     debug(`Calling0 _update(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)})`);
     const { newParams, offline } = fixParams(params);
-    let newData = shallowClone(data);
+    let newData = clone(data);
     let active = await this.remoteService.get(id, newParams);
 
     if (!('uuid' in newData)) {
@@ -195,7 +195,7 @@ class RealtimeClass extends AdapterService {
       })
     }
 
-    let newData = shallowClone(data);
+    let newData = clone(data);
     let active = await this.remoteService.get(id, newParams);
     if (new Date(active.onServerAt).getTime() > newData.updatedAt) {
       return Promise.resolve(active)
@@ -305,13 +305,13 @@ module.exports = { init, Realtime, realtimeWrapper };
 // --- Helper functions
 
 /**
- * Make a shallow clone of any given object
+ * Make a full clone of any given object
  * @param {object} obj
  * @returns {object} The copy object
  */
-function shallowClone (obj) {
-  return Object.assign({}, obj);
-};
+function clone (obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
 
 const _adapterTestStrip = ['uuid', 'updatedAt', 'onServerAt', 'deletedAt'];
 
@@ -321,13 +321,13 @@ const attrStrip = (...attr) => {
     if (Array.isArray(res)) {
       result = [];
       res.map((v, i, arr) => {
-        let obj = shallowClone(arr[i]);
+        let obj = clone(arr[i]);
         attr.forEach(a => delete obj[a]);
         result.push(obj);
       })
     }
     else {
-      result = shallowClone(res);
+      result = clone(res);
       attr.forEach(a => delete result[a]);
     }
     return result;
