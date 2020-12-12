@@ -26,8 +26,6 @@ const defaultOptions = {
   'throttle': null,
   'timedSync': 24*60*60*1000,
   'adapterTest': false,
-  // 'multi': false,
-  // 'paginate': false,
   'matcher': sift,
   sorter,
   'fixedName': ''
@@ -268,7 +266,7 @@ class OwnClass extends AdapterService {
     // We apply optimistic mutation
     let newParams = clone(params);
     this.disallowInternalProcessing('_create');
-    let queueId = await this._addQueuedEvent('create', newData, clone(newData), cleanUpParams(params));
+    let queueId = await this._addQueuedEvent('create', newData, clone(newData), params);
 
     // Start actual mutation on remote service
     [err, res] = await to(this.localService.create(newData, clone(params)));
@@ -342,7 +340,7 @@ class OwnClass extends AdapterService {
 
     // Optimistic mutation
     this.disallowInternalProcessing('_update');
-    let queueId = await this._addQueuedEvent('update', newData, id, clone(newData), cleanUpParams(params));
+    let queueId = await this._addQueuedEvent('update', newData, id, clone(newData), params);
 
     // Start actual mutation on remote service
     [err, res] = await to(this.localService.update(id, newData, clone(params)));
@@ -423,7 +421,7 @@ class OwnClass extends AdapterService {
     newData.onServerAt = BOT;
     newData.updatedAt = ts;
     this.disallowInternalProcessing('_patch');
-    const queueId = await this._addQueuedEvent('patch', newData, id, clone(newData), cleanUpParams(params));
+    const queueId = await this._addQueuedEvent('patch', newData, id, clone(newData), params);
 
     // Start actual mutation on remote service
     [err, res] = await to(this.localService.patch(id, newData, clone(params)));
@@ -510,7 +508,7 @@ class OwnClass extends AdapterService {
     // Optimistic mutation
     const beforeRecord = clone(res);
     this.disallowInternalProcessing('_remove');
-    const queueId = await this._addQueuedEvent('remove', beforeRecord, id, cleanUpParams(params));
+    const queueId = await this._addQueuedEvent('remove', beforeRecord, id, params);
 
     // Start actual mutation on remote service
     [err, res] = await to(this.localService.remove(id, clone(params)));
@@ -740,15 +738,4 @@ module.exports = OwnClass;
  */
 function clone (obj) {
   return JSON.parse(JSON.stringify(obj));
-}
-
-/**
- * Remove any test attributes in queries
- */
-function cleanUpParams (parameters) {
-  let p = JSON.parse(JSON.stringify(parameters));
-  // if (p && p.query && p.query._fail) {
-  //   delete p.query._fail;
-  // }
-  return p;
 }

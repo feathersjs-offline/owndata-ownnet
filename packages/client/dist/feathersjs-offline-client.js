@@ -2608,7 +2608,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                 newParams = clone(params);
                 this.disallowInternalProcessing('_create');
                 _context11.next = 25;
-                return this._addQueuedEvent('create', newData, clone(newData), cleanUpParams(params));
+                return this._addQueuedEvent('create', newData, clone(newData), params);
 
               case 25:
                 queueId = _context11.sent;
@@ -2785,7 +2785,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
 
                 this.disallowInternalProcessing('_update');
                 _context15.next = 21;
-                return this._addQueuedEvent('update', newData, id, clone(newData), cleanUpParams(params));
+                return this._addQueuedEvent('update', newData, id, clone(newData), params);
 
               case 21:
                 queueId = _context15.sent;
@@ -2986,7 +2986,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                 newData.updatedAt = ts;
                 this.disallowInternalProcessing('_patch');
                 _context19.next = 23;
-                return this._addQueuedEvent('patch', newData, id, clone(newData), cleanUpParams(params));
+                return this._addQueuedEvent('patch', newData, id, clone(newData), params);
 
               case 23:
                 queueId = _context19.sent;
@@ -3209,7 +3209,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                 beforeRecord = clone(res);
                 this.disallowInternalProcessing('_remove');
                 _context24.next = 19;
-                return this._addQueuedEvent('remove', beforeRecord, id, cleanUpParams(params));
+                return this._addQueuedEvent('remove', beforeRecord, id, params);
 
               case 19:
                 queueId = _context24.sent;
@@ -3731,18 +3731,6 @@ module.exports = OwnClass; // --- Helper functions
 
 function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
-}
-/**
- * Remove any test attributes in queries
- */
-
-
-function cleanUpParams(parameters) {
-  var p = JSON.parse(JSON.stringify(parameters)); // if (p && p.query && p.query._fail) {
-  //   delete p.query._fail;
-  // }
-
-  return p;
 }
 
 /***/ }),
