@@ -2170,8 +2170,6 @@ var defaultOptions = {
   'throttle': null,
   'timedSync': 24 * 60 * 60 * 1000,
   'adapterTest': false,
-  // 'multi': false,
-  // 'paginate': false,
   'matcher': sift_1["default"],
   sorter: adapter_commons_1.sorter,
   'fixedName': ''
@@ -2349,6 +2347,11 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
 
                 if (!(this.remoteService instanceof adapter_commons_1.AdapterService)) {
                   this._listenOptions();
+                } // Make sure that the wrapped service is setup correctly
+
+
+                if (typeof this.remoteService.setup === 'function') {
+                  this.remoteService.setup(app, path);
                 } // Should we perform a sync every timedSync?
 
 
@@ -2361,7 +2364,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                 debug('  Done.');
                 return _context2.abrupt("return", true);
 
-              case 36:
+              case 37:
               case "end":
                 return _context2.stop();
             }
@@ -4614,6 +4617,7 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 })); //
 // Most of this code has been copied from 'https://github.com/feathers-plus/feathers-offline-snapshot/blob/master/src/index.js'
+// with permission from @eddyystop
 //
 
 var debug_1 = __importDefault(__webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js"));
