@@ -94,6 +94,27 @@ describe('RealtimeServerWrapper', () => {
         expect(err.name).to.equal('XXX', `Adapter class unexpectedly throws '${err.name}' ${err.message}`);
       }
     })
+
+    it('should setup wrapped service', () => {
+      app = feathers();
+
+      let setupCalled = false;
+      let passedApp;
+      let passedPath;
+
+      app.use(path, {
+        setup(app, path) {
+          setupCalled = true;
+          passedApp = app;
+          passedPath = path
+        }
+      });
+      realtimeWrapper(app, path, {});
+
+      expect(setupCalled).to.equal(true, 'setup was called');
+      expect(typeof passedApp).to.equals('object', 'app argument was passed');
+      expect(passedPath).to.equal(path, 'path argument was passed');
+    });
   });
 
   describe('real-life tests', () => {
