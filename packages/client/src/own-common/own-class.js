@@ -150,6 +150,11 @@ class OwnClass extends AdapterService {
       this._listenOptions();
     }
 
+    // Make sure that the wrapped service is setup correctly
+    if (typeof this.remoteService.setup === 'function') {
+      this.remoteService.setup(app, path);
+    }
+
     // Should we perform a sync every timedSync?
     if (this.options.timedSync && Number.isInteger(this.options.timedSync) && this.options.timedSync > 0) {
       this._timedSyncHandle = setInterval(() => self.sync(), self.options.timedSync);

@@ -92,16 +92,42 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
         let path = newServicePath();
         let service = service2(wrapper, path);
         let flag = '';
-        let err = {name: 'All is fine', message: 'No comments.'};
+        let err = { name: 'All is fine', message: 'No comments.' };
         try {
-        service.setup(app, path);
-        service.setup(app, path);
-        flag = 'OK';
+          service.setup(app, path);
+          service.setup(app, path);
+          flag = 'OK';
         } catch (error) {
           err = error;
           flag = 'ERROR'
         }
         expect(flag).to.equal('OK', `Unexpectedly failed to ignore multiple setup() err=${err.name}, ${err.message}`);
+      });
+
+
+      it('should setup wrapped service', async () => {
+        app = feathers();
+
+        let setupCalled = false;
+        let passedApp;
+        let passedPath;
+
+        app.use(serviceName, {
+          setup(app, path) {
+            setupCalled = true;
+            passedApp = app;
+            passedPath = path
+          }
+        });
+        wrapper(app, serviceName, {});
+
+        // Force setup now
+        await delay(20)();
+        await app.service(serviceName).setup(app, serviceName);
+
+        expect(setupCalled).to.equal(true, 'setup was called');
+        expect(typeof passedApp).to.equals('object', 'app argument was passed');
+        expect(passedPath).to.equal(serviceName, 'path argument was passed');
       });
 
       it('create adds missing uuid, updatedAt, and onServerAt', () => {
@@ -118,7 +144,7 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
       it('fixed name works', () => {
         app = feathers();
         app.use(serviceName, memory({ multi: true }));
-        let service = wrapper(app, serviceName, {fixedName: 'NameFixed'});
+        let service = wrapper(app, serviceName, { fixedName: 'NameFixed' });
 
         return service.create({ id: 99, order: 99 })
           .then(data => {

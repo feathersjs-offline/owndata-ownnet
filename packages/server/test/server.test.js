@@ -95,7 +95,7 @@ describe('RealtimeServerWrapper', () => {
       }
     })
 
-    it('should setup wrapped service', () => {
+    it('should setup wrapped service', async () => {
       app = feathers();
 
       let setupCalled = false;
@@ -111,6 +111,10 @@ describe('RealtimeServerWrapper', () => {
       });
       realtimeWrapper(app, path, {});
 
+      // Force setup now
+      await delay(20)();
+      await app.service(path).setup(app, path);
+      
       expect(setupCalled).to.equal(true, 'setup was called');
       expect(typeof passedApp).to.equals('object', 'app argument was passed');
       expect(passedPath).to.equal(path, 'path argument was passed');

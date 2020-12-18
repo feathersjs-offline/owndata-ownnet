@@ -2055,12 +2055,17 @@ var RealtimeClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
 
                 if (!(this.remoteService instanceof adapter_commons_1.AdapterService)) {
                   this._listenOptions();
+                } // Make sure that the wrapped service is setup correctly
+
+
+                if (typeof this.remoteService.setup === 'function') {
+                  this.remoteService.setup(app, path);
                 }
 
                 debug('  Done.');
                 return _context2.abrupt("return", true);
 
-              case 17:
+              case 18:
               case "end":
                 return _context2.stop();
             }
