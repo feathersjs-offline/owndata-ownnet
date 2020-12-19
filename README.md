@@ -23,7 +23,7 @@ These packages implements the offline-first `own-data` / `own-net` principles on
 
 Go to the packages to see the details:
 - Server is here on [Git](https://github.com/feathersjs-offline/owndata-ownnet/tree/main/packages/server) and here on [NPM](https://www.npmjs.com/package/@feathersjs-offline/server)
-- CLient is here on [Git](https://github.com/feathersjs-offline/owndata-ownnet/tree/main/packages/client) and here on [NPM](https://www.npmjs.com/package/@feathersjs-offline/client)
+- Client is here on [Git](https://github.com/feathersjs-offline/owndata-ownnet/tree/main/packages/client) and here on [NPM](https://www.npmjs.com/package/@feathersjs-offline/client)
 
 You'll need both to be able to a fully functional `own-data`or `own-net` offline-first implementation in your own app.
 
