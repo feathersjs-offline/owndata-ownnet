@@ -27,6 +27,8 @@ jobs:
         with:
           node-version: 11
           registry-url: https://registry.npmjs.org/
+      - run: git config --global user.email "michael@hillerstrom.name"
+      - run: git config --global user.name "Michael Hillerström"
       - run: npm install
       - run: npm publish
         env:
@@ -41,6 +43,8 @@ jobs:
         with:
           node-version: 11
           registry-url: https://npm.pkg.github.com/
+      - run: git config --global user.email "michael@hillerstrom.name"
+      - run: git config --global user.name "Michael Hillerström"
       - run: npm install
       - run: npm publish
         env:
