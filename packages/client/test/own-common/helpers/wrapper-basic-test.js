@@ -130,6 +130,40 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
         expect(passedPath).to.equal(serviceName, 'path argument was passed');
       });
 
+      it('should call wrapped service hooks', async () => {
+        app = feathers();
+
+        let setupCalled = false;
+
+        app.use(serviceName, {
+          setup(app, path) {
+            setupCalled = true;
+          },
+          find (params) {
+            return [ { data: {id: 1, text: "You won!"} } ]
+          }
+        });
+        app.service(serviceName).hooks({
+          after: {
+            all: [async context => {
+                context.result.data.fromHook = 'You were here!';
+                return context;
+              }
+            ]
+          }
+        })
+        wrapper(app, serviceName, {});
+
+        // Force setup now
+        app.service(serviceName).find()
+          .then(res => {
+            expect(setupCalled).to.equal(true, 'setup was called');
+            expect(res.data.id).to.equal(1, 'service was called');
+            expect(res.data.fromHook).to.equals('You were here', 'service called hook');
+            expect(res.data.updatedAt).to.equal('string', 'updatedAt was added');
+           })
+      });
+
       it('create adds missing uuid, updatedAt, and onServerAt', () => {
         let service = service1(wrapper);
 
