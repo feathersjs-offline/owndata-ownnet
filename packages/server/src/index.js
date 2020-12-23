@@ -48,9 +48,8 @@ class RealtimeClass extends AdapterService {
     let self = this;
 
     // Now we are ready to define the path with its underlying service (the remoteService)
-    let old = app.services[path];
-    this.remoteService = old || app.service(path); // We want to get the default service (redirects to server or points to a local service)
-    app.services[path] = self;  // Install this service instance
+    this.remoteService = app.service(path); // We want to get the default service (redirects to server or points to a local service)
+    app.use(path, self);  // Install this service instance
 
     // Get the service name and standard settings
     this.name = stripSlashes(path);
@@ -155,7 +154,7 @@ class RealtimeClass extends AdapterService {
     }
 
   async _update (id, data, params) {
-    debug(`Calling0 _update(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)})`);
+    debug(`Calling _update(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)})`);
     const { newParams, offline } = fixParams(params);
     let newData = clone(data);
     let active = await this.remoteService.get(id, newParams);
