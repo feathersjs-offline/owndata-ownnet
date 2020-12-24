@@ -2269,11 +2269,14 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                 self = this;
                 this.thisName = this.options.fixedName !== '' ? this.options.fixedName : "".concat(this.type, "_offline_").concat(nameIx++, "_").concat(path); // Now we are ready to define the path with its underlying service (the remoteService)
 
-                old = app.services[path];
-                this.remoteService = old || app.service(path); // We want to get the default service (redirects to server or points to a local service)
+                old = app.service(path);
 
-                app.services[path] = self; // Install this service instance
-                // Get the service name and standard settings
+                if (old !== self) {
+                  this.remoteService = old || app.service(path); // We want to get the default service (redirects to server or points to a local service)
+
+                  app.use(path, self); // Install this service instance
+                } // Get the service name and standard settings
+
 
                 this.name = path; // Construct the two helper services
 
@@ -2302,10 +2305,10 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                 this.localQueue = app.service(this.localServiceQueue); // We need to make sure that localService is properly initiated - make a dummy search
                 //    (one of the quirks of feathers-localstorage)
 
-                _context2.next = 24;
+                _context2.next = 23;
                 return this.localService.ready();
 
-              case 24:
+              case 23:
                 // The initialization/setup of the localService adapter screws-up our options object
                 this.options = this.wrapperOptions; // Are we running adapterTests?
 
@@ -2364,7 +2367,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                 debug('  Done.');
                 return _context2.abrupt("return", true);
 
-              case 37:
+              case 36:
               case "end":
                 return _context2.stop();
             }
@@ -4060,7 +4063,7 @@ function owndataWrapper(app, path) {
   }
 
   var location = commons_1.stripSlashes(path);
-  var old = app.services[location];
+  var old = app.service(location);
 
   if (typeof old === 'undefined') {
     throw new errors_1["default"].Unavailable("No prior service registered on path '".concat(location, "'"));
@@ -4068,11 +4071,11 @@ function owndataWrapper(app, path) {
 
   var opts = Object.assign({}, old.options, options);
   app.use(location, Owndata(opts));
-  app.services[location].options = opts;
+  app.service(location).options = opts;
 
-  app.services[location]._listenOptions();
+  app.service(location)._listenOptions();
 
-  return app.services[location];
+  return app.service(location);
 }
 
 module.exports = {
@@ -4524,7 +4527,7 @@ function ownnetWrapper(app, path) {
   debug("ownnetWrapper started on path '".concat(path, "'"));
   if (!(app && app.version && app.service && app.services)) throw new errors_1["default"].Unavailable("The FeathersJS app must be supplied as first argument");
   var location = commons_1.stripSlashes(path);
-  var old = app.services[location];
+  var old = app.service(location);
 
   if (typeof old === 'undefined') {
     throw new errors_1["default"].Unavailable("No prior service registered on path '".concat(location, "'"));
@@ -4532,11 +4535,11 @@ function ownnetWrapper(app, path) {
 
   var opts = Object.assign({}, old.options, options);
   app.use(location, Ownnet(opts));
-  app.services[location].options = opts;
+  app.service(location).options = opts;
 
-  app.services[location]._listenOptions();
+  app.service(location)._listenOptions();
 
-  return app.services[location];
+  return app.service(location);
 }
 
 module.exports = {

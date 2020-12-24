@@ -2414,7 +2414,7 @@ function realtimeWrapper(app, path) {
   debug("realtimeWrapper started on path '".concat(path, "'"));
   if (!(app && app.version && app.service && app.services)) throw new errors_1["default"].Unavailable("The FeathersJS app must be supplied as first argument");
   var location = commons_1.stripSlashes(path);
-  var old = app.services[location];
+  var old = app.service(location);
 
   if (typeof old === 'undefined') {
     throw new errors_1["default"].Unavailable("No prior service registered on path '".concat(location, "'"));
@@ -2429,7 +2429,7 @@ function realtimeWrapper(app, path) {
   service._listenOptions();
 
   service.remoteService = old;
-  return app.services[location];
+  return app.service(location);
 }
 
 module.exports = {
