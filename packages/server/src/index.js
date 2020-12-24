@@ -157,7 +157,7 @@ class RealtimeClass extends AdapterService {
     }
 
   async _update (id, data, params) {
-    debug(`Calling0 _update(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)})`);
+    debug(`Calling _update(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)})`);
     const { newParams, offline } = fixParams(params);
     let newData = clone(data);
     let active = await this.remoteService.get(id, newParams);

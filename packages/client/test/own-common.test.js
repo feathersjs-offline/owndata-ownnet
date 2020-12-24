@@ -47,7 +47,7 @@ function ownclassWrapper (app, path, options = {}) {
   app.service(location).options = opts;
   app.service(location)._listenOptions();
 
-  return app.services[location];
+  return app.service(location);
 }
 
 const init = options => {return new OwnclassClass(options)};

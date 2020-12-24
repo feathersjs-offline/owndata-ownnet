@@ -27,13 +27,13 @@ describe(desc, () => {
       .use(express.json())
       .use(serviceName, {
         async get(id) {
-          return { id, get: 'ok' };
+          return Promise.resolve({ id, get: 'ok' });
         },
 
         async create(data) {
           let myData = JSON.parse(JSON.stringify(data));
           myData.create = 'ok';
-          return myData;
+          return Promise.resolve(myData);
         }
       });
 

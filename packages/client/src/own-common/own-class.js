@@ -90,6 +90,7 @@ class OwnClass extends AdapterService {
     this.thisName = this.options.fixedName !== '' ? this.options.fixedName : `${this.type}_offline_${nameIx++}_${path}`;
 
     // Now we are ready to define the path with its underlying service (the remoteService)
+
     let old = app.service(path);
     if (old !== self) {
       this.remoteService = old || app.service(path); // We want to get the default service (redirects to server or points to a local service)

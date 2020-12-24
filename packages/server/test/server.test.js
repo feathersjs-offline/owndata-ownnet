@@ -114,12 +114,47 @@ describe('RealtimeServerWrapper', () => {
       // Force setup now
       await delay(20)();
       await app.service(path).setup(app, path);
-      
+
       expect(setupCalled).to.equal(true, 'setup was called');
       expect(typeof passedApp).to.equals('object', 'app argument was passed');
       expect(passedPath).to.equal(path, 'path argument was passed');
     });
+
+    it('should call wrapped service hooks', async () => {
+      app = feathers();
+
+      let setupCalled = false;
+
+      app.use(path, {
+        setup(app, path) {
+          setupCalled = true;
+        },
+        find(params) {
+          return [{ data: { id: 1, text: "You won!" } }]
+        }
+      });
+      app.service(path).hooks({
+        after: {
+          all: [async context => {
+            context.result.data.fromHook = 'You were here!';
+            return context;
+          }
+          ]
+        }
+      })
+      realtimeWrapper(app, path, {});
+
+      // Force setup now
+      app.service(path).find()
+        .then(res => {
+          expect(setupCalled).to.equal(true, 'setup was called');
+          expect(res.data.id).to.equal(1, 'service was called');
+          expect(res.data.fromHook).to.equals('You were here', 'service called hook');
+          expect(res.data.onServerAt).to.equal('string', 'onServerAt was added');
+        })
+    });
   });
+
 
   describe('real-life tests', () => {
     // Let's perform all the usual adapter tests to verify full functionality
@@ -280,11 +315,11 @@ describe('RealtimeServerWrapper', () => {
     const sampleLen = 5;
     const data = [];
     for (let i = 0, len = sampleLen; i < len; i += 1) {
-      data.push({ id: i, uuid: 1000 + i, order: i, updatedAt: new Date(i+1).getTime(), onServerAt: new Date(+1).getTime() });
+      data.push({ id: i, uuid: 1000 + i, order: i, updatedAt: new Date(i + 1).getTime(), onServerAt: new Date(+1).getTime() });
     }
     const deleted = [];
     for (let i = sampleLen, len = 2 * sampleLen; i < len; i += 1) {
-      deleted.push({ id: i, uuid: 1000 + i, order: i, updatedAt: new Date(i+1).getTime(), onServerAt: new Date(i+1).getTime() });
+      deleted.push({ id: i, uuid: 1000 + i, order: i, updatedAt: new Date(i + 1).getTime(), onServerAt: new Date(i + 1).getTime() });
     }
 
     var cdata = [];
@@ -638,7 +673,7 @@ describe('RealtimeServerWrapper', () => {
 
 // Helpers
 
-function delay (ms = 0) {
+function delay(ms = 0) {
   return data => new Promise(resolve => {
     setTimeout(() => {
       resolve(data);

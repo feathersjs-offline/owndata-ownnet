@@ -114,10 +114,11 @@ function owndataWrapper (app, path, options = {}) {
 
   let opts = Object.assign({}, old.options, options);
   app.use(location, Owndata(opts));
-  app.service(location).options = opts;
-  app.service(location)._listenOptions();
+  let service = app.service(location);
+  service.options = opts;
+  service._listenOptions();
 
-  return app.service(location);
+  return service;
 }
 
 module.exports = { init, Owndata, owndataWrapper };

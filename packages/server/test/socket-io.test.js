@@ -106,6 +106,9 @@ describe(desc, () => {
         assert.deepStrictEqual(typeof res.uuid, 'string');
         assert.deepStrictEqual(flag, true);
       })
+      .catch(err => {
+        assert.fail(`Should never get here: errName=${err.name}, errMessage=${err.message}`);
+      });
   });
 
 });
