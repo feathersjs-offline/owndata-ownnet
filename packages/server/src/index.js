@@ -289,7 +289,7 @@ function realtimeWrapper (app, path, options = {}) {
 
   let location = stripSlashes(path);
 
-  let old = app.services[location];
+  let old = app.service(location);
   if (typeof old === 'undefined') {
     throw new errors.Unavailable(`No prior service registered on path '${location}'`);
   }
@@ -302,7 +302,7 @@ function realtimeWrapper (app, path, options = {}) {
   service._listenOptions();
   service.remoteService = old;
 
-  return app.services[location];
+  return app.service(location);
 }
 
 module.exports = { init, Realtime, realtimeWrapper };

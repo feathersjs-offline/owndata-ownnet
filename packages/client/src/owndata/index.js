@@ -107,17 +107,17 @@ function owndataWrapper (app, path, options = {}) {
 
   let location = stripSlashes(path);
 
-  let old = app.services[location];
+  let old = app.service(location);
   if (typeof old === 'undefined') {
     throw new errors.Unavailable(`No prior service registered on path '${location}'`);
   }
 
   let opts = Object.assign({}, old.options, options);
   app.use(location, Owndata(opts));
-  app.services[location].options = opts;
-  app.services[location]._listenOptions();
+  app.service(location).options = opts;
+  app.service(location)._listenOptions();
 
-  return app.services[location];
+  return app.service(location);
 }
 
 module.exports = { init, Owndata, owndataWrapper };
