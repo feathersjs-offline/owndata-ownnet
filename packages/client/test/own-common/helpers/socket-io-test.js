@@ -114,7 +114,6 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 7
 
     it('wrapped service triggers event handlers', () => {
       let flag = false;
-      // cApp.service(serviceName).on('created', () => { flag = true; });
       wrapperFn(cApp, serviceName, {});
       cApp.service(serviceName).on('created', () => { flag = true; });
 

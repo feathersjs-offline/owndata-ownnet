@@ -6,12 +6,18 @@ import feathers from '@feathersjs/feathers';
 import { Service } from 'feathers-memory';
 
 import * as express from '@feathersjs/express';
-const { realtimeWrapper } = require('../src');
+import { realtimeWrapper } from '../src';
 
 const expressify = express.default;
 const { rest } = express;
 
-describe('express/rest provider', () => {
+let desc = 'RealtimeWrapper REST support';
+let wrapperFn = realtimeWrapper;
+let serviceName = "code";
+let port = 7886;
+
+
+describe(desc, () => {
   let server;
   let app;
 
@@ -19,7 +25,7 @@ describe('express/rest provider', () => {
     app = expressify(feathers())
       .configure(rest(rest.formatter))
       .use(express.json())
-      .use('/codes', {
+      .use(serviceName, {
         async get(id) {
           return Promise.resolve({ id, get: 'ok' });
         },
@@ -31,19 +37,19 @@ describe('express/rest provider', () => {
         }
       });
 
-    server = app.listen(4777, () => app.use('tasks', new Service()));
+    server = app.listen(port, () => app.use('tasks', new Service()));
   });
 
   afterEach(done => server.close(done));
 
 
   it('can call service', async () => {
-    realtimeWrapper(app, 'codes', {});
+    wrapperFn(app, serviceName, {});
     let result = null;
     try {
       result = await axios({ // Call 'create'
         method: 'post',
-        url: 'http://localhost:4777/codes',
+        url: `http://localhost:${port}/${serviceName}`,
         data: {
           firstName: 'Fred',
           lastName: 'Flintstone'
@@ -56,23 +62,23 @@ describe('express/rest provider', () => {
     assert.deepStrictEqual(result.data, { firstName: 'Fred', lastName: 'Flintstone', create: 'ok' });
   });
 
-  it('activates wrapped services hook', async () => {
-    app.service('codes').hooks({
-      before: {
+  it('activates wrapped services hooks', async () => {
+    app.service(serviceName).hooks({
+      after: {
         all: [async context => {
-          context.data.fromHook = 'You were here!';
+          context.result.fromHook = 'You were here!';
           return context;
         }
         ]
       }
     });
-    realtimeWrapper(app, 'codes', {});
+    wrapperFn(app, serviceName, {});
 
     let result = null;
     try {
       result = await axios({ // Call 'create'
         method: 'post',
-        url: 'http://localhost:4777/codes',
+        url: `http://localhost:${port}/${serviceName}`,
         data: {
           firstName: 'Fred',
           lastName: 'Flintstone'
@@ -85,16 +91,16 @@ describe('express/rest provider', () => {
     assert.deepStrictEqual(result.data, { create: 'ok', firstName: 'Fred', fromHook: 'You were here!', lastName: 'Flintstone' });
   });
 
-  it('triggers wrapped services event handlers', async () => {
+  it('wrapped service triggers event handlers', async () => {
     let flag = false;
-    app.service('codes').on('created', () => {flag = true;});
-    realtimeWrapper(app, 'codes', {});
+    app.service(serviceName).on('created', () => { flag = true; });
+    wrapperFn(app, serviceName, {});
 
     let result = null;
     try {
       result = await axios({ // Call 'create'
         method: 'post',
-        url: 'http://localhost:4777/codes',
+        url: `http://localhost:${port}/${serviceName}`,
         data: {
           firstName: 'Fred',
           lastName: 'Flintstone'

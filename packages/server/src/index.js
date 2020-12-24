@@ -48,8 +48,11 @@ class RealtimeClass extends AdapterService {
     let self = this;
 
     // Now we are ready to define the path with its underlying service (the remoteService)
-    this.remoteService = app.service(path); // We want to get the default service (redirects to server or points to a local service)
-    app.use(path, self);  // Install this service instance
+    let old = app.service(path);
+    if (old !== self) {
+      this.remoteService = old || app.service(path); // We want to get the default service (redirects to server or points to a local service)
+      app.use(path, self);  // Install this service instance
+    }
 
     // Get the service name and standard settings
     this.name = stripSlashes(path);
@@ -288,7 +291,7 @@ function realtimeWrapper (app, path, options = {}) {
 
   let location = stripSlashes(path);
 
-  let old = app.services[location];
+  let old = app.service(location);
   if (typeof old === 'undefined') {
     throw new errors.Unavailable(`No prior service registered on path '${location}'`);
   }
@@ -301,7 +304,7 @@ function realtimeWrapper (app, path, options = {}) {
   service._listenOptions();
   service.remoteService = old;
 
-  return app.services[location];
+  return service;
 }
 
 module.exports = { init, Realtime, realtimeWrapper };

@@ -8,8 +8,8 @@ const syncTests = require('./own-common/helpers/sync-test');
 const eventsTests = require('./own-common/helpers/events-test');
 const localStorageTests = require('./own-common/helpers/local-storage-test');
 const owndataOnlyTests = require('./own-common/helpers/owndata-only-test');
-const restTests =  require('./own-common/helpers/rest-test');
-const socketioTests =  require('./own-common/helpers/socket-io-test');
+const restTests = require('./own-common/helpers/rest-test');
+const socketioTests = require('./own-common/helpers/socket-io-test');
 const { Owndata, owndataWrapper } = require('../src/owndata');
 
 let package = 'owndata';
@@ -28,8 +28,8 @@ describe(`${package}Wrapper tests`, () => {
   syncTests(`${package}Wrapper sync functionality`, app, errors, Owndata, 'syncTests', verbose, 9200);
   eventsTests(`${package}Wrapper events functionality`, app, errors, owndataWrapper, 'wrapperEvents', verbose);
   localStorageTests(`${package}Wrapper storage functionality`, app, errors, owndataWrapper, 'wrapperStorage', verbose);
-  restTests(`${package}Wrapper works through REST`, app, errors, owndataWrapper, 'codes', verbose, 7886);
-  socketioTests(`${package}Wrapper works through socket.io`, app, errors, owndataWrapper, 'codes', verbose, 7886);
+  restTests(`${package}Wrapper REST functionality`, app, errors, owndataWrapper, 'wrapperREST', verbose);
+  socketioTests(`${package}Wrapper socket.io functionality`, app, errors, owndataWrapper, 'wrapperSocketIo', verbose);
 
   owndataOnlyTests(`${package}Wrapper only functionality`, app, errors, owndataWrapper, 'wrapperOnly', verbose);
 

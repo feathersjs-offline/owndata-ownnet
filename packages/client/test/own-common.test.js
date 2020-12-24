@@ -8,8 +8,8 @@ const ownWrapper = require('./own-common/helpers/own-wrapper-test');
 const syncTests = require('./own-common/helpers/sync-test');
 const eventsTests = require('./own-common/helpers/events-test');
 const localStorageTests = require('./own-common/helpers/local-storage-test');
-const restTests =  require('./own-common/helpers/rest-test');
-const socketioTests =  require('./own-common/helpers/socket-io-test');
+const restTests = require('./own-common/helpers/rest-test');
+const socketioTests = require('./own-common/helpers/socket-io-test');
 const OwnClass = require('../src/own-common');
 
 let package = 'ownclass';
@@ -65,7 +65,7 @@ describe(`${package}Wrapper tests`, () => {
   syncTests(`${package}Wrapper sync functionality`, app, errors, init, 'syncTests', verbose, 9100, true);
   eventsTests(`${package}Wrapper events functionality`, app, errors, ownclassWrapper, 'wrapperEvents', verbose);
   localStorageTests(`${package}Wrapper storage functionality`, app, errors, ownclassWrapper, 'wrapperStorage', verbose);
-  restTests(`${package}Wrapper works through REST`, app, errors, ownclassWrapper, 'codes', verbose, 7886, true);
-  socketioTests(`${package}Wrapper works through socket.io`, app, errors, ownclassWrapper, 'codes', verbose, 7886, true);
+  restTests(`${package}Wrapper REST functionality`, app, errors, ownclassWrapper, 'wrapperREST', verbose, 7886, true);
+  socketioTests(`${package}Wrapper socket.io functionality`, app, errors, ownclassWrapper, 'wrapperSocketIo', verbose, 7886, true);
 
 })
