@@ -49,7 +49,7 @@
     "compile": "shx rm -rf lib/ && tsc",
     "unit": "npm run mocha",
     "test": "npm run compile && npm run mocha",
-    "mocha": "rm -rf ./.scratch; nyc mocha --config ../../.mocharc.ts.json --recursive test/**.test.ts test/**/*.test.ts test/**.test.js test/**/*.test.js"
+    "mocha": "rm -rf ./.scratch; nyc mocha --config ../../.mocharc.ts.json --recursive test/**.test.js test/**/*.test.js"
   },
   "dependencies": {
     "@feathersjs/adapter-commons": "^4.5.11",
@@ -62,16 +62,21 @@
   },
   "devDependencies": {
     "@feathersjs/adapter-tests": "^4.5.11",
+    "@feathersjs/client": "^4.5.11",
     "@feathersjs/express": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
+    "@feathersjs/socketio": "^4.5.11",
     "@feathersjs/socketio-client": "^4.5.11",
     "@types/debug": "^4.1.5",
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.12",
+    "axios": "^0.21.0",
     "chai": "^4.2.0",
     "feathers-memory": "^4.1.0",
+    "http": "^0.0.1-security",
     "mocha": "^8.2.1",
     "shx": "^0.3.3",
+    "socket.io-client": "^1.7.3",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.2"
   },

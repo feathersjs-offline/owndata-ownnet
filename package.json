@@ -1,8 +1,7 @@
 {
   "name": "feathersjs-offline",
-  "private": true,
   "description": "FeathersJS offline-first realtime universe",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "keywords": [
     "feathers",
     "feathersjs-offline",
@@ -19,6 +18,9 @@
     "url": "https://github.com/feathersjs-offline/issues"
   },
   "homepage": "https://github.com/feathersjs-offline",
+  "publishConfig": {
+    "access": "restricted"
+  },
   "main": "dist/",
   "license": "MIT",
   "repository": {
