@@ -54,7 +54,7 @@
     "@babel/preset-env": "^7.12.10",
     "babel-loader": "^8.2.2",
     "lerna": "^3.22.1",
-    "npm-check-updates": "^10.2.3",
+    "npm-check-updates": "^11.0.0",
     "nyc": "^15.1.0",
     "parallel-webpack": "^2.6.0",
     "tslint": "^6.1.3",
