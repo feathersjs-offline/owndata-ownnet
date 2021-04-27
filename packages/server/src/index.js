@@ -358,12 +358,12 @@ const attrStrip = (...attr) => {
  */
 const fixParams = function (params) {
   if (!params)
-    return { newParams: { query: {} }, offline: {} };
+    return { newParams: { ...params, query: {} }, offline: {} };
 
   params = JSON.parse(JSON.stringify(params));
   let { paginate, query = {}, ...other } = params;
   let { offline } = query;
-  let newParams = {};
+  let newParams = Object.assign({}, params);
 
   if (offline) {
     delete query.offline;
