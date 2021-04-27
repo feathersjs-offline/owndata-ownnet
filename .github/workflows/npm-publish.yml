@@ -12,10 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: 11
-      - run: npm install
+          node-version: 12
+      - run: git config --global user.email "michael@hillerstrom.name"
+      - run: git config --global user.name "Michael Hillerström"
+      - run: npm ci
       - run: npm test
 
   publish-npm:
@@ -23,13 +25,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: 11
+          node-version: 12
           registry-url: https://registry.npmjs.org/
       - run: git config --global user.email "michael@hillerstrom.name"
       - run: git config --global user.name "Michael Hillerström"
-      - run: npm install
+      - run: npm ci
       - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
@@ -37,15 +39,18 @@ jobs:
   publish-gpr:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: 11
+          node-version: 12
           registry-url: https://npm.pkg.github.com/
       - run: git config --global user.email "michael@hillerstrom.name"
       - run: git config --global user.name "Michael Hillerström"
-      - run: npm install
+      - run: npm ci
       - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
