@@ -1,6 +1,7 @@
 {
   "name": "feathersjs-offline",
   "description": "FeathersJS offline-first realtime universe",
+
   "version": "1.0.7",
   "keywords": [
     "feathers",
