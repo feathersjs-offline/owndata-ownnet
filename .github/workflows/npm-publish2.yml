@@ -30,7 +30,7 @@ jobs:
       - run: git config --global user.email "michael@hillerstrom.name"
       - run: git config --global user.name "Michael Hillerström"
       - run: npm install
-      - run: npm publish --access=public
+      - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
@@ -48,7 +48,7 @@ jobs:
           registry-url: https://npm.pkg.github.com/
       - run: git config --global user.email "michael@hillerstrom.name"
       - run: git config --global user.name "Michael Hillerström"
-      - run: npm install --access=public
-      - run: npm publish
+      - run: npm install
+      - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
