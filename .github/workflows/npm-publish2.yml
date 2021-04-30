@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - run: git config --global user.email "michael@hillerstrom.name"
+      - run: git config --global user.email "feathersjs-offline@hillerstrom.name"
       - run: git config --global user.name "Michael Hillerström"
       - run: npm install
       - run: cd packages/server && npm publish --access public
@@ -47,7 +47,7 @@ jobs:
         with:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
-      - run: git config --global user.email "michael@hillerstrom.name"
+      - run: git config --global user.email "feathersjs-offline@hillerstrom.name"
       - run: git config --global user.name "Michael Hillerström"
       - run: cd packages/server && npm publish --access public
       - run: cd packages/client && npm publish --access public
