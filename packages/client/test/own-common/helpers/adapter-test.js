@@ -81,11 +81,11 @@ describe(title, () => {
 
   if (idProp !== undefined && idProp !== 'id') {
     app.use(serviceName, memory({ events, id: idProp }));
-    wrapper(app, serviceName, {adapterTest: true, store: {}});
+    wrapper(app, serviceName, {name: serviceName, adapterTest: true, store: {}});
   } else {
     app.use(serviceName, memory({ events }));
     // We want to test the wrappers default value for id (which is 'id')
-    wrapper(app, serviceName, {adapterTest: true, store: {}});
+    wrapper(app, serviceName, {name: serviceName, adapterTest: true, store: {}});
     idProp = 'id';
   }
 

@@ -10,6 +10,9 @@ const eventsTests = require('./own-common/helpers/events-test');
 const localStorageTests = require('./own-common/helpers/local-storage-test');
 const restTests = require('./own-common/helpers/rest-test');
 const socketioTests = require('./own-common/helpers/socket-io-test');
+const localStorage = require('localstorage-memory');
+global.localStorage = localStorage;
+
 const OwnClass = require('../src/own-common');
 
 let package = 'ownclass';
@@ -66,6 +69,6 @@ describe(`${package}Wrapper tests`, () => {
   eventsTests(`${package}Wrapper events functionality`, app, errors, ownclassWrapper, 'wrapperEvents', verbose);
   localStorageTests(`${package}Wrapper storage functionality`, app, errors, ownclassWrapper, 'wrapperStorage', verbose);
   restTests(`${package}Wrapper REST functionality`, app, errors, ownclassWrapper, 'wrapperREST', verbose, 7886, true);
-  socketioTests(`${package}Wrapper socket.io functionality`, app, errors, ownclassWrapper, 'wrapperSocketIo', verbose, 7886, true);
+  socketioTests(`${package}Wrapper socket.io functionality`, app, errors, ownclassWrapper, 'wrapperSocketIo', verbose, 7885, true);
 
 })

@@ -3,7 +3,7 @@ import sift from 'sift';
 import { sorter, select, AdapterService } from '@feathersjs/adapter-commons';
 import { _, hooks, stripSlashes } from '@feathersjs/commons';
 import errors from '@feathersjs/errors';
-import ls from 'feathers-localstorage';
+import ls from 'feathers-localforage';
 import { genUuid, to, OptionsProxy } from '../common';
 import snapshot from '../snapshot';
 
@@ -103,8 +103,9 @@ class OwnClass extends AdapterService {
     this.localServiceName = this.thisName + '_local';
     this.localServiceQueue = this.thisName + '_queue';
 
-    this.storage = this.options.storage ? this.options.storage : localStorage;
-    this.localSpecOptions = { name: this.localServiceName, storage: this.storage, store: this.options.store, reuseKeys: this.options.fixedName !== '' };
+    this.storage = this.options.storage ? this.options.storage : ['localStorageWrapper'];
+    this.store = this.options.store ? this.options.store : [];
+    this.localSpecOptions = { name: this.localServiceName, storage: this.storage, store: this.store, reuseKeys: this.options.fixedName !== '' };
     let localOptions = Object.assign({}, this.options, this.localSpecOptions);
     let queueOptions = { id: 'id', name: this.localServiceQueue, storage: this.storage, paginate: null, multi: true, reuseKeys: this.options.fixedName !== '' };
 
@@ -605,6 +606,7 @@ class OwnClass extends AdapterService {
   async _addQueuedEvent (eventName, localRecord, arg1, arg2, arg3) {
     debug('addQueuedEvent entered');
     let [err, res] = await to(this.localQueue.create({ eventName, record: localRecord, arg1, arg2, arg3 }));
+    if (err) throw new errors.GeneralError(`Could not write '${JSON.stringify({ eventName, record: localRecord, arg1, arg2, arg3 })}' to localQueue (${this.localServiceQueue}), err=${err.name}, ${err.message}`);
     debug(`addQueuedEvent added: ${JSON.stringify(res)}`);
     return Promise.resolve(res.id);
   }
