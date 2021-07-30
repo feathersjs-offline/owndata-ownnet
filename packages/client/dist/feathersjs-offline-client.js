@@ -3,7 +3,7 @@ var feathersjsOfflineClient;feathersjsOfflineClient =
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./node_modules/@feathersjs/adapter-commons/lib/filter-query.js":
-/*!**********************************************************************!*
+/*!**********************************************************************!*\
   !*** ./node_modules/@feathersjs/adapter-commons/lib/filter-query.js ***!
   \**********************************************************************/
 /***/ ((module, exports, __webpack_require__) => {
@@ -146,7 +146,7 @@ if (true) {
 /***/ }),
 
 /***/ "./node_modules/@feathersjs/adapter-commons/lib/index.js":
-/*!***************************************************************!*
+/*!***************************************************************!*\
   !*** ./node_modules/@feathersjs/adapter-commons/lib/index.js ***!
   \***************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
@@ -268,7 +268,7 @@ exports.select = select;
 /***/ }),
 
 /***/ "./node_modules/@feathersjs/adapter-commons/lib/service.js":
-/*!*****************************************************************!*
+/*!*****************************************************************!*\
   !*** ./node_modules/@feathersjs/adapter-commons/lib/service.js ***!
   \*****************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
@@ -430,7 +430,7 @@ exports.AdapterService = AdapterService;
 /***/ }),
 
 /***/ "./node_modules/@feathersjs/adapter-commons/lib/sort.js":
-/*!**************************************************************!*
+/*!**************************************************************!*\
   !*** ./node_modules/@feathersjs/adapter-commons/lib/sort.js ***!
   \**************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
@@ -608,7 +608,7 @@ exports.sorter = sorter;
 /***/ }),
 
 /***/ "./node_modules/@feathersjs/commons/lib/hooks.js":
-/*!*******************************************************!*
+/*!*******************************************************!*\
   !*** ./node_modules/@feathersjs/commons/lib/hooks.js ***!
   \*******************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
@@ -841,7 +841,7 @@ exports.enableHooks = enableHooks;
 /***/ }),
 
 /***/ "./node_modules/@feathersjs/commons/lib/index.js":
-/*!*******************************************************!*
+/*!*******************************************************!*\
   !*** ./node_modules/@feathersjs/commons/lib/index.js ***!
   \*******************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
@@ -903,7 +903,7 @@ exports.hooks = hookUtils;
 /***/ }),
 
 /***/ "./node_modules/@feathersjs/commons/lib/utils.js":
-/*!*******************************************************!*
+/*!*******************************************************!*\
   !*** ./node_modules/@feathersjs/commons/lib/utils.js ***!
   \*******************************************************/
 /***/ ((__unused_webpack_module, exports) => {
@@ -1073,7 +1073,7 @@ exports.createSymbol = createSymbol;
 /***/ }),
 
 /***/ "./node_modules/@feathersjs/errors/lib/index.js":
-/*!******************************************************!*
+/*!******************************************************!*\
   !*** ./node_modules/@feathersjs/errors/lib/index.js ***!
   \******************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -1322,7 +1322,7 @@ module.exports = Object.assign({
 /***/ }),
 
 /***/ "./node_modules/debug/src/browser.js":
-/*!*******************************************!*
+/*!*******************************************!*\
   !*** ./node_modules/debug/src/browser.js ***!
   \*******************************************/
 /***/ ((module, exports, __webpack_require__) => {
@@ -1512,7 +1512,7 @@ formatters.j = function (v) {
 /***/ }),
 
 /***/ "./node_modules/debug/src/common.js":
-/*!******************************************!*
+/*!******************************************!*\
   !*** ./node_modules/debug/src/common.js ***!
   \******************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -1795,7 +1795,7 @@ module.exports = setup;
 /***/ }),
 
 /***/ "./packages/client/lib/common/cryptographic.js":
-/*!*****************************************************!*
+/*!*****************************************************!*\
   !*** ./packages/client/lib/common/cryptographic.js ***!
   \*****************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -1834,7 +1834,7 @@ module.exports = {
 /***/ }),
 
 /***/ "./packages/client/lib/common/index.js":
-/*!*********************************************!*
+/*!*********************************************!*\
   !*** ./packages/client/lib/common/index.js ***!
   \*********************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -1856,7 +1856,7 @@ module.exports = Object.assign(Object.assign(Object.assign({
 /***/ }),
 
 /***/ "./packages/client/lib/common/misc.js":
-/*!********************************************!*
+/*!********************************************!*\
   !*** ./packages/client/lib/common/misc.js ***!
   \********************************************/
 /***/ ((module) => {
@@ -1887,7 +1887,7 @@ module.exports = {
 /***/ }),
 
 /***/ "./packages/client/lib/common/options-proxy.js":
-/*!*****************************************************!*
+/*!*****************************************************!*\
   !*** ./packages/client/lib/common/options-proxy.js ***!
   \*****************************************************/
 /***/ ((module) => {
@@ -1968,7 +1968,7 @@ module.exports = /*#__PURE__*/function () {
 /***/ }),
 
 /***/ "./packages/client/lib/common/to.js":
-/*!******************************************!*
+/*!******************************************!*\
   !*** ./packages/client/lib/common/to.js ***!
   \******************************************/
 /***/ ((module) => {
@@ -1994,7 +1994,7 @@ module.exports = to;
 /***/ }),
 
 /***/ "./packages/client/lib/index.js":
-/*!**************************************!*
+/*!**************************************!*\
   !*** ./packages/client/lib/index.js ***!
   \**************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -2032,7 +2032,7 @@ module.exports = {
 /***/ }),
 
 /***/ "./packages/client/lib/own-common/index.js":
-/*!*************************************************!*
+/*!*************************************************!*\
   !*** ./packages/client/lib/own-common/index.js ***!
   \*************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -2044,7 +2044,7 @@ module.exports = OwnClass;
 /***/ }),
 
 /***/ "./packages/client/lib/own-common/own-class.js":
-/*!*****************************************************!*
+/*!*****************************************************!*\
   !*** ./packages/client/lib/own-common/own-class.js ***!
   \*****************************************************/
 /***/ (function(module, exports, __webpack_require__) {
@@ -2152,16 +2152,6 @@ var snapshot_1 = __importDefault(__webpack_require__(/*! ../snapshot */ "./packa
 
 var debug = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js")('@feathersjs-offline:ownclass:service-base');
 
-if (typeof localStorage === 'undefined') {
-  debug('Simulating localStorage...');
-
-  var LocalStorage = __webpack_require__(/*! node-localstorage */ "./node_modules/node-localstorage/LocalStorage.js").LocalStorage;
-
-  __webpack_require__.g.localStorage = new LocalStorage('./.scratch');
-} else {
-  debug('Utilizing built-in localStorage');
-}
-
 var defaultOptions = {
   'id': 'id',
   'store': null,
@@ -2249,7 +2239,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
     key: "setup",
     value: function setup(app, path) {
       return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-        var self, old, localOptions, queueOptions, stripValues, idIx;
+        var LocalStorage, self, old, localOptions, queueOptions, stripValues, idIx;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -2265,6 +2255,15 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
 
               case 3:
                 this._setupPerformed = true;
+
+                if (typeof localStorage === 'undefined') {
+                  debug('Simulating localStorage...');
+                  LocalStorage = __webpack_require__(/*! node-localstorage */ "./node_modules/node-localstorage/LocalStorage.js").LocalStorage;
+                  __webpack_require__.g.localStorage = new LocalStorage('./.scratch');
+                } else {
+                  debug('Utilizing built-in localStorage');
+                }
+
                 this.options = this.wrapperOptions;
                 self = this;
                 this.thisName = this.options.fixedName !== '' ? this.options.fixedName : "".concat(this.type, "_offline_").concat(nameIx++, "_").concat(path); // Now we are ready to define the path with its underlying service (the remoteService)
@@ -2272,7 +2271,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                 old = app.service(path);
 
                 if (old !== self) {
-                  this.remoteService = old || app.service(path); // We want to get the default service (redirects to server or points to a local service)
+                  this.remoteService = old; // We want to get the default service (redirects to server or points to a local service)
 
                   app.use(path, self); // Install this service instance
                 } // Get the service name and standard settings
@@ -2305,10 +2304,10 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                 this.localQueue = app.service(this.localServiceQueue); // We need to make sure that localService is properly initiated - make a dummy search
                 //    (one of the quirks of feathers-localstorage)
 
-                _context2.next = 23;
+                _context2.next = 24;
                 return this.localService.ready();
 
-              case 23:
+              case 24:
                 // The initialization/setup of the localService adapter screws-up our options object
                 this.options = this.wrapperOptions; // Are we running adapterTests?
 
@@ -2367,7 +2366,7 @@ var OwnClass = /*#__PURE__*/function (_adapter_commons_1$Ad) {
                 debug('  Done.');
                 return _context2.abrupt("return", true);
 
-              case 36:
+              case 37:
               case "end":
                 return _context2.stop();
             }
@@ -3742,7 +3741,7 @@ function clone(obj) {
 /***/ }),
 
 /***/ "./packages/client/lib/owndata/index.js":
-/*!**********************************************!*
+/*!**********************************************!*\
   !*** ./packages/client/lib/owndata/index.js ***!
   \**********************************************/
 /***/ (function(module, exports, __webpack_require__) {
@@ -4071,11 +4070,12 @@ function owndataWrapper(app, path) {
 
   var opts = Object.assign({}, old.options, options);
   app.use(location, Owndata(opts));
-  app.service(location).options = opts;
+  var service = app.service(location);
+  service.options = opts;
 
-  app.service(location)._listenOptions();
+  service._listenOptions();
 
-  return app.service(location);
+  return service;
 }
 
 module.exports = {
@@ -4134,7 +4134,7 @@ function _accEvent(idName, eventName, el, arg1, arg2, arg3, id) {
 /***/ }),
 
 /***/ "./packages/client/lib/ownnet/index.js":
-/*!*********************************************!*
+/*!*********************************************!*\
   !*** ./packages/client/lib/ownnet/index.js ***!
   \*********************************************/
 /***/ (function(module, exports, __webpack_require__) {
@@ -4535,11 +4535,12 @@ function ownnetWrapper(app, path) {
 
   var opts = Object.assign({}, old.options, options);
   app.use(location, Ownnet(opts));
-  app.service(location).options = opts;
+  var service = app.service(location);
+  service.options = opts;
 
-  app.service(location)._listenOptions();
+  service._listenOptions();
 
-  return app.service(location);
+  return service;
 }
 
 module.exports = {
@@ -4602,7 +4603,7 @@ function _accEvent(idName, eventName, el, arg1, arg2, arg3, ids) {
 /***/ }),
 
 /***/ "./packages/client/lib/snapshot/index.js":
-/*!***********************************************!*
+/*!***********************************************!*\
   !*** ./packages/client/lib/snapshot/index.js ***!
   \***********************************************/
 /***/ (function(module, exports, __webpack_require__) {
@@ -4673,7 +4674,7 @@ module.exports = snapshot;
 /***/ }),
 
 /***/ "./node_modules/charenc/charenc.js":
-/*!*****************************************!*
+/*!*****************************************!*\
   !*** ./node_modules/charenc/charenc.js ***!
   \*****************************************/
 /***/ ((module) => {
@@ -4716,7 +4717,7 @@ module.exports = charenc;
 /***/ }),
 
 /***/ "./node_modules/crypt/crypt.js":
-/*!*************************************!*
+/*!*************************************!*\
   !*** ./node_modules/crypt/crypt.js ***!
   \*************************************/
 /***/ ((module) => {
@@ -4822,7 +4823,7 @@ module.exports = charenc;
 /***/ }),
 
 /***/ "./node_modules/events/events.js":
-/*!***************************************!*
+/*!***************************************!*\
   !*** ./node_modules/events/events.js ***!
   \***************************************/
 /***/ ((module) => {
@@ -5309,7 +5310,7 @@ function once(emitter, name) {
 /***/ }),
 
 /***/ "./node_modules/feathers-localstorage/lib/index.js":
-/*!*********************************************************!*
+/*!*********************************************************!*\
   !*** ./node_modules/feathers-localstorage/lib/index.js ***!
   \*********************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -5415,7 +5416,7 @@ module.exports.Service = Service;
 /***/ }),
 
 /***/ "./node_modules/feathers-memory/lib/index.js":
-/*!***************************************************!*
+/*!***************************************************!*\
   !*** ./node_modules/feathers-memory/lib/index.js ***!
   \***************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -5566,7 +5567,7 @@ module.exports.Service = Service;
 /***/ }),
 
 /***/ "./node_modules/feathers-memory/node_modules/sift/src/index.js":
-/*!*********************************************************************!*
+/*!*********************************************************************!*\
   !*** ./node_modules/feathers-memory/node_modules/sift/src/index.js ***!
   \*********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -5574,9 +5575,9 @@ module.exports.Service = Service;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => /* binding */ sift,
-/* harmony export */   "compare": () => /* binding */ compare,
-/* harmony export */   "comparable": () => /* binding */ comparable
+/* harmony export */   "default": () => (/* binding */ sift),
+/* harmony export */   "compare": () => (/* binding */ compare),
+/* harmony export */   "comparable": () => (/* binding */ comparable)
 /* harmony export */ });
 /*
  *
@@ -6293,7 +6294,7 @@ function comparable(value) {
 /***/ }),
 
 /***/ "./node_modules/graceful-fs/clone.js":
-/*!*******************************************!*
+/*!*******************************************!*\
   !*** ./node_modules/graceful-fs/clone.js ***!
   \*******************************************/
 /***/ ((module) => {
@@ -6323,7 +6324,7 @@ function clone (obj) {
 /***/ }),
 
 /***/ "./node_modules/graceful-fs/graceful-fs.js":
-/*!*************************************************!*
+/*!*************************************************!*\
   !*** ./node_modules/graceful-fs/graceful-fs.js ***!
   \*************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -6687,7 +6688,7 @@ function retry () {
 /***/ }),
 
 /***/ "./node_modules/graceful-fs/legacy-streams.js":
-/*!****************************************************!*
+/*!****************************************************!*\
   !*** ./node_modules/graceful-fs/legacy-streams.js ***!
   \****************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -6815,7 +6816,7 @@ function legacy (fs) {
 /***/ }),
 
 /***/ "./node_modules/graceful-fs/polyfills.js":
-/*!***********************************************!*
+/*!***********************************************!*\
   !*** ./node_modules/graceful-fs/polyfills.js ***!
   \***********************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -7167,7 +7168,7 @@ function patch (fs) {
 /***/ }),
 
 /***/ "./node_modules/imurmurhash/imurmurhash.js":
-/*!*************************************************!*
+/*!*************************************************!*\
   !*** ./node_modules/imurmurhash/imurmurhash.js ***!
   \*************************************************/
 /***/ ((module) => {
@@ -7313,7 +7314,7 @@ function patch (fs) {
 /***/ }),
 
 /***/ "./node_modules/is-buffer/index.js":
-/*!*****************************************!*
+/*!*****************************************!*\
   !*** ./node_modules/is-buffer/index.js ***!
   \*****************************************/
 /***/ ((module) => {
@@ -7344,7 +7345,7 @@ function isSlowBuffer (obj) {
 /***/ }),
 
 /***/ "./node_modules/md5/md5.js":
-/*!*********************************!*
+/*!*********************************!*\
   !*** ./node_modules/md5/md5.js ***!
   \*********************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -7514,7 +7515,7 @@ function isSlowBuffer (obj) {
 /***/ }),
 
 /***/ "./node_modules/ms/index.js":
-/*!**********************************!*
+/*!**********************************!*\
   !*** ./node_modules/ms/index.js ***!
   \**********************************/
 /***/ ((module) => {
@@ -7686,7 +7687,7 @@ function plural(ms, msAbs, n, name) {
 /***/ }),
 
 /***/ "./node_modules/node-localstorage/LocalStorage.js":
-/*!********************************************************!*
+/*!********************************************************!*\
   !*** ./node_modules/node-localstorage/LocalStorage.js ***!
   \********************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
@@ -8048,7 +8049,7 @@ function plural(ms, msAbs, n, name) {
 /***/ }),
 
 /***/ "./node_modules/shortid/index.js":
-/*!***************************************!*
+/*!***************************************!*\
   !*** ./node_modules/shortid/index.js ***!
   \***************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -8061,7 +8062,7 @@ module.exports = __webpack_require__(/*! ./lib/index */ "./node_modules/shortid/
 /***/ }),
 
 /***/ "./node_modules/shortid/lib/alphabet.js":
-/*!**********************************************!*
+/*!**********************************************!*\
   !*** ./node_modules/shortid/lib/alphabet.js ***!
   \**********************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -8175,7 +8176,7 @@ module.exports = {
 /***/ }),
 
 /***/ "./node_modules/shortid/lib/build.js":
-/*!*******************************************!*
+/*!*******************************************!*\
   !*** ./node_modules/shortid/lib/build.js ***!
   \*******************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -8232,7 +8233,7 @@ module.exports = build;
 /***/ }),
 
 /***/ "./node_modules/shortid/lib/generate.js":
-/*!**********************************************!*
+/*!**********************************************!*\
   !*** ./node_modules/shortid/lib/generate.js ***!
   \**********************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -8264,7 +8265,7 @@ module.exports = generate;
 /***/ }),
 
 /***/ "./node_modules/shortid/lib/index.js":
-/*!*******************************************!*
+/*!*******************************************!*\
   !*** ./node_modules/shortid/lib/index.js ***!
   \*******************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -8337,7 +8338,7 @@ module.exports.isValid = isValid;
 /***/ }),
 
 /***/ "./node_modules/shortid/lib/is-valid.js":
-/*!**********************************************!*
+/*!**********************************************!*\
   !*** ./node_modules/shortid/lib/is-valid.js ***!
   \**********************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -8363,7 +8364,7 @@ module.exports = isShortId;
 /***/ }),
 
 /***/ "./node_modules/shortid/lib/random/random-byte-browser.js":
-/*!****************************************************************!*
+/*!****************************************************************!*\
   !*** ./node_modules/shortid/lib/random/random-byte-browser.js ***!
   \****************************************************************/
 /***/ ((module) => {
@@ -8395,7 +8396,7 @@ module.exports = randomByte;
 /***/ }),
 
 /***/ "./node_modules/shortid/lib/random/random-from-seed.js":
-/*!*************************************************************!*
+/*!*************************************************************!*\
   !*** ./node_modules/shortid/lib/random/random-from-seed.js ***!
   \*************************************************************/
 /***/ ((module) => {
@@ -8431,7 +8432,7 @@ module.exports = {
 /***/ }),
 
 /***/ "./node_modules/shortid/lib/util/cluster-worker-id-browser.js":
-/*!********************************************************************!*
+/*!********************************************************************!*\
   !*** ./node_modules/shortid/lib/util/cluster-worker-id-browser.js ***!
   \********************************************************************/
 /***/ ((module) => {
@@ -8445,7 +8446,7 @@ module.exports = 0;
 /***/ }),
 
 /***/ "./node_modules/shortid/node_modules/nanoid/format.browser.js":
-/*!********************************************************************!*
+/*!********************************************************************!*\
   !*** ./node_modules/shortid/node_modules/nanoid/format.browser.js ***!
   \********************************************************************/
 /***/ ((module) => {
@@ -8495,7 +8496,7 @@ module.exports = function (random, alphabet, size) {
 /***/ }),
 
 /***/ "./node_modules/sift/es5m/index.js":
-/*!*****************************************!*
+/*!*****************************************!*\
   !*** ./node_modules/sift/es5m/index.js ***!
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -8503,35 +8504,35 @@ module.exports = function (random, alphabet, size) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__,
-/* harmony export */   "$Size": () => /* binding */ $Size,
-/* harmony export */   "$all": () => /* binding */ $all,
-/* harmony export */   "$and": () => /* binding */ $and,
-/* harmony export */   "$elemMatch": () => /* binding */ $elemMatch,
-/* harmony export */   "$eq": () => /* binding */ $eq,
-/* harmony export */   "$exists": () => /* binding */ $exists,
-/* harmony export */   "$gt": () => /* binding */ $gt,
-/* harmony export */   "$gte": () => /* binding */ $gte,
-/* harmony export */   "$in": () => /* binding */ $in,
-/* harmony export */   "$lt": () => /* binding */ $lt,
-/* harmony export */   "$lte": () => /* binding */ $lte,
-/* harmony export */   "$mod": () => /* binding */ $mod,
-/* harmony export */   "$ne": () => /* binding */ $ne,
-/* harmony export */   "$nin": () => /* binding */ $nin,
-/* harmony export */   "$nor": () => /* binding */ $nor,
-/* harmony export */   "$not": () => /* binding */ $not,
-/* harmony export */   "$options": () => /* binding */ $options,
-/* harmony export */   "$or": () => /* binding */ $or,
-/* harmony export */   "$regex": () => /* binding */ $regex,
-/* harmony export */   "$size": () => /* binding */ $size,
-/* harmony export */   "$type": () => /* binding */ $type,
-/* harmony export */   "$where": () => /* binding */ $where,
-/* harmony export */   "EqualsOperation": () => /* binding */ EqualsOperation,
-/* harmony export */   "createDefaultQueryOperation": () => /* binding */ createDefaultQueryOperation,
-/* harmony export */   "createEqualsOperation": () => /* binding */ createEqualsOperation,
-/* harmony export */   "createOperationTester": () => /* binding */ createOperationTester,
-/* harmony export */   "createQueryOperation": () => /* binding */ createQueryOperation,
-/* harmony export */   "createQueryTester": () => /* binding */ createQueryTester
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "$Size": () => (/* binding */ $Size),
+/* harmony export */   "$all": () => (/* binding */ $all),
+/* harmony export */   "$and": () => (/* binding */ $and),
+/* harmony export */   "$elemMatch": () => (/* binding */ $elemMatch),
+/* harmony export */   "$eq": () => (/* binding */ $eq),
+/* harmony export */   "$exists": () => (/* binding */ $exists),
+/* harmony export */   "$gt": () => (/* binding */ $gt),
+/* harmony export */   "$gte": () => (/* binding */ $gte),
+/* harmony export */   "$in": () => (/* binding */ $in),
+/* harmony export */   "$lt": () => (/* binding */ $lt),
+/* harmony export */   "$lte": () => (/* binding */ $lte),
+/* harmony export */   "$mod": () => (/* binding */ $mod),
+/* harmony export */   "$ne": () => (/* binding */ $ne),
+/* harmony export */   "$nin": () => (/* binding */ $nin),
+/* harmony export */   "$nor": () => (/* binding */ $nor),
+/* harmony export */   "$not": () => (/* binding */ $not),
+/* harmony export */   "$options": () => (/* binding */ $options),
+/* harmony export */   "$or": () => (/* binding */ $or),
+/* harmony export */   "$regex": () => (/* binding */ $regex),
+/* harmony export */   "$size": () => (/* binding */ $size),
+/* harmony export */   "$type": () => (/* binding */ $type),
+/* harmony export */   "$where": () => (/* binding */ $where),
+/* harmony export */   "EqualsOperation": () => (/* binding */ EqualsOperation),
+/* harmony export */   "createDefaultQueryOperation": () => (/* binding */ createDefaultQueryOperation),
+/* harmony export */   "createEqualsOperation": () => (/* binding */ createEqualsOperation),
+/* harmony export */   "createOperationTester": () => (/* binding */ createOperationTester),
+/* harmony export */   "createQueryOperation": () => (/* binding */ createQueryOperation),
+/* harmony export */   "createQueryTester": () => (/* binding */ createQueryTester)
 /* harmony export */ });
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -8657,7 +8658,7 @@ var BaseOperation = /** @class */ (function () {
     BaseOperation.prototype.init = function () { };
     BaseOperation.prototype.reset = function () {
         this.done = false;
-        this.success = false;
+        this.keep = false;
     };
     return BaseOperation;
 }());
@@ -8680,7 +8681,7 @@ var GroupOperation = /** @class */ (function (_super) {
     /**
      */
     GroupOperation.prototype.reset = function () {
-        this.success = false;
+        this.keep = false;
         this.done = false;
         for (var i = 0, length_2 = this.children.length; i < length_2; i++) {
             this.children[i].reset();
@@ -8690,15 +8691,15 @@ var GroupOperation = /** @class */ (function (_super) {
      */
     GroupOperation.prototype.childrenNext = function (item, key, owner) {
         var done = true;
-        var success = true;
+        var keep = true;
         for (var i = 0, length_3 = this.children.length; i < length_3; i++) {
             var childOperation = this.children[i];
             childOperation.next(item, key, owner);
-            if (!childOperation.success) {
-                success = false;
+            if (!childOperation.keep) {
+                keep = false;
             }
             if (childOperation.done) {
-                if (!childOperation.success) {
+                if (!childOperation.keep) {
                     break;
                 }
             }
@@ -8706,9 +8707,8 @@ var GroupOperation = /** @class */ (function (_super) {
                 done = false;
             }
         }
-        // console.log("DONE", this.params, done, success);
         this.done = done;
-        this.success = success;
+        this.keep = keep;
     };
     return GroupOperation;
 }(BaseOperation));
@@ -8779,7 +8779,7 @@ var EqualsOperation = /** @class */ (function (_super) {
         if (!Array.isArray(parent) || parent.hasOwnProperty(key)) {
             if (this._test(item, key, parent)) {
                 this.done = true;
-                this.success = true;
+                this.keep = true;
             }
         }
     };
@@ -8793,7 +8793,7 @@ var NopeOperation = /** @class */ (function (_super) {
     }
     NopeOperation.prototype.next = function () {
         this.done = true;
-        this.success = false;
+        this.keep = false;
     };
     return NopeOperation;
 }(BaseOperation));
@@ -8880,7 +8880,7 @@ var createQueryOperations = function (query, options) {
 var createOperationTester = function (operation) { return function (item, key, owner) {
     operation.reset();
     operation.next(item, key, owner);
-    return operation.success;
+    return operation.keep;
 }; };
 var createQueryTester = function (query, options) {
     if (options === void 0) { options = {}; }
@@ -8897,12 +8897,12 @@ var $Ne = /** @class */ (function (_super) {
     };
     $Ne.prototype.reset = function () {
         _super.prototype.reset.call(this);
-        this.success = true;
+        this.keep = true;
     };
     $Ne.prototype.next = function (item) {
         if (this._test(item)) {
             this.done = true;
-            this.success = false;
+            this.keep = false;
         }
     };
     return $Ne;
@@ -8920,17 +8920,21 @@ var $ElemMatch = /** @class */ (function (_super) {
         _super.prototype.reset.call(this);
         this._queryOperation.reset();
     };
-    $ElemMatch.prototype.next = function (item, key, owner) {
-        this._queryOperation.reset();
-        if (isArray(owner)) {
-            this._queryOperation.next(item, key, owner);
-            this.done =
-                this.done || this._queryOperation.done || key === owner.length - 1;
-            this.success = this.success || this._queryOperation.success;
+    $ElemMatch.prototype.next = function (item) {
+        if (isArray(item)) {
+            for (var i = 0, length_1 = item.length; i < length_1; i++) {
+                // reset query operation since item being tested needs to pass _all_ query
+                // operations for it to be a success
+                this._queryOperation.reset();
+                // check item
+                this._queryOperation.next(item[i], i, item);
+                this.keep = this.keep || this._queryOperation.keep;
+            }
+            this.done = true;
         }
         else {
-            this.done = true;
-            this.success = false;
+            this.done = false;
+            this.keep = false;
         }
     };
     return $ElemMatch;
@@ -8949,7 +8953,7 @@ var $Not = /** @class */ (function (_super) {
     $Not.prototype.next = function (item, key, owner) {
         this._queryOperation.next(item, key, owner);
         this.done = this._queryOperation.done;
-        this.success = !this._queryOperation.success;
+        this.keep = !this._queryOperation.keep;
     };
     return $Not;
 }(NamedBaseOperation));
@@ -8959,11 +8963,15 @@ var $Size = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     $Size.prototype.init = function () { };
-    $Size.prototype.next = function (item, key, parent) {
-        if (parent && parent.length === this.params) {
+    $Size.prototype.next = function (item) {
+        if (isArray(item) && item.length === this.params) {
             this.done = true;
-            this.success = true;
+            this.keep = true;
         }
+        // if (parent && parent.length === this.params) {
+        //   this.done = true;
+        //   this.keep = true;
+        // }
     };
     return $Size;
 }(NamedBaseOperation));
@@ -8980,24 +8988,24 @@ var $Or = /** @class */ (function (_super) {
     };
     $Or.prototype.reset = function () {
         this.done = false;
-        this.success = false;
-        for (var i = 0, length_1 = this._ops.length; i < length_1; i++) {
+        this.keep = false;
+        for (var i = 0, length_2 = this._ops.length; i < length_2; i++) {
             this._ops[i].reset();
         }
     };
     $Or.prototype.next = function (item, key, owner) {
         var done = false;
         var success = false;
-        for (var i = 0, length_2 = this._ops.length; i < length_2; i++) {
+        for (var i = 0, length_3 = this._ops.length; i < length_3; i++) {
             var op = this._ops[i];
             op.next(item, key, owner);
-            if (op.success) {
+            if (op.keep) {
                 done = true;
-                success = op.success;
+                success = op.keep;
                 break;
             }
         }
-        this.success = success;
+        this.keep = success;
         this.done = done;
     };
     return $Or;
@@ -9009,7 +9017,7 @@ var $Nor = /** @class */ (function (_super) {
     }
     $Nor.prototype.next = function (item, key, owner) {
         _super.prototype.next.call(this, item, key, owner);
-        this.success = !this.success;
+        this.keep = !this.keep;
     };
     return $Nor;
 }($Or));
@@ -9030,7 +9038,7 @@ var $In = /** @class */ (function (_super) {
     $In.prototype.next = function (item, key, owner) {
         var done = false;
         var success = false;
-        for (var i = 0, length_3 = this._testers.length; i < length_3; i++) {
+        for (var i = 0, length_4 = this._testers.length; i < length_4; i++) {
             var test = this._testers[i];
             if (test(item)) {
                 done = true;
@@ -9038,7 +9046,7 @@ var $In = /** @class */ (function (_super) {
                 break;
             }
         }
-        this.success = success;
+        this.keep = success;
         this.done = done;
     };
     return $In;
@@ -9050,7 +9058,7 @@ var $Nin = /** @class */ (function (_super) {
     }
     $Nin.prototype.next = function (item, key, owner) {
         _super.prototype.next.call(this, item, key, owner);
-        this.success = !this.success;
+        this.keep = !this.keep;
     };
     return $Nin;
 }($In));
@@ -9062,7 +9070,7 @@ var $Exists = /** @class */ (function (_super) {
     $Exists.prototype.next = function (item, key, owner) {
         if (owner.hasOwnProperty(key) === this.params) {
             this.done = true;
-            this.success = true;
+            this.keep = true;
         }
     };
     return $Exists;
@@ -9104,13 +9112,6 @@ var $type = function (clazz, owneryQuery, options) {
 };
 var $and = function (params, ownerQuery, options, name) { return new $And(params, ownerQuery, options, name); };
 var $all = $and;
-// export const $size = (
-//   params: number,
-//   ownerQuery: Query<any>,
-//   options: Options
-// ) => new EqualsOperation(b => {
-//   return b && b.length === params;
-// }, ownerQuery, options);
 var $size = function (params, ownerQuery, options) { return new $Size(params, ownerQuery, options, "$size"); };
 var $options = function () { return null; };
 var $where = function (params, ownerQuery, options) {
@@ -9174,7 +9175,7 @@ var createDefaultQueryTester = function (query, options) {
 /***/ }),
 
 /***/ "./node_modules/slide/lib/async-map.js":
-/*!*********************************************!*
+/*!*********************************************!*\
   !*** ./node_modules/slide/lib/async-map.js ***!
   \*********************************************/
 /***/ ((module) => {
@@ -9238,7 +9239,7 @@ function asyncMap () {
 /***/ }),
 
 /***/ "./node_modules/slide/lib/bind-actor.js":
-/*!**********************************************!*
+/*!**********************************************!*\
   !*** ./node_modules/slide/lib/bind-actor.js ***!
   \**********************************************/
 /***/ ((module) => {
@@ -9264,7 +9265,7 @@ function bindActor () {
 /***/ }),
 
 /***/ "./node_modules/slide/lib/chain.js":
-/*!*****************************************!*
+/*!*****************************************!*\
   !*** ./node_modules/slide/lib/chain.js ***!
   \*****************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -9294,7 +9295,7 @@ function chain (things, cb) {
 /***/ }),
 
 /***/ "./node_modules/slide/lib/slide.js":
-/*!*****************************************!*
+/*!*****************************************!*\
   !*** ./node_modules/slide/lib/slide.js ***!
   \*****************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
@@ -9307,7 +9308,7 @@ exports.chain = __webpack_require__(/*! ./chain */ "./node_modules/slide/lib/cha
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/index.js":
-/*!*****************************************************!*
+/*!*****************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/index.js ***!
   \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -9315,15 +9316,15 @@ exports.chain = __webpack_require__(/*! ./chain */ "./node_modules/slide/lib/cha
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "v1": () => /* reexport safe */ _v1_js__WEBPACK_IMPORTED_MODULE_0__.default,
-/* harmony export */   "v3": () => /* reexport safe */ _v3_js__WEBPACK_IMPORTED_MODULE_1__.default,
-/* harmony export */   "v4": () => /* reexport safe */ _v4_js__WEBPACK_IMPORTED_MODULE_2__.default,
-/* harmony export */   "v5": () => /* reexport safe */ _v5_js__WEBPACK_IMPORTED_MODULE_3__.default,
-/* harmony export */   "NIL": () => /* reexport safe */ _nil_js__WEBPACK_IMPORTED_MODULE_4__.default,
-/* harmony export */   "version": () => /* reexport safe */ _version_js__WEBPACK_IMPORTED_MODULE_5__.default,
-/* harmony export */   "validate": () => /* reexport safe */ _validate_js__WEBPACK_IMPORTED_MODULE_6__.default,
-/* harmony export */   "stringify": () => /* reexport safe */ _stringify_js__WEBPACK_IMPORTED_MODULE_7__.default,
-/* harmony export */   "parse": () => /* reexport safe */ _parse_js__WEBPACK_IMPORTED_MODULE_8__.default
+/* harmony export */   "v1": () => (/* reexport safe */ _v1_js__WEBPACK_IMPORTED_MODULE_0__.default),
+/* harmony export */   "v3": () => (/* reexport safe */ _v3_js__WEBPACK_IMPORTED_MODULE_1__.default),
+/* harmony export */   "v4": () => (/* reexport safe */ _v4_js__WEBPACK_IMPORTED_MODULE_2__.default),
+/* harmony export */   "v5": () => (/* reexport safe */ _v5_js__WEBPACK_IMPORTED_MODULE_3__.default),
+/* harmony export */   "NIL": () => (/* reexport safe */ _nil_js__WEBPACK_IMPORTED_MODULE_4__.default),
+/* harmony export */   "version": () => (/* reexport safe */ _version_js__WEBPACK_IMPORTED_MODULE_5__.default),
+/* harmony export */   "validate": () => (/* reexport safe */ _validate_js__WEBPACK_IMPORTED_MODULE_6__.default),
+/* harmony export */   "stringify": () => (/* reexport safe */ _stringify_js__WEBPACK_IMPORTED_MODULE_7__.default),
+/* harmony export */   "parse": () => (/* reexport safe */ _parse_js__WEBPACK_IMPORTED_MODULE_8__.default)
 /* harmony export */ });
 /* harmony import */ var _v1_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./v1.js */ "./node_modules/uuid/dist/esm-browser/v1.js");
 /* harmony import */ var _v3_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./v3.js */ "./node_modules/uuid/dist/esm-browser/v3.js");
@@ -9347,7 +9348,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/md5.js":
-/*!***************************************************!*
+/*!***************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/md5.js ***!
   \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -9355,7 +9356,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /*
  * Browser-compatible JavaScript MD5
@@ -9576,7 +9577,7 @@ function md5ii(a, b, c, d, x, s, t) {
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/nil.js":
-/*!***************************************************!*
+/*!***************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/nil.js ***!
   \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -9584,14 +9585,14 @@ function md5ii(a, b, c, d, x, s, t) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ('00000000-0000-0000-0000-000000000000');
 
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/parse.js":
-/*!*****************************************************!*
+/*!*****************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/parse.js ***!
   \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -9599,7 +9600,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validate.js */ "./node_modules/uuid/dist/esm-browser/validate.js");
 
@@ -9641,7 +9642,7 @@ function parse(uuid) {
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/regex.js":
-/*!*****************************************************!*
+/*!*****************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/regex.js ***!
   \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -9649,14 +9650,14 @@ function parse(uuid) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i);
 
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/rng.js":
-/*!***************************************************!*
+/*!***************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/rng.js ***!
   \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -9664,7 +9665,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => /* binding */ rng
+/* harmony export */   "default": () => (/* binding */ rng)
 /* harmony export */ });
 // Unique ID creation requires a high quality random # generator. In the browser we therefore
 // require the crypto API and do not support built-in fallback to lower quality random number
@@ -9689,7 +9690,7 @@ function rng() {
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/sha1.js":
-/*!****************************************************!*
+/*!****************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/sha1.js ***!
   \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -9697,7 +9698,7 @@ function rng() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 // Adapted from Chris Veness' SHA1 code at
 // http://www.movable-type.co.uk/scripts/sha1.html
@@ -9799,7 +9800,7 @@ function sha1(bytes) {
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/stringify.js":
-/*!*********************************************************!*
+/*!*********************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/stringify.js ***!
   \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -9807,7 +9808,7 @@ function sha1(bytes) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validate.js */ "./node_modules/uuid/dist/esm-browser/validate.js");
 
@@ -9844,7 +9845,7 @@ function stringify(arr) {
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/v1.js":
-/*!**************************************************!*
+/*!**************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/v1.js ***!
   \**************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -9852,7 +9853,7 @@ function stringify(arr) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _rng_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./rng.js */ "./node_modules/uuid/dist/esm-browser/rng.js");
 /* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist/esm-browser/stringify.js");
@@ -9955,7 +9956,7 @@ function v1(options, buf, offset) {
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/v3.js":
-/*!**************************************************!*
+/*!**************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/v3.js ***!
   \**************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -9963,7 +9964,7 @@ function v1(options, buf, offset) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _v35_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./v35.js */ "./node_modules/uuid/dist/esm-browser/v35.js");
 /* harmony import */ var _md5_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./md5.js */ "./node_modules/uuid/dist/esm-browser/md5.js");
@@ -9975,7 +9976,7 @@ var v3 = (0,_v35_js__WEBPACK_IMPORTED_MODULE_0__.default)('v3', 0x30, _md5_js__W
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/v35.js":
-/*!***************************************************!*
+/*!***************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/v35.js ***!
   \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -9983,9 +9984,9 @@ var v3 = (0,_v35_js__WEBPACK_IMPORTED_MODULE_0__.default)('v3', 0x30, _md5_js__W
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "DNS": () => /* binding */ DNS,
-/* harmony export */   "URL": () => /* binding */ URL,
-/* harmony export */   "default": () => /* export default binding */ __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "DNS": () => (/* binding */ DNS),
+/* harmony export */   "URL": () => (/* binding */ URL),
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist/esm-browser/stringify.js");
 /* harmony import */ var _parse_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./parse.js */ "./node_modules/uuid/dist/esm-browser/parse.js");
@@ -10057,7 +10058,7 @@ var URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/v4.js":
-/*!**************************************************!*
+/*!**************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/v4.js ***!
   \**************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -10065,7 +10066,7 @@ var URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _rng_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./rng.js */ "./node_modules/uuid/dist/esm-browser/rng.js");
 /* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist/esm-browser/stringify.js");
@@ -10097,7 +10098,7 @@ function v4(options, buf, offset) {
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/v5.js":
-/*!**************************************************!*
+/*!**************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/v5.js ***!
   \**************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -10105,7 +10106,7 @@ function v4(options, buf, offset) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _v35_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./v35.js */ "./node_modules/uuid/dist/esm-browser/v35.js");
 /* harmony import */ var _sha1_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sha1.js */ "./node_modules/uuid/dist/esm-browser/sha1.js");
@@ -10117,7 +10118,7 @@ var v5 = (0,_v35_js__WEBPACK_IMPORTED_MODULE_0__.default)('v5', 0x50, _sha1_js__
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/validate.js":
-/*!********************************************************!*
+/*!********************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/validate.js ***!
   \********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -10125,7 +10126,7 @@ var v5 = (0,_v35_js__WEBPACK_IMPORTED_MODULE_0__.default)('v5', 0x50, _sha1_js__
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regex.js */ "./node_modules/uuid/dist/esm-browser/regex.js");
 
@@ -10139,7 +10140,7 @@ function validate(uuid) {
 /***/ }),
 
 /***/ "./node_modules/uuid/dist/esm-browser/version.js":
-/*!*******************************************************!*
+/*!*******************************************************!*\
   !*** ./node_modules/uuid/dist/esm-browser/version.js ***!
   \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -10147,7 +10148,7 @@ function validate(uuid) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validate.js */ "./node_modules/uuid/dist/esm-browser/validate.js");
 
@@ -10165,7 +10166,7 @@ function version(uuid) {
 /***/ }),
 
 /***/ "./node_modules/write-file-atomic/index.js":
-/*!*************************************************!*
+/*!*************************************************!*\
   !*** ./node_modules/write-file-atomic/index.js ***!
   \*************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -10306,7 +10307,7 @@ function writeFileSync (filename, data, options) {
 /***/ }),
 
 /***/ "?b0c0":
-/*!************************!*
+/*!************************!*\
   !*** assert (ignored) ***!
   \************************/
 /***/ (() => {
@@ -10316,7 +10317,7 @@ function writeFileSync (filename, data, options) {
 /***/ }),
 
 /***/ "?4c81":
-/*!***************************!*
+/*!***************************!*\
   !*** constants (ignored) ***!
   \***************************/
 /***/ (() => {
@@ -10326,7 +10327,7 @@ function writeFileSync (filename, data, options) {
 /***/ }),
 
 /***/ "?65c5":
-/*!********************!*
+/*!********************!*\
   !*** fs (ignored) ***!
   \********************/
 /***/ (() => {
@@ -10336,7 +10337,7 @@ function writeFileSync (filename, data, options) {
 /***/ }),
 
 /***/ "?0f27":
-/*!**********************!*
+/*!**********************!*\
   !*** path (ignored) ***!
   \**********************/
 /***/ (() => {
@@ -10346,7 +10347,7 @@ function writeFileSync (filename, data, options) {
 /***/ }),
 
 /***/ "?cc48":
-/*!************************!*
+/*!************************!*\
   !*** stream (ignored) ***!
   \************************/
 /***/ (() => {
@@ -10356,7 +10357,7 @@ function writeFileSync (filename, data, options) {
 /***/ }),
 
 /***/ "?0bed":
-/*!**********************!*
+/*!**********************!*\
   !*** util (ignored) ***!
   \**********************/
 /***/ (() => {
@@ -10417,7 +10418,7 @@ function writeFileSync (filename, data, options) {
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */

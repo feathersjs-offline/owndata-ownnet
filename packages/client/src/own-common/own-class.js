@@ -9,14 +9,6 @@ import snapshot from '../snapshot';
 
 const debug = require('debug')('@feathersjs-offline:ownclass:service-base');
 
-if (typeof localStorage === 'undefined') {
-  debug('Simulating localStorage...');
-  let LocalStorage = require('node-localstorage').LocalStorage;
-  global.localStorage = new LocalStorage('./.scratch');
-}
-else {
-  debug('Utilizing built-in localStorage');
-}
 
 const defaultOptions = {
   'id': 'id',
@@ -83,6 +75,15 @@ class OwnClass extends AdapterService {
       return;
     }
     this._setupPerformed = true;
+
+    if (typeof localStorage === 'undefined') {
+      debug('Simulating localStorage...');
+      let LocalStorage = require('node-localstorage').LocalStorage;
+      global.localStorage = new LocalStorage('./.scratch');
+    }
+    else {
+      debug('Utilizing built-in localStorage');
+    }
 
     this.options = this.wrapperOptions;
 
