@@ -20,11 +20,11 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 7
         .configure(rest(rest.formatter))
         .use(express.json())
         .use(serviceName, {
-          async get(id) {
+          async get (id) {
             return { id, get: 'ok' };
           },
 
-          async create(data) {
+          async create (data) {
             let myData = JSON.parse(JSON.stringify(data));
             myData.create = 'ok';
             return myData;
@@ -35,7 +35,6 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 7
     });
 
     afterEach(done => server.close(done));
-
 
     it('can call service', async () => {
       wrapperFn(app, serviceName, {});

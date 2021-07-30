@@ -4,8 +4,9 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 
+## [1.1.0](http://github.com/feathersjs-offline/owndata-ownnet/packages/server/compare/v1.0.7...v1.0.8) (2021-07-30)
 
-
+**Note:** Version bump only for package @feathersjs-offline/server
 
 ## [1.0.8](http://github.com/feathersjs-offline/owndata-ownnet/packages/server/compare/v1.0.7...v1.0.8) (2021-07-17)
 
