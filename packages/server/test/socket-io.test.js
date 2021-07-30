@@ -6,8 +6,6 @@ const socketio = require('@feathersjs/socketio');
 const socketioClient = require('@feathersjs/socketio-client');
 const { realtimeWrapper } = require('../src');
 
-
-
 let desc = 'RealtimeWrapper socket.io support';
 let wrapperFn = realtimeWrapper;
 let serviceName = 'codes';
@@ -20,17 +18,16 @@ describe(desc, () => {
   let cApp = null;
   let server = null;
 
-
   beforeEach(done => {
     app = feathers();
     app.configure(socketio());
 
     app.use(serviceName, {
-      async get(id) {
+      async get (id) {
         return Promise.resolve({ id, get: 'ok' });
       },
 
-      async create(data) {
+      async create (data) {
         let myData = JSON.parse(JSON.stringify(data));
         myData.create = 'ok';
         return Promise.resolve(myData);

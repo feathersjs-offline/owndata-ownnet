@@ -103,7 +103,7 @@ describe('RealtimeServerWrapper', () => {
       let passedPath;
 
       app.use(path, {
-        setup(app, path) {
+        setup (app, path) {
           setupCalled = true;
           passedApp = app;
           passedPath = path
@@ -126,11 +126,11 @@ describe('RealtimeServerWrapper', () => {
       let setupCalled = false;
 
       app.use(path, {
-        setup(app, path) {
+        setup (app, path) {
           setupCalled = true;
         },
-        find(params) {
-          return [{ data: { id: 1, text: "You won!" } }]
+        find (params) {
+          return [{ data: { id: 1, text: 'You won!' } }]
         }
       });
       app.service(path).hooks({
@@ -154,7 +154,6 @@ describe('RealtimeServerWrapper', () => {
         })
     });
   });
-
 
   describe('real-life tests', () => {
     // Let's perform all the usual adapter tests to verify full functionality
@@ -673,7 +672,7 @@ describe('RealtimeServerWrapper', () => {
 
 // Helpers
 
-function delay(ms = 0) {
+function delay (ms = 0) {
   return data => new Promise(resolve => {
     setTimeout(() => {
       resolve(data);

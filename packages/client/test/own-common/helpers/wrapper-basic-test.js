@@ -104,7 +104,6 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
         expect(flag).to.equal('OK', `Unexpectedly failed to ignore multiple setup() err=${err.name}, ${err.message}`);
       });
 
-
       it('should setup wrapped service', async () => {
         app = feathers();
 
@@ -113,7 +112,7 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
         let passedPath;
 
         app.use(serviceName, {
-          setup(app, path) {
+          setup (app, path) {
             setupCalled = true;
             passedApp = app;
             passedPath = path
@@ -136,11 +135,11 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
         let setupCalled = false;
 
         app.use(serviceName, {
-          setup(app, path) {
+          setup (app, path) {
             setupCalled = true;
           },
           find (params) {
-            return [ { data: {id: 1, text: "You won!"} } ]
+            return [ { data: {id: 1, text: 'You won!'} } ]
           }
         });
         app.service(serviceName).hooks({
