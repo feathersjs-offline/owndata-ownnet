@@ -9,6 +9,9 @@ const eventsTests = require('./own-common/helpers/events-test');
 const localStorageTests = require('./own-common/helpers/local-storage-test');
 const restTests = require('./own-common/helpers/rest-test');
 const socketioTests = require('./own-common/helpers/socket-io-test');
+let LocalStorage = require('node-localstorage').LocalStorage;
+global.localStorage = new LocalStorage('./.scratch');
+
 const { Ownnet, ownnetWrapper } = require('../src/ownnet');
 
 let package = 'ownnet';
