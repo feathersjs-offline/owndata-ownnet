@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](http://github.com/feathersjs-offline/compare/v1.1.0...v1.1.1) (2021-08-01)
+
+**Note:** Version bump only for package feathersjs-offline
+
 ## [1.1.0](http://github.com/feathersjs-offline/compare/v1.0.7...v1.0.8) (2021-07-30)
 
 **Note:** Version bump only for package feathersjs-offline
