@@ -134,26 +134,44 @@ class OwnClass extends AdapterService {
     this.aIP = 0; // Our semaphore for internal processing
     this.pQActive = false; // Our flag for avoiding more than one processing of queued operations at a time
 
+    // Setup syncDB functions
+    //   (localStorage is sync and React AsyncStorage is async so we
+    //    coerce the chosen storage to be async...)
+    debug(`  Setting up syncDB functions...`);
+    this.syncDB = {};
+    this.syncDB.getItem = (async (key) => this.storage.getItem(key));
+    this.syncDB.setItem = (async (key, value) => this.storage.setItem(key, value));
+
     // Determine latest registered sync timestamp
-    this.syncedAt = new Date(this.storage.getItem(this.thisName+'_syncedAt') || 0).toISOString();
-    this.storage.setItem(this.thisName+'_syncedAt', new Date(this.syncedAt).toISOString());
+    debug(`  Determine latest registered sync timestamp (if any)...`);
+    this.syncDB.getItem(this.thisName + '_syncedAt')
+      .then(value => {
+        this.syncedAt = Date(value || 0).toISOString();
+        this.syncDB.setItem(this.thisName + '_syncedAt', new Date(this.syncedAt).toISOString());
+      })
+      .catch(err => {
+        throw new errors.GeneralError(`Could not access syncDB to read syncedAt. err=${err.name}: ${err.message}`);
+      })
 
     // This is necessary if we get updates to options (e.g. .options.multi = ['patch'])
     if (!(this.remoteService instanceof AdapterService)) {
+      debug(`  Listen for updates to wrapped service options...`);
       this._listenOptions();
     }
 
     // Make sure that the wrapped service is setup correctly
     if (typeof this.remoteService.setup === 'function') {
+      debug(`  Calling setup() of wrapped service...`);
       this.remoteService.setup(app, path);
     }
 
     // Should we perform a sync every timedSync?
     if (this.options.timedSync && Number.isInteger(this.options.timedSync) && this.options.timedSync > 0) {
+      debug(`  Setup timed synchronization every ${self.options.timedSync} ms...`);
       this._timedSyncHandle = setInterval(() => self.sync(), self.options.timedSync);
     }
 
-    debug('  Done.');
+    debug('Done.');
     return true;
   }
 
@@ -688,7 +706,10 @@ class OwnClass extends AdapterService {
     }));
 
     // Save last sync timestamp
-    this.storage.setItem(this.thisName+'_syncedAt', new Date(syncTS).toISOString());
+    this.syncDB.setItem(this.thisName + '_syncedAt', new Date(syncTS).toISOString())
+      .catch(err => {
+        throw new errors.GeneralError(`Could not access syncDB to write syncedAt. err=${err.name}: ${err.message}`);
+      });
 
     if (result) // Wait until internal Processing is ok
       while (!await this._processQueuedEvents()) {
