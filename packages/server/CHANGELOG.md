@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.0.0](http://github.com/feathersjs-offline/owndata-ownnet/packages/client/compare/v2.0.0...v1.1.1) (2021-10-08)
+## [2.0.0](http://github.com/feathersjs-offline/owndata-ownnet/packages/client/compare/v2.0.0...v1.1.1) (2021-10-23)
 
 Added option for  automatically convert ISO-formatted date strings in result sets to proper `Date` objects.
 
