@@ -1,6 +1,6 @@
 import { stripSlashes } from '@feathersjs/commons';
 import errors from '@feathersjs/errors';
-import { to } from '../common';
+import { to, clone } from '../common';
 import OwnClass from '../own-common';
 
 const debug = require('debug')('@feathersjs-offline:owndata:service-wrapper');
@@ -20,25 +20,25 @@ class OwndataClass extends OwnClass {
 
   async _processQueuedEvents () {
     debug(`processQueuedEvents (${this.type}) entered`);
+    const self = this;
     if(!this.internalProcessingAllowed() || this.pQActive) {
       // console.log(`processingQueuedEvents: internalProcessing (aIP=${this.aIP}), pQActive=${this.pQActive}`);
       return false;
     }
     this.pQActive = true;
 
-    let [err, store] = await to(this.localQueue.getEntries({query:{$sort: {[this.id]: 1}}}));
-    if (!store || store === []) {
+    let [err, store] = await to(this.localQueue.getEntries({ query: { $sort: { [this.id]: 1 } } }));
+    if (err || store.length === 0) {
       this.pQActive = false;
       return true;
     }
 
     debug(`  processing ${store.length} queued entries...`);
-    let self = this;
     let stop = false;
     while (store.length && !stop) {
       let el = store.shift();
       let { eventName, record, arg1, arg2, arg3 = null, id } = el;
-      ({eventName, el, arg1, arg2, arg3, id} = _accEvent(this.id, eventName, record, arg1, arg2, arg3, id));
+      ({ eventName, el, arg1, arg2, arg3, id } = _accEvent(self.id, eventName, record, arg1, arg2, arg3, id));
 
       debug(`    processing: event=${eventName}, arg1=${JSON.stringify(arg1)}, arg2=${JSON.stringify(arg2)}, arg3=${JSON.stringify(arg3)}`)
       await self.remoteService[eventName](arg1, arg2, arg3)
@@ -100,7 +100,7 @@ let Owndata = init;
  *
  */
 function owndataWrapper (app, path, options = {}) {
-  debug(`owndataWrapper started on path '${path}'`)
+  debug(`owndataWrapper started on path '${path}' with options '${JSON.stringify(options)}'`);
   if (!(app && app.version && app.service && app.services) ) {
     throw new errors.Unavailable(`The FeathersJS app must be supplied as first argument`);
   }
@@ -112,12 +112,15 @@ function owndataWrapper (app, path, options = {}) {
     throw new errors.Unavailable(`No prior service registered on path '${location}'`);
   }
 
-  let opts = Object.assign({}, old.options, options);
+  let oldOpts = clone(old.options || {});
+  let { storage, ...rest } = oldOpts;
+  oldOpts = rest;
+  let opts = Object.assign({}, oldOpts, options);
   app.use(location, Owndata(opts));
   let service = app.service(location);
   service.options = opts;
   service._listenOptions();
-
+  
   return service;
 }
 

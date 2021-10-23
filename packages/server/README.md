@@ -23,6 +23,7 @@ npm install '@feathersjs-offline/server' --save
 All options available for the wrapped adapter can be used in addition to:
 
 - `useShortUuid` (optional, default `true`) - Generate short `uuid`s. If `false` long `uuid`s are generated. This option should match whatever you choose on the client.
+- `dates` (optional, default `false`) - Automatically convert ISO-formatted date strings in result sets to proper `Date` objects.
 - `adapterTest` (optional, default `false`) - This is usually only used for running adapter tests as it suppresses the generation of `uuid`, and updating of `onServerAt`.
 
 ## Documentation

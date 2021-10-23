@@ -91,7 +91,7 @@ describe('Common tests - test of common functions', () => {
         it('long uuid', () => {
           let uuid1 = genUuid(false);
           let uuid2 = genUuid(false);
-            expect(uuid1.length).to.equal(36, 'long uuid length is wrong');
+            expect(uuid1.length).to.equal(21, 'long uuid length is wrong');
           expect(uuid1).to.not.equal(uuid2, 'the two uuids are identical');
         });
       });

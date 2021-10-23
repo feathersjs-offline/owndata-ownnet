@@ -12,20 +12,15 @@ let app;
 
 module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
 
-  let app = _app;
-
   describe(`${test} - client only`, () => {
 
     after(() => {
       console.log('\n');
     });
 
-    beforeEach(() => {
-    });
-
     describe('Parameter and registration tests', () => {
       it('fails with missing prior registration', () => {
-        app = feathers();
+        let app = feathers();
         let path = newServicePath();
         try {
           wrapper(app, path, { someDummyOption: 1 });
@@ -35,7 +30,7 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
       });
 
       it('fails with missing or wrong app', () => {
-        app = feathers();
+        let app = feathers();
         let path = newServicePath();
         app.use(path, memory());
         app.service(path);
@@ -72,14 +67,12 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
       });
 
       it('basic functionality', () => {
-        app = feathers();
         expect(typeof wrapper).to.equal('function', 'is a function');
         let obj = service1(wrapper);
         expect(typeof obj).to.equal('object', 'is an object');
       });
 
       it('configure (default)', () => {
-        app = feathers()
         service1(wrapper);
       });
 
@@ -104,16 +97,15 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
         expect(flag).to.equal('OK', `Unexpectedly failed to ignore multiple setup() err=${err.name}, ${err.message}`);
       });
 
-
       it('should setup wrapped service', async () => {
-        app = feathers();
+        let app = feathers();
 
         let setupCalled = false;
         let passedApp;
         let passedPath;
 
         app.use(serviceName, {
-          setup(app, path) {
+          setup (app, path) {
             setupCalled = true;
             passedApp = app;
             passedPath = path
@@ -122,25 +114,25 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
         wrapper(app, serviceName, {});
 
         // Force setup now
-        await delay(20)();
-        await app.service(serviceName).setup(app, serviceName);
-
-        expect(setupCalled).to.equal(true, 'setup was called');
-        expect(typeof passedApp).to.equals('object', 'app argument was passed');
-        expect(passedPath).to.equal(serviceName, 'path argument was passed');
+        app.service(serviceName).find()
+          .then(_res => {
+            expect(setupCalled).to.equal(true, 'setup was called');
+            expect(typeof passedApp).to.equals('object', 'app argument was passed');
+            expect(passedPath).to.equal(serviceName, 'path argument was passed');
+          });
       });
 
       it('should call wrapped service hooks', async () => {
-        app = feathers();
+        let app = feathers();
 
         let setupCalled = false;
 
         app.use(serviceName, {
-          setup(app, path) {
+          setup (app, path) {
             setupCalled = true;
           },
           find (params) {
-            return [ { data: {id: 1, text: "You won!"} } ]
+            return [ { data: {id: 1, text: 'You won!'} } ]
           }
         });
         app.service(serviceName).hooks({
@@ -160,7 +152,7 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
             expect(setupCalled).to.equal(true, 'setup was called');
             expect(res.data.id).to.equal(1, 'service was called');
             expect(res.data.fromHook).to.equals('You were here', 'service called hook');
-            expect(res.data.updatedAt).to.equal('string', 'updatedAt was added');
+            expect(typeof res.data.updatedAt).to.equal('object', 'updatedAt was added');
            })
       });
 
@@ -170,21 +162,21 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
         return service.create({ id: 99, order: 99 })
           .then(data => {
             expect(typeof data.uuid).to.equal('string', 'uuid was added');
-            expect(typeof data.updatedAt).to.equal('string', 'updatedAt was added');
-            expect(typeof data.onServerAt).to.equal('string', 'onServerAt was added');
+            expect(typeof data.updatedAt).to.equal('object', 'updatedAt was added');
+            expect(typeof data.onServerAt).to.equal('object', 'onServerAt was added');
           })
       });
 
       it('fixed name works', () => {
-        app = feathers();
+        let app = feathers();
         app.use(serviceName, memory({ multi: true }));
         let service = wrapper(app, serviceName, { fixedName: 'NameFixed' });
 
         return service.create({ id: 99, order: 99 })
           .then(data => {
             expect(typeof data.uuid).to.equal('string', 'uuid was added');
-            expect(typeof data.updatedAt).to.equal('string', 'updatedAt was added');
-            expect(typeof data.onServerAt).to.equal('string', 'onServerAt was added');
+            expect(typeof data.updatedAt).to.equal('object', 'updatedAt was added');
+            expect(typeof data.onServerAt).to.equal('object', 'onServerAt was added');
           })
       });
 

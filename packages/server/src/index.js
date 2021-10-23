@@ -1,17 +1,24 @@
 // Main module for server
-import EventEmitter from 'component-emitter';
-import sift from 'sift';
 import { sorter, select, AdapterService } from '@feathersjs/adapter-commons';
 import { _, hooks, stripSlashes } from '@feathersjs/commons';
 import errors from '@feathersjs/errors';
+import EventEmitter from 'component-emitter';
+import cloneDeep from 'lodash/cloneDeep';
+import sift from 'sift';
 import { genUuid } from './cryptographic';
 import to from './to';
+import stringsToDates from './strings-to-dates';
+import { stripProps } from './misc';
+
 const debug = require('debug')('@feathersjs-offline:server:index');
 
 const defOptions = {
   useShortUuid: true,
-  adapterTest: false
+  adapterTest: false,
+  dates: false
 };
+
+const BOT = new Date(0);
 
 /**
  * A RealtimeServiceWrapper is a SERVER adapter wrapping a standard AdapterService to ensure all records/documents
@@ -45,12 +52,14 @@ class RealtimeClass extends AdapterService {
 
     this.options = this.wrapperOptions;
 
+    this._dates = this.options.dates;
+
     let self = this;
 
     // Now we are ready to define the path with its underlying service (the remoteService)
     let old = app.service(path);
     if (old !== self) {
-      this.remoteService = old || app.service(path); // We want to get the default service (redirects to server or points to a local service)
+      this.wrappedService = old || app.service(path); // We want to get the default service (redirects to server or points to a local service)
       app.use(path, self);  // Install this service instance
     }
 
@@ -80,13 +89,13 @@ class RealtimeClass extends AdapterService {
     this.listening = false;
 
     // This is necessary if we get updates to options (e.g. .options.multi = ['patch'])
-    if (!(this.remoteService instanceof AdapterService)) {
+    if (!(this.wrappedService instanceof AdapterService)) {
       this._listenOptions();
     }
 
     // Make sure that the wrapped service is setup correctly
-    if (typeof this.remoteService.setup === 'function') {
-      this.remoteService.setup(app, path);
+    if (typeof this.wrappedService.setup === 'function') {
+      this.wrappedService.setup(app, path);
     }
 
     debug('  Done.');
@@ -100,30 +109,41 @@ class RealtimeClass extends AdapterService {
 
     this.options = observe(Object.assign(
       {},
-      this.remoteService.options ? this.remoteService.options : {},
+      this.wrappedService.options ? this.wrappedService.options : {},
       self.options
     ));
     watcher(() => {
       // Update all changes to 'this.options' in both localService and remoteService
-      self.remoteService.options = Object.assign({}, self.remoteService.options, self.options);
+      self.wrappedService.options = Object.assign({}, self.wrappedService.options, self.options);
     });
 
   }
 
+  // Allow access to our internal services (e.g. for application hooks). Use with care!
+  get wrapped () {
+    return this.wrappedService;
+  }
+  
   async _get (id, params) {
     const { newParams, offline } = fixParams(params);
     debug(`Calling _get(${id}, ${JSON.stringify(newParams)}) params=${JSON.stringify(params)}`);
-    return this.remoteService.get(id, newParams)
+    return this.wrappedService.get(id, newParams)
       .then(this._strip)
-      .then(this._select(newParams));
+      .then(this._select(newParams))
+      .then(stringsToDates(this._dates));
     }
 
   async _find (params) {
     const { newParams, offline } = fixParams(params);
-    debug(`Calling _find(${JSON.stringify(newParams)})`);
-    return this.remoteService.find(newParams)
+    debug(`Calling _find(${JSON.stringify(newParams)}), offline=${JSON.stringify(offline)}, query was=${JSON.stringify(params.query ? params.query : {})}`);
+    return this.wrappedService.find(newParams)
       .then(this._strip)
-      .then(this._select(newParams));
+      .then(this._select(newParams))
+      .then(stringsToDates(this._dates))
+      .then(result => {
+        debug(`Find result=${JSON.stringify(result)}`);
+        return result;
+      });
     }
 
   async _create (data, params = {}, ts = null) {
@@ -136,7 +156,7 @@ class RealtimeClass extends AdapterService {
 
     ts = ts || new Date();
 
-    let newData = clone(data);
+    let newData = cloneDeep(data);
 
     // We require a 'uuid' attribute along with 'updatedAt' and 'onServerAt'
     if (!('uuid' in newData)) {
@@ -151,16 +171,17 @@ class RealtimeClass extends AdapterService {
 
     let myParams = Object.assign({}, params, { dummy: 123});
 
-    return this.remoteService.create(newData, myParams)
+    return this.wrappedService.create(newData, newParams)
       .then(this._strip)
-      .then(this._select(newParams));
+      .then(this._select(newParams))
+      .then(stringsToDates(this._dates));
     }
 
   async _update (id, data, params) {
     debug(`Calling _update(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)})`);
     const { newParams, offline } = fixParams(params);
-    let newData = clone(data);
-    let active = await this.remoteService.get(id, newParams);
+    let newData = cloneDeep(data);
+    let active = await this.wrappedService.get(id, newParams);
 
     if (!('uuid' in newData)) {
       newData.uuid = active.uuid;
@@ -174,9 +195,10 @@ class RealtimeClass extends AdapterService {
         .then(this._strip);
     } else {
       newData.onServerAt = new Date();
-      return this.remoteService.update(id, newData, newParams)
+      return this.wrappedService.update(id, newData, newParams)
         .then(this._strip)
-        .then(this._select(newParams));
+        .then(this._select(newParams))
+        .then(stringsToDates(this._dates));
       }
   }
 
@@ -189,11 +211,11 @@ class RealtimeClass extends AdapterService {
         throw new errors.MethodNotAllowed('Patching multiple without option \'multi\' set');
       }
       const ts = new Date();
-      return this.remoteService.find(newParams).then(page => {
+      return this.wrappedService.find(newParams).then(page => {
         const res = page.data ? page.data : page;
-        if (!Array.isArray(res)) {
-          res = [res];
-        }
+        // if (!Array.isArray(res)) {
+        //   res = [res];
+        // }
 
         const self = this;
         return Promise.all(res.map(
@@ -202,17 +224,18 @@ class RealtimeClass extends AdapterService {
       })
     }
 
-    let newData = clone(data);
-    let active = await this.remoteService.get(id, newParams);
+    let newData = cloneDeep(data);
+    let active = await this.wrappedService.get(id, newParams);
     if (new Date(active.onServerAt).getTime() > newData.updatedAt) {
       return Promise.resolve(active)
         .then(this._strip)
         .then(this._select(newParams));
       } else {
       newData.onServerAt = ts || new Date();
-      return this.remoteService.patch(id, newData, newParams)
+      return this.wrappedService.patch(id, newData, newParams)
         .then(this._strip)
-        .then(this._select(params));
+        .then(this._select(params))
+        .then(stringsToDates(this._dates));
       }
   }
 
@@ -225,11 +248,11 @@ class RealtimeClass extends AdapterService {
         throw new errors.MethodNotAllowed('Removing multiple without option \'multi\' set');
       }
       const ts = new Date();
-      return this.remoteService.find(newParams).then(page => {
+      return this.wrappedService.find(newParams).then(page => {
         const res = page.data ? page.data : page;
-        if (!Array.isArray(res)) {
-          res = [res];
-        }
+        // if (!Array.isArray(res)) {
+        //   res = [res];
+        // }
 
         const self = this;
         return Promise.all(res.map(
@@ -240,17 +263,18 @@ class RealtimeClass extends AdapterService {
 
     ts = ts || new Date();
 
-    if (offline && '_forceAll' in offline) {
-      return this.remoteService.remove(id, newParams)
+    if (offline && offline._forceAll) {
+      return this.wrappedService.remove(id, newParams)
         .then(this._strip)
         .then(this._select(newParams));
       } else {
-      return this.remoteService.patch(id, { deletedAt: ts }, newParams)
+      return this.wrappedService.patch(id, { deletedAt: ts }, newParams)
         .then(res => {
           return res;
         })
         .then(this._strip)
-        .then(this._select(newParams));
+        .then(this._select(newParams))
+        .then(stringsToDates(this._dates));
     }
   }
 };
@@ -302,7 +326,7 @@ function realtimeWrapper (app, path, options = {}) {
   service = app.service(location);
   service.options = opts;
   service._listenOptions();
-  service.remoteService = old;
+  service.wrappedService = old;
 
   return service;
 }
@@ -311,83 +335,53 @@ module.exports = { init, Realtime, realtimeWrapper };
 
 // --- Helper functions
 
-/**
- * Make a full clone of any given object
- * @param {object} obj
- * @returns {object} The copy object
- */
-function clone (obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
-
 const _adapterTestStrip = ['uuid', 'updatedAt', 'onServerAt', 'deletedAt'];
 
-const attrStrip = (...attr) => {
-  return (res) => {
-    let result;
-    if (Array.isArray(res)) {
-      result = [];
-      res.map((v, i, arr) => {
-        let obj = clone(arr[i]);
-        attr.forEach(a => delete obj[a]);
-        result.push(obj);
-      })
-    }
-    else {
-      result = clone(res);
-      attr.forEach(a => delete result[a]);
-    }
-    return result;
-  }
-};
+const attrStrip = (...attr) => 
+  (res) => Array.isArray(res) ? res.map(val => stripProps(val, attr))
+                              : stripProps(res, attr);
 
 /**
- * Fixes params so that `query` adheres to the standard i.e. it splits
- * `{ query: { ..., offline: { ... }}}` into `{ newParams, offline }`.
+ * Fixes params so that `query` adheres to the standard i.e. it splits `{ query:
+ * { ..., offline: { ... }}}` into `{ newParams, offline }`.
  *
- * Iff `offline` contains `_forceAll: true, onServerAt: ...` we copy the
- * `onServerAt` to `query` and remove `deletedAt`from `query`.
+ * Iff `offline` contains `_forceAll: true` we remove `offline` and
+ * `deletedAt`from `query`.
  *
  * `deletedAt` is normally forced to `null` in `query` so we do not operate on
- * soft-deleted items, but iff `query.offline._forceAll` we remove the
- * attribute from `query` to be able to query all items in the collection
- * regardless of their deletion status.
+ * soft-deleted items, but iff `query.offline._forceAll` we remove the attribute
+ * from `query` to be able to query all items in the collection regardless of
+ * their deletion status.
  *
  * @param {object} params A normal params object with possible `offline` query
  * @return {object} Returns `{ newParams, offline }`
  */
 const fixParams = function (params) {
   if (!params)
-    return { newParams: { query: {} }, offline: {} };
+    return { newParams: { query: {'deletedAt': null} }, offline: {} };
 
   params = JSON.parse(JSON.stringify(params));
   let { paginate, query = {}, ...other } = params;
-  let { offline } = query;
-  let newParams = Object.assign({}, params);
+  let { offline, ...rest } = query;
+  query = rest;
+  let newParams = Object.assign({}, { paginate }, other);
 
   if (offline) {
-    delete query.offline;
-
-    if ('_forceAll' in offline) {
-      delete query.deletedAt
-      if ('onServerAt' in offline) {
-        query.onServerAt = { $gte: new Date(offline.onServerAt).getTime() };
-      }
+    if (offline._forceAll) {
+      query = stripProps(query, 'deletedAt');
+      query.onServerAt = { $gte: query.onServerAt ? new Date(query.onServerAt).getTime() : BOT.getTime() };
     }
     else {
       query.deletedAt = null;
+      let at = query.onServerAt || BOT.toISOString();
+      query.onServerAt = { $gte: new Date(at).getTime() };
     }
   }
   else {
-    if (query && query !== {}) {
-      query = Object.assign(query, { 'deletedAt': null });
-    } else {
-      query = { 'deletedAt': null };
-    }
+    query.deletedAt = null;
   }
 
   newParams.query = query;
-  if (paginate !== undefined) newParams.paginate = paginate;
 
   return { newParams, offline: (offline !== undefined ? offline : {}) };
 };

@@ -8,10 +8,9 @@ const ownWrapper = require('./own-common/helpers/own-wrapper-test');
 const syncTests = require('./own-common/helpers/sync-test');
 const eventsTests = require('./own-common/helpers/events-test');
 const localStorageTests = require('./own-common/helpers/local-storage-test');
+const asyncStorageTests = require('./own-common/helpers/async-storage-test');
 const restTests = require('./own-common/helpers/rest-test');
 const socketioTests = require('./own-common/helpers/socket-io-test');
-const localStorage = require('localstorage-memory');
-global.localStorage = localStorage;
 
 const OwnClass = require('../src/own-common');
 
@@ -45,7 +44,9 @@ function ownclassWrapper (app, path, options = {}) {
     throw new errors.Unavailable(`No prior service registered on path '${location}'`);
   }
 
-  let opts = Object.assign({}, old.options, options);
+  let oldOpts = Object.assign({}, old.options);
+  delete oldOpts.storage;
+  let opts = Object.assign({}, oldOpts, options);
   app.use(location, new OwnclassClass(opts, true));
   app.service(location).options = opts;
   app.service(location)._listenOptions();
@@ -59,15 +60,21 @@ init.Service = OwnclassClass;
 describe(`${package}Wrapper tests`, () => {
   app = feathers();
   let testTitle = `${package}Wrapper adapterTests`
+
   adapterTests(testTitle, app, errors, ownclassWrapper, 'people');
   adapterTests(testTitle, app, errors, ownclassWrapper, 'people-customId', 'customId');
   adapterTests(testTitle, app, errors, ownclassWrapper, 'people-uuid', 'uuid');
 
   wrapperBasic(`${package}Wrapper basic functionality`, app, errors, ownclassWrapper, 'wrapperBasic', verbose);
   ownWrapper(`${package}Wrapper specific functionality`, app, errors, ownclassWrapper, 'ownWrapper', verbose, true);
+
   syncTests(`${package}Wrapper sync functionality`, app, errors, init, 'syncTests', verbose, 9100, true);
+
   eventsTests(`${package}Wrapper events functionality`, app, errors, ownclassWrapper, 'wrapperEvents', verbose);
-  localStorageTests(`${package}Wrapper storage functionality`, app, errors, ownclassWrapper, 'wrapperStorage', verbose);
+
+  localStorageTests(`${package}Wrapper sync storage functionality`, app, errors, ownclassWrapper, 'wrapperStorage', verbose);
+  asyncStorageTests(`${package}Wrapper async storage functionality`, app, errors, ownclassWrapper, 'wrapperStorage', verbose);
+
   restTests(`${package}Wrapper REST functionality`, app, errors, ownclassWrapper, 'wrapperREST', verbose, 7886, true);
   socketioTests(`${package}Wrapper socket.io functionality`, app, errors, ownclassWrapper, 'wrapperSocketIo', verbose, 7885, true);
 

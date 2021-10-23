@@ -1,3 +1,4 @@
+const debug = require('debug')('@feathersjs-offline:ownclass:options-proxy');
 
 let depends = {};
 let watchingFn = [];
@@ -14,6 +15,7 @@ module.exports = class OptionsProxy {
     this.name = name /*+ ++ix*/;
     depends[this.name] = [];
     watchingFn[this.name] = null;
+    debug(`Constructed proxy for '${this.name}`);
   }
 
   /**
@@ -29,9 +31,12 @@ module.exports = class OptionsProxy {
           if (!depends[self.name][key]) depends[self.name][key] = [];
           depends[self.name][key].push(watchingFn[self.name]);
         }
-        return obj[key];
+        const res = obj[key];
+        debug(`${self.name}: get(${key}) = ${JSON.stringify(res)}`);
+        return res;
       },
       set (obj, key, val) {
+        debug(`${self.name}: set(${key}, ${JSON.stringify(val)})`);
         obj[key] = val;
         if (depends[self.name][key])
           depends[self.name][key].forEach(cb => cb());

@@ -1,6 +1,6 @@
 import { stripSlashes } from '@feathersjs/commons';
 import errors from '@feathersjs/errors';
-import { to } from '../common';
+import { to, clone } from '../common';
 import OwnClass from '../own-common';
 
 const debug = require('debug')('@feathersjs-offline:ownnet:service-wrapper');
@@ -25,7 +25,7 @@ class OwnnetClass extends OwnClass {
     this.pQActive = true;
 
     let [err, store] = await to(this.localQueue.getEntries({ query: { $sort: { uuid: 1, updatedAt: 1 } } }));
-    if (!store || store === [] || store.length === 0) {
+    if (err || store.length === 0) {
       this.pQActive = false;
       return true;
     }
@@ -157,7 +157,7 @@ let Ownnet = init;
  *
  */
 function ownnetWrapper (app, path, options = {}) {
-  debug(`ownnetWrapper started on path '${path}'`)
+  debug(`ownnetWrapper started on path '${path}' with options '${JSON.stringify(options)}'`)
   if (!(app && app.version && app.service && app.services))
     throw new errors.Unavailable(`The FeathersJS app must be supplied as first argument`);
 
@@ -168,7 +168,10 @@ function ownnetWrapper (app, path, options = {}) {
     throw new errors.Unavailable(`No prior service registered on path '${location}'`);
   }
 
-  let opts = Object.assign({}, old.options, options);
+  let oldOpts = clone(old.options || {});
+  let { storage, ...rest } = oldOpts;
+  oldOpts = rest;
+  let opts = Object.assign({}, oldOpts, options);
   app.use(location, Ownnet(opts));
   let service = app.service(location);
   service.options = opts;
@@ -182,10 +185,6 @@ module.exports = { init, Ownnet, ownnetWrapper };
 init.Service = OwnnetClass;
 
 // Helpers
-
-function clone (obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
 
 function _accEvent (idName, eventName, el, arg1, arg2, arg3, ids) {
   let elId = el[idName];

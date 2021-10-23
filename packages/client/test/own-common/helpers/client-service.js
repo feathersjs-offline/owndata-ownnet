@@ -3,8 +3,8 @@ const memory = require('feathers-memory');
 
 let ix = 0;
 
-function newServicePath () {
-  return '/tmp' + ix++;
+function newServicePath (path = '/tmp') {
+  return path + ix++;
 }
 
 function service1 (wrapper) {
@@ -13,14 +13,22 @@ function service1 (wrapper) {
 }
 
 function service2 (wrapper, path) {
-  app = feathers();
+  let app = feathers();
   app.use(path, memory({ multi: true }));
   let service = wrapper(app, path);
   return service;
 }
 
+function service2a (wrapper, basePath) {
+  let app = feathers();
+  let path = newServicePath(basePath);
+  app.use(path, memory({ multi: true }));
+  let service = wrapper(app, path);
+  return { service, path };
+}
+
 function service3 (wrapper) {
-  app = feathers();
+  let app = feathers();
   let path = newServicePath();
   app.use(path, memory({ multi: false }));
   wrapper(app, path);
@@ -28,7 +36,7 @@ function service3 (wrapper) {
 }
 
 function service4 (wrapper, options) {
-  app = feathers();
+  let app = feathers();
   let path = newServicePath();
   app.use(path, memory(options));
   wrapper(app, path, options);
@@ -36,10 +44,10 @@ function service4 (wrapper, options) {
 }
 
 function fromServiceNonPaginatedConfig (wrapper, path) {
-  app = feathers();
+  let app = feathers();
   app.use(path, memory({ multi: true }));
   wrapper(app, path);
   return app.service(path);
 }
 
-module.exports = { newServicePath, service1, service2, service3, service4, fromServiceNonPaginatedConfig };
+module.exports = { newServicePath, service1, service2, service2a, service3, service4, fromServiceNonPaginatedConfig };

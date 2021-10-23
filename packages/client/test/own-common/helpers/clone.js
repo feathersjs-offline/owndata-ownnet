@@ -1,3 +1,3 @@
-module.exports = function clone (obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
+import cloneDeep from 'lodash/cloneDeep';
+
+module.exports = cloneDeep;

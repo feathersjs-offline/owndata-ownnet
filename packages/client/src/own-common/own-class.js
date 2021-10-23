@@ -1,22 +1,17 @@
-import EventEmitter from 'component-emitter';
-import sift from 'sift';
 import { sorter, select, AdapterService } from '@feathersjs/adapter-commons';
 import { _, hooks, stripSlashes } from '@feathersjs/commons';
 import errors from '@feathersjs/errors';
-import ls from 'feathers-localforage';
-import { genUuid, to, OptionsProxy } from '../common';
+import lf from '@feathersjs-offline/localforage';
+import EventEmitter from 'component-emitter';
+import ls from 'feathers-localstorage';
+import sift from 'sift';
+import { genUuid, to, OptionsProxy, clone, stringsToDates } from '../common';
 import snapshot from '../snapshot';
+import { stripProps } from '../common';
+
+const { LocalForage } = lf;
 
 const debug = require('debug')('@feathersjs-offline:ownclass:service-base');
-
-if (typeof localStorage === 'undefined') {
-  debug('Simulating localStorage...');
-  let LocalStorage = require('node-localstorage').LocalStorage;
-  global.localStorage = new LocalStorage('./.scratch');
-}
-else {
-  debug('Utilizing built-in localStorage');
-}
 
 const defaultOptions = {
   'id': 'id',
@@ -28,8 +23,22 @@ const defaultOptions = {
   'adapterTest': false,
   'matcher': sift,
   sorter,
-  'fixedName': ''
-  };
+  'fixedName': '',
+  'dates': false
+};
+  
+const Drivers = {
+  INDEXEDDB: 'asyncStorage',
+  WEBSQL: 'webSQLStorage',
+  LOCALSTORAGE: 'localStorageWrapper'
+};
+
+const States = {
+  started: 'started',
+  ended: 'ended'
+};
+
+const SYNC_DB_NAME = '@@@syncedAt@@@';
 
 const BOT = new Date(0);
 
@@ -37,39 +46,44 @@ const _adapterTestStrip = ['uuid', 'updatedAt', 'onServerAt', 'deletedAt'];
 
 let nameIx = 0;
 
-const attrStrip = (...attr) => {
-  return (res) => {
-    let result;
-    if (Array.isArray(res)) {
-      result = [];
-      res.map((v, i, arr) => {
-        let obj = clone(arr[i]);
-        attr.forEach(a => delete obj[a]);
-        result.push(obj);
-      })
-    }
-    else {
-      result = clone(res);
-      attr.forEach(a => delete result[a]);
-    }
-    return result;
-  }
-}
+const attrStrip = (...attr) =>
+  (res) => Array.isArray(res) ? res.map(val => stripProps(val, attr))
+                              : stripProps(res, attr);
 
 class OwnClass extends AdapterService {
   constructor (opts) {
     let newOpts = Object.assign({}, defaultOptions, opts);
 
-    debug(`Constructor started, newOpts = ${JSON.stringify(newOpts)}`);
+    debug(`Constructor started, newOpts = ${JSON.stringify(newOpts)}, allOpts = ${Object.keys(newOpts)}`);
     super(newOpts);
 
     this.wrapperOptions = Object.assign({}, newOpts, this.options);
-    debug(`Constructor ended, options = ${JSON.stringify(this.options)}`);
+    this.wrapperOptions.storage = newOpts.storage;
+    debug(`Constructor ended, options = ${JSON.stringify(this.wrapperOptions)}, allOpts = ${Object.keys(newOpts)}`);
 
     this.type = 'own-class';
 
+    debug(`   Setting _select...`);
+
+    // Make sure we always select the key (id) in our results
+    this._select = (params, ...others) => (res) => { return select(params, ...others, this.id)(res) }
+
+    // Initialize the service wrapper
+    this.listening = false;
+    this.aIP = 0; // Our semaphore for internal processing
+    this.pQActive = false; // Our flag for avoiding more than one processing of queued operations at a time
+
     debug('  Done.');
     return this;
+  }
+
+  async awaitSetup () {
+    while (this._setupPerformed !== States.ended) {
+      debug(`awaitSetup...`);
+      await this.delay(200);
+    }
+
+    return true;
   }
 
   async _setup (app, path) {  // This will be removed for future versions of Feathers
@@ -78,17 +92,22 @@ class OwnClass extends AdapterService {
   }
 
   async setup (app, path) {
-    debug(`SetUp('${path}') started`);
+    const self = this;
     if (this._setupPerformed) { // Assure we only run setup once
       return;
     }
-    this._setupPerformed = true;
 
-    this.options = this.wrapperOptions;
+    debug(`SetUp('${path}') started`);
+    this._setupPerformed = States.started;
 
-    let self = this;
+    this.options = Object.assign({}, this.wrapperOptions);
+    debug(`   Options '${JSON.stringify(this.options)}')`);
+ 
+    this._dates = this.options.dates;
+  
     this.thisName = this.options.fixedName !== '' ? this.options.fixedName : `${this.type}_offline_${nameIx++}_${path}`;
 
+    debug(`SetUp('${path}') before old app...`);
     // Now we are ready to define the path with its underlying service (the remoteService)
     let old = app.service(path);
     if (old !== self) {
@@ -96,33 +115,61 @@ class OwnClass extends AdapterService {
       app.use(path, self);  // Install this service instance
     }
 
+    // Make sure that the wrapped service is setup correctly
+    if (typeof this.remoteService.setup === 'function') {
+      debug(`   Setting up remote service...`);
+      await this.remoteService.setup(app, path);
+      this.options = Object.assign({}, this.wrapperOptions, this.options);
+    }
+    
+    debug(`SetUp('${path}') after old app...`);
     // Get the service name and standard settings
     this.name = path;
-
-    // Construct the two helper services
+    
+    // Construct two helper services
     this.localServiceName = this.thisName + '_local';
     this.localServiceQueue = this.thisName + '_queue';
-
-    this.storage = this.options.storage ? this.options.storage : ['localStorageWrapper'];
+    
+    // Make sure the driver is correct
+    debug(`  Setting up storage...`);
+    let localStorageDriver = null;
+    if (this.options.storage && !Array.isArray(this.options.storage) && this.options.storage.toUpperCase() === 'ASYNCSTORAGE') {
+      localStorageDriver = ls;
+      this.storage = global.AsyncStorage;
+      this.options.throttle = 1;
+    }
+    else {
+      localStorageDriver = lf;
+      let storage = this.options.storage ? this.options.storage : 'LOCALSTORAGE';
+      if (!Array.isArray(storage)) {
+        storage = [storage];
+      }
+      this.storage = storage.map(s => {
+        let driver = Drivers[s.toUpperCase()];
+        if (!driver) throw new errors.NotFound(`Illegal driver type '${s}' found. Please use either a combination of 'LOCALSTORAGE', 'WEBSQL', and 'INDEXEDDB' or for React 'ASYNCSTORAGE'.`);
+        return driver;
+      });
+    }
+      
+    debug(`   Storage=${this.storage}`);
     this.store = this.options.store ? this.options.store : [];
-    this.localSpecOptions = { name: this.localServiceName, storage: this.storage, store: this.store, reuseKeys: this.options.fixedName !== '' };
+    this.localSpecOptions = { name: this.localServiceName, storage: this.storage, store: this.store, reuseKeys: this.options.fixedName !== '', events: ['synced'], dates: this.options.dates };
     let localOptions = Object.assign({}, this.options, this.localSpecOptions);
     let queueOptions = { id: 'id', name: this.localServiceQueue, storage: this.storage, paginate: null, multi: true, reuseKeys: this.options.fixedName !== '' };
-
-    debug(`  Setting up services '${this.localServiceName}' and '${this.localServiceQueue}'...`);
-    app.use(this.localServiceName, ls(localOptions));
-    app.use(this.localServiceQueue, ls(queueOptions));
+    
+    debug(`   Setting up service '${this.localServiceName}' with options '${JSON.stringify(localOptions)}'...`);
+    app.use(this.localServiceName, localStorageDriver(localOptions));
+    debug(`   Setting up service '${this.localServiceQueue}' with options '${JSON.stringify(queueOptions)}'...`);
+    app.use(this.localServiceQueue, localStorageDriver(queueOptions));
 
     this.localService = app.service(this.localServiceName);
     this.localQueue = app.service(this.localServiceQueue);
 
-    // We need to make sure that localService is properly initiated - make a dummy search
-    //    (one of the quirks of feathers-localstorage)
-    await this.localService.ready();
+    debug(`   Adding syncDB...`);
+    app.use(SYNC_DB_NAME, localStorageDriver({ name: SYNC_DB_NAME, storage: this.storage, reuseKeys: true }));
+    this.syncDB = app.service(SYNC_DB_NAME);
 
-    // The initialization/setup of the localService adapter screws-up our options object
-    this.options = this.wrapperOptions;
-
+    debug(`   AdapterTest=${this.options.adapterTest}...`);
     // Are we running adapterTests?
     if (this.options.adapterTest) {
       // Make sure the '_adapterTestStrip' attributes are stripped from results
@@ -136,58 +183,113 @@ class OwnClass extends AdapterService {
       this._strip = v => { return v };
     }
 
-    // Make sure we always select the key (id) in our results
-    this._select = (params, ...others) => (res) => { return select(params, ...others, self.id)(res) }
-
-    // Initialize the service wrapper
-    this.listening = false;
-    this.aIP = 0; // Our semaphore for internal processing
-    this.pQActive = false; // Our flag for avoiding more than one processing of queued operations at a time
-
     // Determine latest registered sync timestamp
-    this.syncedAt = new Date(this.storage.getItem(this.thisName+'_syncedAt') || 0).toISOString();
-    this.storage.setItem(this.thisName+'_syncedAt', new Date(this.syncedAt).toISOString());
+    debug(`   Determine latest registered sync timestamp (if any)...`);
+    let value = this.getSyncItem(false);
+    this.syncedAt = new Date(value || BOT).toISOString();
+    debug(`   Sync timestamp is found... ${this.syncedAt}`);
+    value = this.setSyncItem(this.syncedAt);
+    debug(`   Sync timestamp is stored!`);
+
+    debug(`   Restore options...`);
+    // The re-initialization/setup of the localService adapter can screw-up our options object
+    this.options = Object.assign({}, this.wrapperOptions);
 
     // This is necessary if we get updates to options (e.g. .options.multi = ['patch'])
     if (!(this.remoteService instanceof AdapterService)) {
+      debug(`   Adding options listener...`);
       this._listenOptions();
-    }
-
-    // Make sure that the wrapped service is setup correctly
-    if (typeof this.remoteService.setup === 'function') {
-      this.remoteService.setup(app, path);
     }
 
     // Should we perform a sync every timedSync?
     if (this.options.timedSync && Number.isInteger(this.options.timedSync) && this.options.timedSync > 0) {
+      debug(`   Setting up timed-sync every ${JSON.stringify(self.options.timedSync)} ms...`);
       this._timedSyncHandle = setInterval(() => self.sync(), self.options.timedSync);
     }
 
+    debug(`   Options '${JSON.stringify(this.options)}')`);
     debug('  Done.');
+    this._setupPerformed = States.ended;
+
     return true;
   }
 
-  _listenOptions () {
+  // syncDB functions
+  getSyncItem (failOnMissing = true) {
+    let key = this.thisName + '_syncedAt';
+    let res = this.syncDB.get(key)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        if (failOnMissing) throw new errors.GeneralError(`Error get syncDB: key=${key} ${err.name}, ${err.message}`);
+      });
+      return res ? res.value : BOT.toISOString();
+  }
+  
+  setSyncItem (value) {
+    let key = this.thisName + '_syncedAt';
+    let res = this.syncDB.get(key)
+      .then(resVal => {
+        this.syncDB.update(key, { id: key, value: value })
+          .catch(err => {
+            throw new errors.GeneralError(`Error updating syncDB: id=${id} ${err.name}, ${err.message}`);
+          });
+          return resVal;
+      })
+      .catch(err => {
+        return this.syncDB.create({ id: key, value: value })
+          .catch(err => {
+            throw new errors.GeneralError(`Error creating syncDB: key=${key}, value=${value}: ${err.name}, ${err.message}`);
+          });
+      });
+
+    return res;
+  }
+
+  async delay (ms) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(true);
+      }, ms);
+    });
+
+  }
+
+  async _listenOptions () {
     // This is necessary if we get updates to options (e.g. .options.multi = ['patch'])
 
-    let self = this;
-    let optProxy = new OptionsProxy(self.thisName);
+    const self = this;
+    const optProxy = new OptionsProxy(self.thisName);
 
     this.options = optProxy.observe(Object.assign(
       {},
-      self.remoteService.options ? self.remoteService.options : {},
+      self.remote.options ? self.remote.options : {},
       self.options
     ));
-    optProxy.watcher(() => {
+    optProxy.watcher(async () => {
       // Update all changes to 'this.options' in both localService and remoteService
-      self.remoteService.options = Object.assign({}, self.remoteService.options, self.options);
-      self.localService.options = Object.assign({}, self.options, self.localSpecOptions);
+
+      //  Make sure the remote service is set-up
+      while (self.remote === undefined) {
+        debug(`REMOTE STILL UNDEFINED`);
+        await this.delay(10);
+      }
+      //  Make sure the local service is ready
+      while (self.local === undefined) {
+        debug(`LOCAL STILL UNDEFINED`);
+        await this.delay(10);
+      }
+      self.remote.options = Object.assign({}, self.remote.options, self.options);
+      self.local.options = Object.assign({}, self.options, self.localSpecOptions);
     });
 
   }
 
   async getEntries (params) {
-    debug(`Calling getEntries(${JSON.stringify(params)}})`);
+    debug(`Calling getEntries(${JSON.stringify(params)}}), thisName=${this.thisName}`);
+    await this.awaitSetup();
+
     let res = [];
     await this.localService.getEntries(params)
       .then(entries => {
@@ -196,37 +298,55 @@ class OwnClass extends AdapterService {
 
     return Promise.resolve(res)
       .then(this._strip)
-      .then(this._select(params));
+      .then(this._select(params))
+      .then(stringsToDates(this._dates))
+      .then(result => {
+        debug(`getEntries: result=${JSON.stringify(result)}`);
+        return result;
+      })
+      ;
   }
 
   async get (id, params) {
-    debug(`Calling get(${JSON.stringify(id)}, ${JSON.stringify(params)}})`);
+    debug(`Calling get(${JSON.stringify(id)}, ${JSON.stringify(params)})`);
+    await this.awaitSetup();
+
     return this._get(id, params);
   }
 
   async _get (id, params) {
     debug(`Calling _get(${JSON.stringify(id)}, ${JSON.stringify(params)}})`);
+    await this.awaitSetup();
+
     return await this.localService.get(id, params)
       .then(this._strip)
       .then(this._select(params))
+      .then(stringsToDates(this._dates))
       .catch(err => {throw err});
   }
 
   async find (params) {
     debug(`Calling find(${JSON.stringify(params)}})`);
     debug(`  rows=${JSON.stringify(await this.getEntries())}`);
+    await this.awaitSetup();
+
     return this._find(params);
   }
 
   async _find (params) {
     debug(`Calling _find(${JSON.stringify(params)}})`);
+    await this.awaitSetup();
+
     return this.localService.find(params)
       .then(this._strip)
-      .then(this._select(params));
+      .then(this._select(params))
+      .then(stringsToDates(this._dates));
   };
 
   async create (data, params) {
     debug(`Calling create(${JSON.stringify(data)}, ${JSON.stringify(params)})`);
+    await this.awaitSetup();
+
     if (Array.isArray(data) && !this.allowsMulti('create')) {
       return Promise.reject(new errors.MethodNotAllowed('Creating multiple without option \'multi\' set'));
     }
@@ -236,6 +356,8 @@ class OwnClass extends AdapterService {
 
   async _create (data, params, ts = 0) {
     debug(`Calling _create(${JSON.stringify(data)}, ${JSON.stringify(params)}, ${ts})`);
+    await this.awaitSetup();
+
     let self = this;
     if (Array.isArray(data)) {
       const multi = this.allowsMulti('create');
@@ -308,11 +430,14 @@ class OwnClass extends AdapterService {
 
     return Promise.resolve(res)
       .then(this._strip)
-      .then(this._select(params));
+      .then(this._select(params))
+      .then(stringsToDates(this._dates));
   }
 
   async update (id, data, params) {
     debug(`Calling update(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)}})`);
+    await this.awaitSetup();
+
     if (id === null || Array.isArray(data)) {
       return Promise.reject(new errors.BadRequest(
         `You can not replace multiple instances. Did you mean 'patch'?`
@@ -324,6 +449,8 @@ class OwnClass extends AdapterService {
 
   async _update (id, data, params = {}) {
     debug(`Calling _update(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)}})`);
+    await this.awaitSetup();
+
     let self = this;
 
     if (id === null || Array.isArray(data)) {
@@ -382,11 +509,14 @@ class OwnClass extends AdapterService {
 
     return Promise.resolve(newData)
       .then(this._strip)
-      .then(this._select(params));
+      .then(this._select(params))
+      .then(stringsToDates(this._dates));
   }
 
   async patch (id, data, params) {
     debug(`Calling patch(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)}})`);
+    await this.awaitSetup();
+
     if (id === null && !this.allowsMulti('patch')) {
       return Promise.reject(new errors.MethodNotAllowed(`Can not patch multiple entries`));
     }
@@ -396,6 +526,8 @@ class OwnClass extends AdapterService {
 
   async _patch (id, data, params = {}, ts = 0) {
     debug(`Calling _patch(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)}})`);
+    await this.awaitSetup();
+
     let self = this;
     if (id === null) {
       const multi = this.allowsMulti('patch');
@@ -463,7 +595,8 @@ class OwnClass extends AdapterService {
 
     return Promise.resolve(newData)
       .then(this._strip)
-      .then(this._select(params));
+      .then(this._select(params))
+      .then(stringsToDates(this._dates));
   }
 
   /**
@@ -480,6 +613,8 @@ class OwnClass extends AdapterService {
 
   async remove (id, params) {
     debug(`Calling remove(${id}, ${JSON.stringify(params)}})`);
+    await this.awaitSetup();
+
     if (id === null && !this.allowsMulti('remove')) {
       return Promise.reject(new errors.MethodNotAllowed(`Can not remove multiple entries`));
     }
@@ -489,6 +624,8 @@ class OwnClass extends AdapterService {
 
   async _remove (id, params = {}) {
     debug(`Calling _remove(${id}, ${JSON.stringify(params)}})`);
+    await this.awaitSetup();
+
     let self = this;
 
     if (id === null) {
@@ -532,13 +669,19 @@ class OwnClass extends AdapterService {
             debug(`_remove TIMEOUT: ${rerr.name}, ${rerr.message}`);
           } else {
             debug(`_remove ERROR: ${rerr.name}, ${rerr.message}\nbeforeRecord = ${JSON.stringify(beforeRecord)}`);
-            // if (beforeRecord.onServerAt === BOT) {
+            try {
+              // if (beforeRecord.onServerAt === BOT) {
               // In all likelihood the document/item was never on the server
               // so we choose to silently ignore this situation
-            // } else {
+              // } else {
               // We have to restore the record to  the local DB
               await to(self._removeQueuedEvent('_remove1', queueId, beforeRecord, null));
-              await to(self.localService.create(beforeRecord, null));
+              let [err, res] = await to(self.localService.create(beforeRecord, null));
+              if (err) throw new errors.GeneralError(`ERROR re-creating record. ${err.name}, ${err.message}`);
+            } catch (err) {
+              debug(`_create re-created record: ERROR re-creating record. ${err.name}, ${err.message}`);
+            };
+            debug(`_create re-created record: rec=${JSON.stringify(beforeRecord)}`);
             // }
           }
           self.allowInternalProcessing('_remove1');
@@ -552,7 +695,8 @@ class OwnClass extends AdapterService {
 
     return Promise.resolve(beforeRecord)
       .then(this._strip)
-      .then(this._select(params));
+      .then(this._select(params))
+      .then(stringsToDates(this._dates));
   }
 
   // Allow access to our internal services (for application hooks and the demo). Use with care!
@@ -604,7 +748,7 @@ class OwnClass extends AdapterService {
   }
 
   async _addQueuedEvent (eventName, localRecord, arg1, arg2, arg3) {
-    debug('addQueuedEvent entered');
+    debug(`addQueuedEvent '${eventName}' entered`);
     let [err, res] = await to(this.localQueue.create({ eventName, record: localRecord, arg1, arg2, arg3 }));
     if (err) throw new errors.GeneralError(`Could not write '${JSON.stringify({ eventName, record: localRecord, arg1, arg2, arg3 })}' to localQueue (${this.localServiceQueue}), err=${err.name}, ${err.message}`);
     debug(`addQueuedEvent added: ${JSON.stringify(res)}`);
@@ -612,7 +756,7 @@ class OwnClass extends AdapterService {
   }
 
   async _removeQueuedEvent (eventName, id, localRecord, updatedAt) {
-    debug('removeQueuedEvent entered');
+    debug(`removeQueuedEvent '${eventName}' entered`);
 
     const [err, res] = await to( this.localQueue.remove(id) );
 
@@ -634,9 +778,10 @@ class OwnClass extends AdapterService {
    * Synchronize the relevant documents/items from the remote db with the local db.
    *
    * @param {boolean} bAll If true, we try to sync for the beginning of time.
+   * @param {boolean} bTesting If true, we try to sync without the proper server/backend wrapper installed.
    * @returns {boolean} True if the process was completed, false otherwise.
    */
-  async sync (bAll = false) {
+  async sync (bAll = false, bTesting = false) {
     while (!this.internalProcessingAllowed()) {
       // console.log(`sync: await internalProcessing (aIP=${this.aIP})`);
       await new Promise(resolve => {
@@ -646,7 +791,7 @@ class OwnClass extends AdapterService {
       });
     }
 
-    const syncOptions = await this._getSyncOptions(bAll);
+    const syncOptions = await this._getSyncOptions(bAll, bTesting);
     debug(`${this.type}.sync(${JSON.stringify(syncOptions)}) started...`);
     let self = this;
     let result = true;
@@ -654,9 +799,9 @@ class OwnClass extends AdapterService {
     let [err, snap] = await to( snapshot(this.remoteService, syncOptions) )
     if (err) { // we silently ignore any errors
       if (err.className === 'timeout') {
-        debug(`  TIMEOUT: ${JSON.stringify(err)}`);
+        debug(`  sync TIMEOUT: ${JSON.stringify(err)}`);
       } else {
-        debug(`  ERROR: ${JSON.stringify(err)}`);
+        debug(`  sync ERROR: ${JSON.stringify(err)}, err=${err.name}, ${err.message}`);
       }
       // Ok, tell anyone interested about the result
       this.localService.emit('synced', false);
@@ -676,8 +821,8 @@ class OwnClass extends AdapterService {
      * Moreover we track the `onServerAt` to determine latest sync timestamp
      */
     debug(`  Applying received snapshot data... (${snap.length} items)`);
-    let syncTS = new Date(0).toISOString();
-    await Promise.all(snap.map(async (v) => {
+    let syncTS = BOT.toISOString();
+    let ts = await Promise.all(snap.map(async (v) => {
       let [err, res] = await to( self.localService.get(v[self.id]) );
       if (res) {
         syncTS = syncTS < v.onServerAt ? v.onServerAt : syncTS;
@@ -687,22 +832,27 @@ class OwnClass extends AdapterService {
         else {
           [err, res] = await to( self.localService.patch(v[self.id], v));
         }
-        if (err) { result = false; }
+        // if (err) { result = false; }
+        return err ? BOT.toISOString() : v.onServerAt;
       }
       else {
         if (!v.deletedAt) {
           syncTS = syncTS < v.onServerAt ? v.onServerAt : syncTS;
           [err, res] = await to( self.localService.create(v));
-          if (err) { result = false; }
+          // if (err) { result = false; }
+          return err ? BOT.toISOString() : v.onServerAt;
         }
       }
     }));
 
+    syncTS = ts.reduce((pv, cv) => pv < cv ? cv : pv, self.syncedAt);
+
     // Save last sync timestamp
-    this.storage.setItem(this.thisName+'_syncedAt', new Date(syncTS).toISOString());
+    this.syncedAt = syncTS;
+    if (snap.length) self.setSyncItem(this.syncedAt);
 
     if (result) // Wait until internal Processing is ok
-      while (!await this._processQueuedEvents()) {
+      while (!await self._processQueuedEvents()) {
         await new Promise(resolve => {
           setTimeout(() => {
             resolve(true);
@@ -711,7 +861,7 @@ class OwnClass extends AdapterService {
       };
 
     // Ok, tell anyone interested about the result
-    this.localService.emit('synced', result);
+    self.localService.emit('synced', result);
 
     return result;
   }
@@ -720,16 +870,20 @@ class OwnClass extends AdapterService {
    * Determine the relevant options necessary for synchronizing this service.
    *
    * @param {boolean} bAll If true, we try to sync for the beginning of time.
+   * Otherwise from `syncedAt`.
+   * @param {boolean} bTesting If true, we try to sync without the proper
+   * server/backend wrapper (ie. we remove the `offline` property).
    * @returns {object} The relevant options for snapshot().
    */
-  async _getSyncOptions (bAll) {
-    let query = Object.assign({}, {offline:{_forceAll: true}, $sort: {onServerAt: 1}});
-    let ts = bAll ? new Date(0).toISOString() : this.syncedAt;
-    let syncTS = ts < this.syncedAt ? ts : this.syncedAt;
+  async _getSyncOptions (bAll, bTesting) {
+    const forceAll = { _forceAll: bAll };
+    const _offline = { offline: forceAll };
+    const offline = (bAll && !bTesting) ? _offline : {};
+    let query = Object.assign({}, bTesting ? {} : { offline }, { $sort: {onServerAt: 1}});
+    let syncTS = bAll ? BOT.toISOString() : this.syncedAt;
+    syncTS = bTesting ? { $gte: syncTS } : syncTS;
 
-    if (syncTS !== new Date(ts)) {
-      query.offline.onServerAt = new Date(syncTS);
-    }
+    query.onServerAt = syncTS;
 
     return query;
   }
@@ -737,14 +891,3 @@ class OwnClass extends AdapterService {
 };
 
 module.exports = OwnClass;
-
-// --- Helper functions
-
-/**
- * Make a full clone of any given object
- * @param {object} obj
- * @returns {object} The copy object
- */
-function clone (obj) {
-  return JSON.parse(JSON.stringify(obj));
-}

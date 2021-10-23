@@ -18,7 +18,7 @@ function setUpHooks (type, serviceName, service, allowFail = false, verbose = fa
         if (verbose) {
           const data = context.data ? `\n\tdata\t${JSON.stringify(context.data)}` : '';
           const params = context.params ? `\n\tparams\t${JSON.stringify(context.params)}` : '';
-          console.log(`Before.all.hook ${type}.${context.method} called${data}${params}\n\tallowFail = ${allowFail}`);
+          console.log(`Before.all.hook ${type}.${context.method} called\npath = ${serviceName}${data}${params}\n\tallowFail = ${allowFail}`);
         }
         if (context.params.query) {
           if (allowFail) {

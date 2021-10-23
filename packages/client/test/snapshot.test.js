@@ -79,6 +79,16 @@ describe('snapshotutils-copy:', () => {
       .catch(logAndThrow('copy error'));
   });
 
+  it('paginated file with $skip and $limit', () => {
+    return snapshot(fromServicePaginated, {$skip: sampleLen-1, $limit: 2})
+      .then(result => {
+        assert.lengthOf(result, 1);
+
+        assert.deepEqual(sortArrayByProp(result, 'order'), [data[sampleLen-1]]);
+      })
+      .catch(logAndThrow('copy error'));
+  });
+
   it('selection works', () => {
     const selection = { order: { $lt: 15 } };
 

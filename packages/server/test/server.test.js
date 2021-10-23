@@ -103,7 +103,7 @@ describe('RealtimeServerWrapper', () => {
       let passedPath;
 
       app.use(path, {
-        setup(app, path) {
+        setup (app, path) {
           setupCalled = true;
           passedApp = app;
           passedPath = path
@@ -126,11 +126,11 @@ describe('RealtimeServerWrapper', () => {
       let setupCalled = false;
 
       app.use(path, {
-        setup(app, path) {
+        setup (app, path) {
           setupCalled = true;
         },
-        find(params) {
-          return [{ data: { id: 1, text: "You won!" } }]
+        find (params) {
+          return [{ data: { id: 1, text: 'You won!' } }]
         }
       });
       app.service(path).hooks({
@@ -154,7 +154,6 @@ describe('RealtimeServerWrapper', () => {
         })
     });
   });
-
 
   describe('real-life tests', () => {
     // Let's perform all the usual adapter tests to verify full functionality
@@ -375,11 +374,10 @@ describe('RealtimeServerWrapper', () => {
     })
 
     it('.find + _forceAll: false', () => {
-      // Test to verify it is only the '_forceAll' key we are relying on - not its value
       return service.find({ query: { offline: { _forceAll: false } } })
         .then(delay())
         .then(sdata => {
-          expect(sdata.length).to.equal(data.length + deleted.length, `${2 * sampleLen} rows found`);
+          expect(sdata.length).to.equal(data.length, `${sampleLen} rows found`);
           for (let i = 0; i < sampleLen; i += 1) {
             expect(sdata[i].id).to.equal(data[i].id, `id is ok (i=${i})`);
             expect(sdata[i].uuid).to.equal(data[i].uuid, `uuid is ok (i=${i})`);
@@ -388,19 +386,10 @@ describe('RealtimeServerWrapper', () => {
             expect(sdata[i].onServerAt).to.not.equal(data[i].onServerAt, `onServerAt is updated (i=${i})`);
             expect(sdata[i].deletedAt).to.equal(data[i].deletedAt, `deletedAt is not updated (i=${i})`);
           }
-          for (let i = sampleLen; i < 2 * sampleLen; i += 1) {
-            expect(sdata[i].id).to.equal(deleted[i - sampleLen].id, `id is ok (i=${i})`);
-            expect(sdata[i].uuid).to.equal(deleted[i - sampleLen].uuid, `uuid is ok (i=${i})`);
-            expect(sdata[i].order).to.equal(deleted[i - sampleLen].order, `order is ok (i=${i})`);
-            expect(sdata[i].updatedAt).to.equal(deleted[i - sampleLen].updatedAt, `updatedAt is ok (i=${i})`);
-            expect(sdata[i].onServerAt).to.not.equal(deleted[i - sampleLen].onServerAt, `onServerAt is updated (i=${i})`);
-            expect(sdata[i].deletedAt).to.not.equal(undefined, `deletedAt is not undefined (i=${i})`);
-          }
         })
     });
 
     it('.find + _forceAll: true', () => {
-      // Test to verify it is only the '_forceAll' key we are relying on - not its value
       return service.find({ query: { offline: { _forceAll: true } } })
         .then(delay())
         .then(sdata => {
@@ -425,8 +414,8 @@ describe('RealtimeServerWrapper', () => {
     });
 
     it('.find + _forceAll: true + onServerAt string', () => {
-      onServerAt = new Date(onServerAt).getTime();
-      return service.find({ query: { offline: { _forceAll: true, onServerAt } } })
+      onServerAt = new Date(onServerAt).toISOString();
+      return service.find({ query: { onServerAt, offline: { _forceAll: true } } })
         .then(delay())
         .then(sdata => {
           expect(sdata.length).to.equal(deleted.length, `${sampleLen} rows found`);
@@ -443,7 +432,7 @@ describe('RealtimeServerWrapper', () => {
 
     it('.find + _forceAll: true + onServerAt date', () => {
       onServerAt = new Date(onServerAt).getTime();
-      return service.find({ query: { offline: { _forceAll: true, onServerAt } } })
+      return service.find({ query: { onServerAt, offline: { _forceAll: true } } })
         .then(delay())
         .then(sdata => {
           expect(sdata.length).to.equal(deleted.length, `${sampleLen} rows found`);
@@ -602,7 +591,7 @@ describe('RealtimeServerWrapper', () => {
 
     it('.patch null + _forceAll: true + onServerAt', () => {
       onServerAt = new Date(onServerAt).getTime();
-      return service.patch(null, { order: 96 }, { query: { offline: { _forceAll: true, onServerAt } } })
+      return service.patch(null, { order: 96 }, { query: { onServerAt, offline: { _forceAll: true } } })
         .then(delay())
         .then(sdata => {
           expect(sdata.length).to.equal(ddata.length, `${sampleLen} rows found`);
@@ -673,7 +662,7 @@ describe('RealtimeServerWrapper', () => {
 
 // Helpers
 
-function delay(ms = 0) {
+function delay (ms = 0) {
   return data => new Promise(resolve => {
     setTimeout(() => {
       resolve(data);
