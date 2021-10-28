@@ -1,13 +1,12 @@
 // Simply "stolen" from feathers-offline-xxx
 const md5 = require('md5');
-const { v4: uuidV4 } = require('uuid');
-const shortid = require('shortid');
+const { nanoid } = require('nanoid');
 const { stripProps } = require('./misc');
 
 // Integrity of short unique identifiers: https://github.com/dylang/shortid/issues/81#issuecomment-259812835
 
 function genUuid (ifShortUuid) {
-  return ifShortUuid ? shortid.generate() : uuidV4();
+  return ifShortUuid ? nanoid(10) : nanoid();
 }
 
 function hash (value) {

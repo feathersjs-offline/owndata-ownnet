@@ -9,7 +9,7 @@ const debug = require('debug')('utils:localstorage');
 const cleanupTimer = 1500;
 
 class LocalStorage {
-  constructor(options = {}) {
+  constructor (options = {}) {
     this.storage = {};
     this.keysToDestroy = [];
     this.keysAdded = [];
@@ -22,7 +22,7 @@ class LocalStorage {
     }
   }
   
-  handleKey(keyName) {
+  handleKey (keyName) {
     if (this.autoClean) {
       if (this.keysAdded.indexOf(keyName) === -1) {
         this.keysAdded.push(keyName);

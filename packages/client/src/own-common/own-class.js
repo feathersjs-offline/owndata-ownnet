@@ -98,7 +98,6 @@ class OwnClass extends AdapterService {
 
     this.storage = this.options.storage ? this.options.storage : ['LOCALSTORAGE'];
 
-    
     if (typeof this.storage === 'string' && this.storage.toUpperCase() === 'ASYNCSTORAGE') {
       this.storage = global.AsyncStorage;
       this.storageDriver = ls;
@@ -183,7 +182,7 @@ class OwnClass extends AdapterService {
     return true;
   }
 
-  async getSyncedAt(bFailOnNotFound = true) {
+  async getSyncedAt (bFailOnNotFound = true) {
     const key = `${this.name}_${syncDB}`;
 
     let [err, res] = await to( this.syncDB.get(key) );
@@ -193,7 +192,7 @@ class OwnClass extends AdapterService {
     return (res && res.value) || BOT.toISOString();
   }
 
-  async writeSyncedAt(value, bFailOnNotFound = true) {
+  async writeSyncedAt (value, bFailOnNotFound = true) {
     const key = `${this.name}_${syncDB}`;
 
     const old = await this.getSyncedAt(bFailOnNotFound)
@@ -776,7 +775,7 @@ class OwnClass extends AdapterService {
    * @param {boolean} bTesting If true, we try to make sync possible without the server wrapper.
    * @returns {object} The relevant options for snapshot().
    */
-  async _getSyncOptions(bAll, bTesting) {
+  async _getSyncOptions (bAll, bTesting) {
     let offline = bTesting ? {} : { _forceAll: bAll };
     let query = Object.assign({}, { offline }, { $sort: {onServerAt: 1}});
     let ts = bAll ? new Date(0).toISOString() : this.syncedAt;
