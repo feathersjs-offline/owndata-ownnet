@@ -2,11 +2,12 @@ const feathers = require('@feathersjs/feathers');
 const memory = require('feathers-memory');
 const _ = require('lodash');
 const { sorter } = require('@feathersjs/adapter-commons');
+const AsyncStorage = require('./async-storage');
 const clone = require('./clone');
 const delay = require('./delay');
 const assertDeepEqualExcept = require('./assert-deep-equal-except');
 
-// NOTE: global.localStorage is set in '../own-common.test.js'
+global.AsyncStorage = new AsyncStorage();
 
 const sampleLen = 5; // Size of test database (backend)
 
@@ -17,12 +18,12 @@ module.exports = (desc, _app, _errors, wrapper, serviceName, verbose, isBaseClas
   function setupServices () {
     app = feathers();
     app.use(serviceName, memory({ multi: true }));
-    clientService = wrapper(app, serviceName, { storage: 'LocalStorage' });
+    clientService = wrapper(app, serviceName, { storage: 'AsyncStorage' });
 
     return clientService;
   }
 
-  describe(`${desc} - alternative storage LocalStorage`, () => {
+  describe(`${desc} - alternative storage AsyncStorage`, () => {
     let data;
     let eventSort = sorter({ id: 1, uuid: 1 });
 
@@ -40,12 +41,15 @@ module.exports = (desc, _app, _errors, wrapper, serviceName, verbose, isBaseClas
       }
     });
 
-    describe('own LocalStorage', () => {
+    describe('own AsyncStorage', () => {
 
-      it('alternative LocalStorage works', () => {
+      beforeEach(() => {
+      });
+
+      it('alternative AsyncStorage works', () => {
         return clientService.create(clone(data))
           .then(delay())
-          .then(() => clientService.local.getEntries())
+          .then(() => clientService.getEntries())
           .then(result => {
             assertDeepEqualExcept(data, result,
               ['onServerAt', 'updatedAt'], eventSort);

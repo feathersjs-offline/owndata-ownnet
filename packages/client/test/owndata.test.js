@@ -10,8 +10,6 @@ const localStorageTests = require('./own-common/helpers/local-storage-test');
 const owndataOnlyTests = require('./own-common/helpers/owndata-only-test');
 const restTests = require('./own-common/helpers/rest-test');
 const socketioTests = require('./own-common/helpers/socket-io-test');
-let LocalStorage = require('node-localstorage').LocalStorage;
-global.localStorage = new LocalStorage('./.scratch');
 
 const { Owndata, owndataWrapper } = require('../src/owndata');
 

@@ -4,8 +4,10 @@ import { sorter, select, AdapterService } from '@feathersjs/adapter-commons';
 import { _, hooks, stripSlashes } from '@feathersjs/commons';
 import errors from '@feathersjs/errors';
 import ls from 'feathers-localstorage';
-import { genUuid, to, OptionsProxy } from '../common';
+import lf from '@feathersjs-offline/localforage';
+import { genUuid, to, OptionsProxy, stringsToDates } from '../common';
 import snapshot from '../snapshot';
+
 
 const debug = require('debug')('@feathersjs-offline:ownclass:service-base');
 
@@ -14,37 +16,37 @@ const defaultOptions = {
   'store': null,
   'storage': null,
   'useShortUuid': true,
-  'throttle': null,
   'timedSync': 24*60*60*1000,
   'adapterTest': false,
   'matcher': sift,
   sorter,
-  'fixedName': ''
-  };
+  'fixedName': '',
+  dates: false
+};
 
 const BOT = new Date(0);
+
+const syncDB = '___SyncDB___';
 
 const _adapterTestStrip = ['uuid', 'updatedAt', 'onServerAt', 'deletedAt'];
 
 let nameIx = 0;
 
-const attrStrip = (...attr) => {
-  return (res) => {
-    let result;
-    if (Array.isArray(res)) {
-      result = [];
-      res.map((v, i, arr) => {
-        let obj = clone(arr[i]);
-        attr.forEach(a => delete obj[a]);
-        result.push(obj);
-      })
-    }
-    else {
-      result = clone(res);
-      attr.forEach(a => delete result[a]);
-    }
-    return result;
-  }
+const attrStrip = (...attrToStrip) => {
+  const removeProperty = (target, propertyToRemove) => {
+    const { [propertyToRemove]: _, ...newTarget } = target;
+    return newTarget;
+  };
+
+  const stripOnce = (obj, attrToStrip) =>
+    attrToStrip.reduce((prev, cur) => removeProperty(prev, cur), obj);
+  
+  return (obj) => {
+    if (Array.isArray(obj))
+      return obj.map(o => stripOnce(o, attrToStrip));
+    else
+      return stripOnce(obj, attrToStrip);
+  };
 }
 
 class OwnClass extends AdapterService {
@@ -94,21 +96,36 @@ class OwnClass extends AdapterService {
     this.localServiceName = this.thisName + '_local';
     this.localServiceQueue = this.thisName + '_queue';
 
-    this.storage = this.options.storage ? this.options.storage : localStorage;
+    this.storage = this.options.storage ? this.options.storage : ['LOCALSTORAGE'];
+
+    
+    if (typeof this.storage === 'string' && this.storage.toUpperCase() === 'ASYNCSTORAGE') {
+      this.storage = global.AsyncStorage;
+      this.storageDriver = ls;
+    }
+    else {
+      this.storageDriver = lf;
+    }
+
     this.localSpecOptions = { name: this.localServiceName, storage: this.storage, store: this.options.store, reuseKeys: this.options.fixedName !== '' };
     let localOptions = Object.assign({}, this.options, this.localSpecOptions);
     let queueOptions = { id: 'id', name: this.localServiceQueue, storage: this.storage, paginate: null, multi: true, reuseKeys: this.options.fixedName !== '' };
 
-    debug(`  Setting up services '${this.localServiceName}' and '${this.localServiceQueue}'...`);
-    app.use(this.localServiceName, ls(localOptions));
-    app.use(this.localServiceQueue, ls(queueOptions));
+    app.use(this.localServiceName, this.storageDriver(localOptions));
+    app.use(this.localServiceQueue, this.storageDriver(queueOptions));
 
     this.localService = app.service(this.localServiceName);
     this.localQueue = app.service(this.localServiceQueue);
 
+    let err1 = null, res=null;
+
+    // Now we need to setup the DB for synchronization timestamps
+    app.use(syncDB, this.storageDriver({ id: 'id', name: syncDB, storage: this.storage, paginate: null, reuseKeys: true }));
+    this.syncDB = app.service(syncDB);
+
     // We need to make sure that localService is properly initiated - make a dummy search
     //    (one of the quirks of feathers-localstorage)
-    await this.localService.ready();
+    if (this.storageDriver === ls) await this.localService.ready();
 
     // The initialization/setup of the localService adapter screws-up our options object
     this.options = this.wrapperOptions;
@@ -129,29 +146,20 @@ class OwnClass extends AdapterService {
     // Make sure we always select the key (id) in our results
     this._select = (params, ...others) => (res) => { return select(params, ...others, self.id)(res) }
 
+    this._dates = this.options.dates || false;
+
     // Initialize the service wrapper
     this.listening = false;
     this.aIP = 0; // Our semaphore for internal processing
     this.pQActive = false; // Our flag for avoiding more than one processing of queued operations at a time
 
-    // Setup syncDB functions
-    //   (localStorage is sync and React AsyncStorage is async so we
-    //    coerce the chosen storage to be async...)
-    debug(`  Setting up syncDB functions...`);
-    this.syncDB = {};
-    this.syncDB.getItem = (async (key) => this.storage.getItem(key));
-    this.syncDB.setItem = (async (key, value) => this.storage.setItem(key, value));
-
     // Determine latest registered sync timestamp
     debug(`  Determine latest registered sync timestamp (if any)...`);
-    this.syncDB.getItem(this.thisName + '_syncedAt')
-      .then(value => {
-        this.syncedAt = Date(value || 0).toISOString();
-        this.syncDB.setItem(this.thisName + '_syncedAt', new Date(this.syncedAt).toISOString());
-      })
-      .catch(err => {
-        throw new errors.GeneralError(`Could not access syncDB to read syncedAt. err=${err.name}: ${err.message}`);
-      })
+    this.syncedAt = await this.getSyncedAt(false);
+    await this.writeSyncedAt(this.syncedAt, false);
+
+    // The initialization/setup of the localService adapter screws-up our options object
+    this.options = this.wrapperOptions;
 
     // This is necessary if we get updates to options (e.g. .options.multi = ['patch'])
     if (!(this.remoteService instanceof AdapterService)) {
@@ -173,6 +181,34 @@ class OwnClass extends AdapterService {
 
     debug('Done.');
     return true;
+  }
+
+  async getSyncedAt(bFailOnNotFound = true) {
+    const key = `${this.name}_${syncDB}`;
+
+    let [err, res] = await to( this.syncDB.get(key) );
+
+    if (err && bFailOnNotFound) throw new errors.NotFound(`Failed to find sync key=${key}. err=${err.name}, ${err.message}`);
+
+    return (res && res.value) || BOT.toISOString();
+  }
+
+  async writeSyncedAt(value, bFailOnNotFound = true) {
+    const key = `${this.name}_${syncDB}`;
+
+    const old = await this.getSyncedAt(bFailOnNotFound)
+      .catch(_err => {
+        throw new errors.NotFound(`Failed to find sync key=${key} at write. err=${_err.name}, ${_err.message}`);
+      })
+      .then(_ => {
+        this.syncDB.create({ id: key, value })
+          .catch(_err => {
+            throw new errors.NotFound(`Failed to write syncedAt key=${key}. err=${_err.name}, ${_err.message}`);
+          })
+          .then(_ => old);
+      })
+
+    return old;
   }
 
   _listenOptions () {
@@ -197,14 +233,18 @@ class OwnClass extends AdapterService {
   async getEntries (params) {
     debug(`Calling getEntries(${JSON.stringify(params)}})`);
     let res = [];
-    await this.localService.getEntries(params)
-      .then(entries => {
+    try {
+      await this.localService.getEntries(params)
+        .then(entries => {
           res = entries
-      });
-
+        });
+    } catch (err) {
+      debug(`ERROR: getEntries(${JSON.stringify(params)}), err=${err.name} ${err.message}`);
+    }
     return Promise.resolve(res)
       .then(this._strip)
-      .then(this._select(params));
+      .then(this._select(params))
+      .then(stringsToDates(this._dates));
   }
 
   async get (id, params) {
@@ -230,7 +270,8 @@ class OwnClass extends AdapterService {
     debug(`Calling _find(${JSON.stringify(params)}})`);
     return this.localService.find(params)
       .then(this._strip)
-      .then(this._select(params));
+      .then(this._select(params))
+      .then(stringsToDates(this._dates));
   };
 
   async create (data, params) {
@@ -316,7 +357,8 @@ class OwnClass extends AdapterService {
 
     return Promise.resolve(res)
       .then(this._strip)
-      .then(this._select(params));
+      .then(this._select(params))
+      .then(stringsToDates(this._dates));
   }
 
   async update (id, data, params) {
@@ -390,7 +432,8 @@ class OwnClass extends AdapterService {
 
     return Promise.resolve(newData)
       .then(this._strip)
-      .then(this._select(params));
+      .then(this._select(params))
+      .then(stringsToDates(this._dates));
   }
 
   async patch (id, data, params) {
@@ -419,7 +462,7 @@ class OwnClass extends AdapterService {
 
         let timestamp = new Date().toISOString();
         return Promise.all(res.map(
-          current => self._patch(current[this.id], data, params, timestamp))
+          current => self._patch(current[self.id], data, params, timestamp))
         );
       });
     }
@@ -471,7 +514,8 @@ class OwnClass extends AdapterService {
 
     return Promise.resolve(newData)
       .then(this._strip)
-      .then(this._select(params));
+      .then(this._select(params))
+      .then(stringsToDates(this._dates));
   }
 
   /**
@@ -511,7 +555,7 @@ class OwnClass extends AdapterService {
         }
 
         return Promise.all(res.map(
-          current => self._remove(current[this.id], params))
+          current => self._remove(current[self.id], params))
         );
       });
     }
@@ -560,7 +604,8 @@ class OwnClass extends AdapterService {
 
     return Promise.resolve(beforeRecord)
       .then(this._strip)
-      .then(this._select(params));
+      .then(this._select(params))
+      .then(stringsToDates(this._dates));
   }
 
   // Allow access to our internal services (for application hooks and the demo). Use with care!
@@ -706,10 +751,8 @@ class OwnClass extends AdapterService {
     }));
 
     // Save last sync timestamp
-    this.syncDB.setItem(this.thisName + '_syncedAt', new Date(syncTS).toISOString())
-      .catch(err => {
-        throw new errors.GeneralError(`Could not access syncDB to write syncedAt. err=${err.name}: ${err.message}`);
-      });
+    await this.writeSyncedAt(syncTS);
+    this.syncedAt = syncTS;
 
     if (result) // Wait until internal Processing is ok
       while (!await this._processQueuedEvents()) {
@@ -730,16 +773,15 @@ class OwnClass extends AdapterService {
    * Determine the relevant options necessary for synchronizing this service.
    *
    * @param {boolean} bAll If true, we try to sync for the beginning of time.
+   * @param {boolean} bTesting If true, we try to make sync possible without the server wrapper.
    * @returns {object} The relevant options for snapshot().
    */
-  async _getSyncOptions (bAll) {
-    let query = Object.assign({}, {offline:{_forceAll: true}, $sort: {onServerAt: 1}});
+  async _getSyncOptions(bAll, bTesting) {
+    let offline = bTesting ? {} : { _forceAll: bAll };
+    let query = Object.assign({}, { offline }, { $sort: {onServerAt: 1}});
     let ts = bAll ? new Date(0).toISOString() : this.syncedAt;
-    let syncTS = ts < this.syncedAt ? ts : this.syncedAt;
 
-    if (syncTS !== new Date(ts)) {
-      query.offline.onServerAt = new Date(syncTS);
-    }
+    query.onServerAt = bTesting ? { $gte: new Date(ts).getTime() } : ts;
 
     return query;
   }

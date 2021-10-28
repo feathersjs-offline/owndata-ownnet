@@ -38,7 +38,10 @@ function createConfig (name, isProduction = false) {
 
   const dev = {
     mode: 'development',
-    devtool: 'source-map'
+    devtool: 'source-map',
+    output: {
+      filename: `${output}.js`
+    },
   };
 
   const production = {

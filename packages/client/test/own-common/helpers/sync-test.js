@@ -7,7 +7,6 @@ const socketioClient = require('@feathersjs/socketio-client');
 const memory = require('feathers-memory');
 const io = require('socket.io-client');
 const delay = require('./delay');
-const setUpHooks = require('./setup-hooks');
 const failCountHook = require('./fail-count-hook');
 const { realtimeWrapper } = require('../../../../server/src');
 
@@ -15,6 +14,9 @@ let app;
 let service;
 
 module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 9100, isBaseClass = false) => {
+
+  const isTesting = false;
+
   const logAction = (type, action) => {
     return (msg, _ctx) => {
       console.log(`${type}: action=${action}, msg=${JSON.stringify(msg)}, _ctx.params=${JSON.stringify(_ctx.params)}, _ctx.query=${JSON.stringify(_ctx.query)}`);
@@ -78,8 +80,8 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 9
       return service.create({ id: 99, order: 99 })
         .then(data => {
           expect(typeof data.uuid).to.equal('string', 'uuid was added');
-          expect(typeof data.updatedAt).to.equal('string', 'updatedAt was added');
-          expect(typeof data.onServerAt).to.equal('string', 'onServerAt was added');
+          expect(typeof data.updatedAt).to.equal('object', 'updatedAt was added');
+          expect(typeof data.onServerAt).to.equal('object', 'onServerAt was added');
         })
         .then(delay())
         .then(() => service.find())
@@ -94,7 +96,7 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 9
         .then(async () => {
           let flag = null;
           try {
-            await service.sync(true);
+            await service.sync(true, isTesting);
             flag = true;
           } catch (err) {
             flag = isBaseClass && err.name === 'NotImplemented';
@@ -105,7 +107,7 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 9
         .then(() => remote.find({ query: { $sort: { id: 1 } } }))
         .then(delay())
         .then(remoteData => remoteSyncResult = remoteData)
-        .then(() => service.find({ query: { $sort: { id: 1 } } }))
+        .then(() => service.local.find({ query: { $sort: { id: 1 } } }))
         .then(delay())
         .then(data => {
           clientSyncResult = data;
@@ -138,11 +140,11 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 9
       return service.create({ id: 99, order: 99 })
         .then(data => {
           expect(typeof data.uuid).to.equal('string', 'uuid was added');
-          expect(typeof data.updatedAt).to.equal('string', 'updatedAt was added');
-          expect(typeof data.onServerAt).to.equal('string', 'onServerAt was added');
+          expect(typeof data.updatedAt).to.equal('object', 'updatedAt was added');
+          expect(typeof data.onServerAt).to.equal('object', 'onServerAt was added');
         })
         .then(delay())
-        .then(() => service.find())
+        .then(() => service.local.find())
         .then(res => {
           expect(res.length).to.equal(1, '1 row created locally');
         })
@@ -153,11 +155,11 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 9
         .then(() => service2.create({ id: 98, order: 98 }))
         .then(data => {
           expect(typeof data.uuid).to.equal('string', 'uuid was added');
-          expect(typeof data.updatedAt).to.equal('string', 'updatedAt was added');
-          expect(typeof data.onServerAt).to.equal('string', 'onServerAt was added');
+          expect(typeof data.updatedAt).to.equal('object', 'updatedAt was added');
+          expect(typeof data.onServerAt).to.equal('object', 'onServerAt was added');
         })
         .then(delay())
-        .then(() => service2.find())
+        .then(() => service2.local.find())
         .then(res => {
           expect(res.length).to.equal(1, '1 row created locally');
         })
@@ -169,7 +171,7 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 9
         .then(async () => {
           let flag = 'Error';
           try {
-            await service.sync(true);
+            await service.sync(true, isTesting);
             flag = 'OK';
           } catch (err) {
             flag = (isBaseClass && err.name === 'NotImplemented') ? 'OK' : 'Error';
@@ -179,7 +181,7 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 9
         .then(async () => {
           let flag = 'Error';
           try {
-            await service2.sync(true);
+            await service2.sync(true, isTesting);
             flag = 'OK';
           } catch (err) {
             flag = (isBaseClass && err.name === 'NotImplemented') ? 'OK' : 'Error';
@@ -190,7 +192,7 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 9
         .then(async () => {
           let flag = 'Error';
           try {
-            await service.sync(true);
+            await service.sync(true, isTesting);
             flag = 'OK';
           } catch (err) {
             flag = (isBaseClass && err.name === 'NotImplemented') ? 'OK' : 'Error';
@@ -206,7 +208,7 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 9
         .then(data => {
           clientSyncResult = data;
           if (!isBaseClass) {
-            expect(remoteSyncResult.length).to.equal(clientSyncResult.length, 'client has ame number of documents');
+            expect(remoteSyncResult.length).to.equal(clientSyncResult.length, 'client has same number of documents');
           }
           else {
             expect(remoteSyncResult.length).to.equal(clientSyncResult.length-1, 'client still missing one document from client');
@@ -246,17 +248,17 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 9
         .then(delay())
         .then(async () => {
           try {
-            await service.sync();
+            await service.sync(true, isTesting);
           } catch (err) {
             expect(true).to.equal(isBaseClass && err.name === 'NotImplemented', '.sync() is a method');
           }
           try {
-            await service2.sync();
+            await service2.sync(true, isTesting);
           } catch (err) {
             expect(true).to.equal(isBaseClass && err.name === 'NotImplemented', '.sync() is a method');
           }
           try {
-            await service.sync();
+            await service.sync(true, isTesting);
           } catch (err) {
             expect(true).to.equal(isBaseClass && err.name === 'NotImplemented', '.sync() is a method');
           }

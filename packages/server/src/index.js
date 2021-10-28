@@ -6,6 +6,7 @@ import { _, hooks, stripSlashes } from '@feathersjs/commons';
 import errors from '@feathersjs/errors';
 import { genUuid } from './cryptographic';
 import to from './to';
+import stringsToDates from './strings-to-dates';
 const debug = require('debug')('@feathersjs-offline:server:index');
 
 const defOptions = {
@@ -47,10 +48,10 @@ class RealtimeClass extends AdapterService {
 
     let self = this;
 
-    // Now we are ready to define the path with its underlying service (the remoteService)
+    // Now we are ready to define the path with its underlying service (the wrapped service)
     let old = app.service(path);
     if (old !== self) {
-      this.remoteService = old || app.service(path); // We want to get the default service (redirects to server or points to a local service)
+      this.wrappedService = old || app.service(path); // We want to get the default service (redirects to server or points to a local service)
       app.use(path, self);  // Install this service instance
     }
 
@@ -76,17 +77,19 @@ class RealtimeClass extends AdapterService {
     // Make sure we always select the key (id) in our results
     this._select = (params, ...others) => (res) => { return select(params, ...others, self.id)(res) }
 
+    this._dates = this.options.dates || false;
+
     // Initialize the service wrapper
     this.listening = false;
 
     // This is necessary if we get updates to options (e.g. .options.multi = ['patch'])
-    if (!(this.remoteService instanceof AdapterService)) {
+    if (!(this.wrappedService instanceof AdapterService)) {
       this._listenOptions();
     }
 
     // Make sure that the wrapped service is setup correctly
-    if (typeof this.remoteService.setup === 'function') {
-      this.remoteService.setup(app, path);
+    if (typeof this.wrappedService.setup === 'function') {
+      this.wrappedService.setup(app, path);
     }
 
     debug('  Done.');
@@ -100,30 +103,41 @@ class RealtimeClass extends AdapterService {
 
     this.options = observe(Object.assign(
       {},
-      this.remoteService.options ? this.remoteService.options : {},
+      this.wrappedService.options ? this.wrappedService.options : {},
       self.options
     ));
     watcher(() => {
       // Update all changes to 'this.options' in both localService and remoteService
-      self.remoteService.options = Object.assign({}, self.remoteService.options, self.options);
+      self.wrappedService.options = Object.assign({}, self.wrappedService.options, self.options);
     });
 
+  }
+
+  get wrapped () {
+    return this.wrappedService;
   }
 
   async _get (id, params) {
     const { newParams, offline } = fixParams(params);
     debug(`Calling _get(${id}, ${JSON.stringify(newParams)}) params=${JSON.stringify(params)}`);
-    return this.remoteService.get(id, newParams)
+    return this.wrappedService.get(id, newParams)
       .then(this._strip)
-      .then(this._select(newParams));
+      .then(this._select(newParams))
+      .then(stringsToDates(this._dates));
     }
 
   async _find (params) {
     const { newParams, offline } = fixParams(params);
+    debug(`params.query = ${JSON.stringify(params.query)}, newParams = ${JSON.stringify(newParams)}`);
     debug(`Calling _find(${JSON.stringify(newParams)})`);
-    return this.remoteService.find(newParams)
+    return this.wrappedService.find(newParams)
       .then(this._strip)
-      .then(this._select(newParams));
+      .then(this._select(newParams))
+      .then(res => {
+        debug(`res = ${JSON.stringify(res)}`);
+        return res;
+      })
+      .then(stringsToDates(this._dates));
     }
 
   async _create (data, params = {}, ts = null) {
@@ -151,16 +165,17 @@ class RealtimeClass extends AdapterService {
 
     let myParams = Object.assign({}, params, { dummy: 123});
 
-    return this.remoteService.create(newData, myParams)
+    return this.wrappedService.create(newData, myParams)
       .then(this._strip)
-      .then(this._select(newParams));
+      .then(this._select(newParams))
+      .then(stringsToDates(this._dates));
     }
 
   async _update (id, data, params) {
     debug(`Calling _update(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)})`);
     const { newParams, offline } = fixParams(params);
     let newData = clone(data);
-    let active = await this.remoteService.get(id, newParams);
+    let active = await this.wrappedService.get(id, newParams);
 
     if (!('uuid' in newData)) {
       newData.uuid = active.uuid;
@@ -174,9 +189,10 @@ class RealtimeClass extends AdapterService {
         .then(this._strip);
     } else {
       newData.onServerAt = new Date();
-      return this.remoteService.update(id, newData, newParams)
+      return this.wrappedService.update(id, newData, newParams)
         .then(this._strip)
-        .then(this._select(newParams));
+        .then(this._select(newParams))
+        .then(stringsToDates(this._dates));
       }
   }
 
@@ -189,12 +205,8 @@ class RealtimeClass extends AdapterService {
         throw new errors.MethodNotAllowed('Patching multiple without option \'multi\' set');
       }
       const ts = new Date();
-      return this.remoteService.find(newParams).then(page => {
+      return this.wrappedService.find(newParams).then(page => {
         const res = page.data ? page.data : page;
-        if (!Array.isArray(res)) {
-          res = [res];
-        }
-
         const self = this;
         return Promise.all(res.map(
           current => self._patch(current[self.id], data, params, ts))
@@ -203,16 +215,17 @@ class RealtimeClass extends AdapterService {
     }
 
     let newData = clone(data);
-    let active = await this.remoteService.get(id, newParams);
+    let active = await this.wrappedService.get(id, newParams);
     if (new Date(active.onServerAt).getTime() > newData.updatedAt) {
       return Promise.resolve(active)
         .then(this._strip)
         .then(this._select(newParams));
       } else {
       newData.onServerAt = ts || new Date();
-      return this.remoteService.patch(id, newData, newParams)
+      return this.wrappedService.patch(id, newData, newParams)
         .then(this._strip)
-        .then(this._select(params));
+        .then(this._select(params))
+        .then(stringsToDates(this._dates));
       }
   }
 
@@ -225,12 +238,8 @@ class RealtimeClass extends AdapterService {
         throw new errors.MethodNotAllowed('Removing multiple without option \'multi\' set');
       }
       const ts = new Date();
-      return this.remoteService.find(newParams).then(page => {
+      return this.wrappedService.find(newParams).then(page => {
         const res = page.data ? page.data : page;
-        if (!Array.isArray(res)) {
-          res = [res];
-        }
-
         const self = this;
         return Promise.all(res.map(
           current => self._remove(current[self.id], params, ts))
@@ -240,17 +249,18 @@ class RealtimeClass extends AdapterService {
 
     ts = ts || new Date();
 
-    if (offline && '_forceAll' in offline) {
-      return this.remoteService.remove(id, newParams)
+    if (offline && offline._forceAll) {
+      return this.wrappedService.remove(id, newParams)
         .then(this._strip)
         .then(this._select(newParams));
       } else {
-      return this.remoteService.patch(id, { deletedAt: ts }, newParams)
+      return this.wrappedService.patch(id, { deletedAt: ts }, newParams)
         .then(res => {
           return res;
         })
         .then(this._strip)
-        .then(this._select(newParams));
+        .then(this._select(newParams))
+        .then(stringsToDates(this._dates));
     }
   }
 };
@@ -302,7 +312,7 @@ function realtimeWrapper (app, path, options = {}) {
   service = app.service(location);
   service.options = opts;
   service._listenOptions();
-  service.remoteService = old;
+  service.wrappedService = old;
 
   return service;
 }
@@ -322,24 +332,22 @@ function clone (obj) {
 
 const _adapterTestStrip = ['uuid', 'updatedAt', 'onServerAt', 'deletedAt'];
 
-const attrStrip = (...attr) => {
-  return (res) => {
-    let result;
-    if (Array.isArray(res)) {
-      result = [];
-      res.map((v, i, arr) => {
-        let obj = clone(arr[i]);
-        attr.forEach(a => delete obj[a]);
-        result.push(obj);
-      })
-    }
-    else {
-      result = clone(res);
-      attr.forEach(a => delete result[a]);
-    }
-    return result;
-  }
-};
+const attrStrip = (...attrToStrip) => {
+  const removeProperty = (target, propertyToRemove) => {
+    const { [propertyToRemove]: _, ...newTarget } = target;
+    return newTarget;
+  };
+
+  const stripOnce = (obj, attrToStrip) =>
+    attrToStrip.reduce((prev, cur) => removeProperty(prev, cur), obj);
+  
+  return (obj) => {
+    if (Array.isArray(obj))
+      return obj.map(o => stripOnce(o, attrToStrip));
+    else
+      return stripOnce(obj, attrToStrip);
+  };
+}
 
 /**
  * Fixes params so that `query` adheres to the standard i.e. it splits
@@ -362,28 +370,22 @@ const fixParams = function (params) {
 
   params = JSON.parse(JSON.stringify(params));
   let { paginate, query = {}, ...other } = params;
-  let { offline } = query;
+  let { offline, ...rest } = query;
+  query = rest;
   let newParams = Object.assign({}, params);
 
   if (offline) {
-    delete query.offline;
-
-    if ('_forceAll' in offline) {
-      delete query.deletedAt
-      if ('onServerAt' in offline) {
-        query.onServerAt = { $gte: new Date(offline.onServerAt).getTime() };
-      }
+    if ('_forceAll' in offline && offline._forceAll) {
+      let { deletedAt, ...rest } = query;
+      query = rest;
+      query.onServerAt = { $gte: new Date(query.onServerAt || 0).getTime() };
     }
     else {
       query.deletedAt = null;
     }
   }
   else {
-    if (query && query !== {}) {
-      query = Object.assign(query, { 'deletedAt': null });
-    } else {
-      query = { 'deletedAt': null };
-    }
+    query = Object.assign(query, { 'deletedAt': null });
   }
 
   newParams.query = query;

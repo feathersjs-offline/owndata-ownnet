@@ -1,7 +1,7 @@
 const { assert, expect } = require('chai');
 const _ = require('lodash');
-const { omit, remove } = _;
-const sorter = require('./sorter'); // require('@feathersjs/adapter-commons');
+const { remove } = _;
+const { sorter } = require('@feathersjs/adapter-commons');
 const { service2, service4 } = require('./client-service');
 const setUpHooks = require('./setup-hooks');
 const failCountHook = require('./fail-count-hook');
@@ -129,7 +129,14 @@ module.exports = (desc, _app, _errors, wrapper, serviceName, verbose, isBaseClas
       it('create adds missing updatedAt', () => {
         return clientService.create({ id: 99, order: 99 })
           .then(data => {
-            assert.isString(data.updatedAt);
+            assert.strictEqual(typeof data.updatedAt, 'object', 'updatedAt should be an object');
+          })
+      });
+
+      it('create adds missing onServerAt', () => {
+        return clientService.create({ id: 99, order: 99 })
+          .then(data => {
+            assert.strictEqual(typeof data.onServerAt, 'object', 'onServerAt should be an object');
           })
       });
 
