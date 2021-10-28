@@ -13,7 +13,6 @@ module.exports = (desc, _app, _errors, wrapper, serviceName, verbose, isBaseClas
 
   let clientService;
 
-
   // This is just to ensure 100% coverage of owndata
   describe('_processQueuedEvents error handling (e.g. remote timeout)', () => {
     let data;

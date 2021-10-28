@@ -5,20 +5,11 @@
   ],
   "linterOptions": {
     "exclude": [
-      "packages/common/lib/*",
-      "packages/docs/**",
-      "packages/owndata/lib/*",
-      "packages/ownnet/lib/*",
-      "**/packages/server/lib/*",
-      "packages/snapshot/lib/*",
-      "**/packages/utils/lib/*",
-      "packages/example/lib/*",
-      "packages/example/public/*",
+      "**/lib/*",
       "**/node_modules/**",
       "**/coverage/**",
       "**/dist/*",
-      "**/*.dist.js",
-      "**/app.js"
+      "**/*.dist.js"
     ]
   },
   "rules": {

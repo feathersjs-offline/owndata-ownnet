@@ -3,7 +3,7 @@
 
 const stringsToDates = (active) => (result) => {
   const regexDate = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/i;
-  function jsonDate(obj) {
+  function jsonDate (obj) {
     const type = typeof (obj);
     if (type === 'object') {
       for (const p in obj)

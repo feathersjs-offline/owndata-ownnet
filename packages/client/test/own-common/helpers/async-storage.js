@@ -23,19 +23,19 @@ class AsyncStorage {
     return oldValue;
   }
 
-  async mergeItem() {
+  async mergeItem () {
   }
-  async removeItem() {
+  async removeItem () {
   }
-  async multiGet() {
+  async multiGet () {
   }
-  async multiSet() {
+  async multiSet () {
   }
-  async multiMerge() {
+  async multiMerge () {
   }
-  async multiRemove() {
+  async multiRemove () {
   }
-  async useAsyncStorage() {
+  async useAsyncStorage () {
   }
 
   async clear () {

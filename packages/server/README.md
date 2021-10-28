@@ -22,6 +22,7 @@ npm install '@feathersjs-offline/server' --save
 All options available for the wrapped adapter can be used in addition to:
 
 - `useShortUuid` (optional, default `true`) - Generate short `uuid`s. If `false` long `uuid`s are generated. This option should match whatever you choose on the client.
+- `dates` (*optional*, default `false`) - Generate short `uuid`'s. If false long `uuid`'s are generated. This option should match whatever you choose on the server.
 - `adapterTest` (optional, default `false`) - This is usually only used for running adapter tests as it suppresses the generation of `uuid`, and updating of `onServerAt`.
 
 ## Documentation
@@ -103,7 +104,7 @@ app.listen(port, () => {
 
 Run the example with `node app` and go to `http://localhost:3030/messages`.
 
-For at more useful example [see this](https://github.com/feathersjs-offline/owndata-ownnet/simple-example/).
+For at more useful example [see this](https://github.com/feathersjs-offline/simple-example/).
 
 ## See also
 This service wrapper works in conjunction with either the `own-data` or the `own-net` client counterparts provided by `@feathersjs-offline/client`.

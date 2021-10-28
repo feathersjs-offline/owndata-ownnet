@@ -12,7 +12,6 @@ const asyncStorageTests = require('./own-common/helpers/async-storage-test');
 const restTests = require('./own-common/helpers/rest-test');
 const socketioTests = require('./own-common/helpers/socket-io-test');
 
-
 const OwnClass = require('../src/own-common');
 
 let package = 'ownclass';
