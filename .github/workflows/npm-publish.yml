@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 12.x
       - run: lerna bootstrap
-      - run: lerna test
+      - run: lerna run test
 
   publish:
     needs: test
