@@ -1,10 +1,8 @@
-const { assert, expect } = require('chai');
+const { assert } = require('chai');
 const _ = require('lodash');
-const { omit, remove } = _;
-const sorter = require('./sorter'); // require('@feathersjs/adapter-commons');
-const { service2, service4 } = require('./client-service');
+const { sorter } = require('@feathersjs/adapter-commons');
+const { service2 } = require('./client-service');
 const setUpHooks = require('./setup-hooks');
-const failCountHook = require('./fail-count-hook');
 const clone = require('./clone');
 const delay = require('./delay');
 const assertDeepEqualExcept = require('./assert-deep-equal-except');
@@ -15,19 +13,6 @@ module.exports = (desc, _app, _errors, wrapper, serviceName, verbose, isBaseClas
 
   let clientService;
 
-  async function getRows (service) {
-    let gRows = null;
-    gRows = await service.find({ query: { id: { $gte: 0 }, $sort: { order: 1 } } });
-    return gRows;
-  }
-
-  function setupServices () {
-    clientService = service2(wrapper, serviceName);
-    setUpHooks('REMOTE', serviceName, clientService.remote, true, verbose);
-    setUpHooks('CLIENT', serviceName, clientService.local, false, verbose);
-
-    return clientService;
-  }
 
   // This is just to ensure 100% coverage of owndata
   describe('_processQueuedEvents error handling (e.g. remote timeout)', () => {

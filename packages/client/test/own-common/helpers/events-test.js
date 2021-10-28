@@ -1,8 +1,6 @@
 const { assert, expect } = require('chai');
 const _ = require('lodash');
-const { omit } = _;
-const sorter = require('./sorter'); // require('@feathersjs/adapter-commons');
-const { service2 } = require('./client-service');
+  const { service2 } = require('./client-service');
 const setUpHooks = require('./setup-hooks');
 const clone = require('./clone');
 const delay = require('./delay');
@@ -29,7 +27,6 @@ module.exports = (desc, _app, _errors, wrapper, serviceName, verbose) => {
 
   describe(`${desc} - events tests`, () => {
     let data;
-    let eventSort = sorter({ id: 1, uuid: 1 });
 
     after(() => {
       console.log('\n');

@@ -1,6 +1,6 @@
 {
   "name": "@feathersjs-offline/server",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Server part of implementation of the own-data / own-net principles for supporting offline-first functionality for Feathers (mobile) applications.",
   "keywords": [
     "Feathersjs",
@@ -42,14 +42,14 @@
     "url": "git+https://github.com/feathersjs-offline/owndata-ownnet/packages/server.git"
   },
   "engines": {
-    "node": ">= 11"
+    "node": ">= 12"
   },
   "scripts": {
     "prepublish": "npm run compile",
     "compile": "shx rm -rf lib/ && tsc",
     "unit": "npm run mocha",
     "test": "npm run compile && npm run mocha",
-    "mocha": "rm -rf ./.scratch; nyc mocha --config ../../.mocharc.ts.json --recursive test/**.test.js test/**/*.test.js"
+    "mocha": "nyc mocha --config ../../.mocharc.ts.json test/**.test.js"
   },
   "dependencies": {
     "@feathersjs/adapter-commons": "^4.5.11",
@@ -57,8 +57,8 @@
     "@feathersjs/errors": "^4.5.11",
     "debug": "^4.3.1",
     "md5": "^2.3.0",
-    "shortid": "^2.2.16",
-    "uuid": "^8.3.2"
+    "nanoid": "^3.1.30",
+    "sift": "^14.0.2"
   },
   "devDependencies": {
     "@feathersjs/adapter-tests": "^4.5.11",

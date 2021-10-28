@@ -4,7 +4,6 @@ const feathers = require('@feathersjs/feathers');
 const errors = require('@feathersjs/errors');
 const memory = require('feathers-memory');
 const delay = require('./delay');
-const setUpHooks = require('./setup-hooks');
 const failCountHook = require('./fail-count-hook');
 const { newServicePath, service1, service2, service3 } = require('./client-service');
 
@@ -169,8 +168,8 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
         return service.create({ id: 99, order: 99 })
           .then(data => {
             expect(typeof data.uuid).to.equal('string', 'uuid was added');
-            expect(typeof data.updatedAt).to.equal('string', 'updatedAt was added');
-            expect(typeof data.onServerAt).to.equal('string', 'onServerAt was added');
+            expect(typeof data.updatedAt).to.equal('object', 'updatedAt was added');
+            expect(typeof data.onServerAt).to.equal('object', 'onServerAt was added');
           })
       });
 
@@ -182,8 +181,8 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
         return service.create({ id: 99, order: 99 })
           .then(data => {
             expect(typeof data.uuid).to.equal('string', 'uuid was added');
-            expect(typeof data.updatedAt).to.equal('string', 'updatedAt was added');
-            expect(typeof data.onServerAt).to.equal('string', 'onServerAt was added');
+            expect(typeof data.updatedAt).to.equal('object', 'updatedAt was added');
+            expect(typeof data.onServerAt).to.equal('object', 'onServerAt was added');
           })
       });
 
@@ -263,7 +262,7 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
 
     })
 
-    describe('Non _ functions throws exception', () => {
+    describe('Non _ methods throws exception', () => {
       let service;
 
       beforeEach(() => {
@@ -299,7 +298,7 @@ module.exports = (test, _app, _errors, wrapper, serviceName, verbose) => {
 
     });
 
-    describe('_ functions throws exception', () => {
+    describe('_ methods throws exception', () => {
       let service;
 
       beforeEach(() => {

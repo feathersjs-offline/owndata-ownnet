@@ -4,7 +4,6 @@ import io from 'socket.io-client';
 const feathers = require('@feathersjs/feathers');
 const socketio = require('@feathersjs/socketio');
 const socketioClient = require('@feathersjs/socketio-client');
-const { Service } = require('feathers-memory');
 const delay = require('./delay');
 
 module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 7886, isBaseClass = false) => {
@@ -56,8 +55,8 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 7
           assert.deepStrictEqual(typeof res.create, 'undefined');
           assert.deepStrictEqual(res.firstName, 'Fred');
           assert.deepStrictEqual(res.lastName, 'Flintstone');
-          assert.deepStrictEqual(typeof res.onServerAt, 'string');
-          assert.deepStrictEqual(typeof res.updatedAt, 'string');
+          assert.deepStrictEqual(typeof res.onServerAt, 'object');
+          assert.deepStrictEqual(typeof res.updatedAt, 'object');
           assert.deepStrictEqual(typeof res.uuid, 'string');
         })
         .then(() => cApp.service(serviceName).sync(true))
@@ -92,8 +91,8 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 7
           assert.deepStrictEqual(res.firstName, 'Fred');
           assert.deepStrictEqual(res.lastName, 'Flintstone');
           assert.deepStrictEqual(res.fromHook, 'You were here!');
-          assert.deepStrictEqual(typeof res.onServerAt, 'string');
-          assert.deepStrictEqual(typeof res.updatedAt, 'string');
+          assert.deepStrictEqual(typeof res.onServerAt, 'object');
+          assert.deepStrictEqual(typeof res.updatedAt, 'object');
           assert.deepStrictEqual(typeof res.uuid, 'string');
         })
         .then(() => cApp.service(serviceName).sync(true))
@@ -120,8 +119,8 @@ module.exports = (desc, _app, _errors, wrapperFn, serviceName, verbose, port = 7
           assert.deepStrictEqual(typeof res.create, 'undefined');
           assert.deepStrictEqual(res.firstName, 'Fred');
           assert.deepStrictEqual(res.lastName, 'Flintstone');
-          assert.deepStrictEqual(typeof res.onServerAt, 'string');
-          assert.deepStrictEqual(typeof res.updatedAt, 'string');
+          assert.deepStrictEqual(typeof res.onServerAt, 'object');
+          assert.deepStrictEqual(typeof res.updatedAt, 'object');
           assert.deepStrictEqual(typeof res.uuid, 'string');
           assert.deepStrictEqual(flag, true);
         })

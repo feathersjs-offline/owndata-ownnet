@@ -374,11 +374,10 @@ describe('RealtimeServerWrapper', () => {
     })
 
     it('.find + _forceAll: false', () => {
-      // Test to verify it is only the '_forceAll' key we are relying on - not its value
       return service.find({ query: { offline: { _forceAll: false } } })
         .then(delay())
         .then(sdata => {
-          expect(sdata.length).to.equal(data.length + deleted.length, `${2 * sampleLen} rows found`);
+          expect(sdata.length).to.equal(data.length, `${sampleLen} rows found`);
           for (let i = 0; i < sampleLen; i += 1) {
             expect(sdata[i].id).to.equal(data[i].id, `id is ok (i=${i})`);
             expect(sdata[i].uuid).to.equal(data[i].uuid, `uuid is ok (i=${i})`);
@@ -386,14 +385,6 @@ describe('RealtimeServerWrapper', () => {
             expect(sdata[i].updatedAt).to.equal(data[i].updatedAt, `updatedAt is ok (i=${i})`);
             expect(sdata[i].onServerAt).to.not.equal(data[i].onServerAt, `onServerAt is updated (i=${i})`);
             expect(sdata[i].deletedAt).to.equal(data[i].deletedAt, `deletedAt is not updated (i=${i})`);
-          }
-          for (let i = sampleLen; i < 2 * sampleLen; i += 1) {
-            expect(sdata[i].id).to.equal(deleted[i - sampleLen].id, `id is ok (i=${i})`);
-            expect(sdata[i].uuid).to.equal(deleted[i - sampleLen].uuid, `uuid is ok (i=${i})`);
-            expect(sdata[i].order).to.equal(deleted[i - sampleLen].order, `order is ok (i=${i})`);
-            expect(sdata[i].updatedAt).to.equal(deleted[i - sampleLen].updatedAt, `updatedAt is ok (i=${i})`);
-            expect(sdata[i].onServerAt).to.not.equal(deleted[i - sampleLen].onServerAt, `onServerAt is updated (i=${i})`);
-            expect(sdata[i].deletedAt).to.not.equal(undefined, `deletedAt is not undefined (i=${i})`);
           }
         })
     });
@@ -425,7 +416,7 @@ describe('RealtimeServerWrapper', () => {
 
     it('.find + _forceAll: true + onServerAt string', () => {
       onServerAt = new Date(onServerAt).getTime();
-      return service.find({ query: { offline: { _forceAll: true, onServerAt } } })
+      return service.find({ query: { offline: { _forceAll: true }, onServerAt } })
         .then(delay())
         .then(sdata => {
           expect(sdata.length).to.equal(deleted.length, `${sampleLen} rows found`);
@@ -442,7 +433,7 @@ describe('RealtimeServerWrapper', () => {
 
     it('.find + _forceAll: true + onServerAt date', () => {
       onServerAt = new Date(onServerAt).getTime();
-      return service.find({ query: { offline: { _forceAll: true, onServerAt } } })
+      return service.find({ query: { offline: { _forceAll: true }, onServerAt } })
         .then(delay())
         .then(sdata => {
           expect(sdata.length).to.equal(deleted.length, `${sampleLen} rows found`);
@@ -515,7 +506,7 @@ describe('RealtimeServerWrapper', () => {
     it('.update + _forceAll: true + onServerAt', () => {
       onServerAt = new Date(onServerAt).getTime();
       let upd = Object.assign({}, ddata[0], { order: 92, updatedAt: new Date() });
-      return service.update(5, upd, { query: { offline: { _forceAll: true, onServerAt } } })
+      return service.update(5, upd, { query: { offline: { _forceAll: true }, onServerAt } })
         .then(delay())
         .then(sdata => {
           // We update data, as onServerAt in DB is older than updatedAt
@@ -593,7 +584,7 @@ describe('RealtimeServerWrapper', () => {
             expect(sdata[i].uuid).to.equal(ddata[i].uuid, `uuid is ok (i=${i})`);
             expect(sdata[i].order).to.equal(95, `order is ok (i=${i})`);
             expect(sdata[i].updatedAt).to.equal(ddata[i].updatedAt, `updatedAt is ok (i=${i})`);
-            expect(sdata[i].onServerAt).to.satisfy((v) => { return v > ddata[i].onServerAt }, `onServerAt is updated (i=${i})`);
+            expect(sdata[i].onServerAt).to.satisfy(v => v > ddata[i].onServerAt, `onServerAt is updated (i=${i})`);
             expect(sdata[i].deletedAt).to.equal(ddata[i].deletedAt, `deletedAt is ok (i=${i})`);
           }
         })
@@ -601,7 +592,7 @@ describe('RealtimeServerWrapper', () => {
 
     it('.patch null + _forceAll: true + onServerAt', () => {
       onServerAt = new Date(onServerAt).getTime();
-      return service.patch(null, { order: 96 }, { query: { offline: { _forceAll: true, onServerAt } } })
+      return service.patch(null, { order: 96 }, { query: { offline: { _forceAll: true }, onServerAt } })
         .then(delay())
         .then(sdata => {
           expect(sdata.length).to.equal(ddata.length, `${sampleLen} rows found`);
@@ -651,7 +642,7 @@ describe('RealtimeServerWrapper', () => {
 
     it('.remove + _forceAll: true + onServerAt', () => {
       onServerAt = new Date(onServerAt).getTime();
-      return service.remove(5, { query: { offline: { _forceAll: true, onServerAt } } })
+      return service.remove(5, { query: { offline: { _forceAll: true }, onServerAt } })
         .then(delay())
         .then(sdata => {
           expect(typeof sdata).to.equal('object', `1 row found`);
@@ -663,6 +654,22 @@ describe('RealtimeServerWrapper', () => {
             expect(sdata.onServerAt).to.equal(ddata[i].onServerAt, `onServerAt is ok (i=${i})`);
             expect(sdata.deletedAt).to.equal(ddata[i].deletedAt, `deletedAt is ok (i=${i})`);
           }
+        })
+    });
+
+    it('.wrapped works', () => {
+      onServerAt = new Date(onServerAt).getTime();
+      let myData = { id: 10, uuid: 1010, order: 10, updatedAt: new Date(11).getTime() };
+      return service.wrapped.create(myData)
+        .then(delay())
+        .then(sdata => {
+          expect(typeof sdata).to.equal('object', `1 row found`);
+          expect(sdata.id).to.equal(myData.id, `id is ok`);
+          expect(sdata.uuid).to.equal(myData.uuid, `uuid is ok`);
+          expect(sdata.order).to.equal(myData.order, `order is ok`);
+          expect(sdata.updatedAt).to.equal(myData.updatedAt, `updatedAt is ok`);
+          expect(sdata.onServerAt).to.equal(myData.onServerAt, `onServerAt is not defined`);
+          expect(sdata.deletedAt).to.equal(myData.deletedAt, `deletedAt is not defined`);
         })
     });
 

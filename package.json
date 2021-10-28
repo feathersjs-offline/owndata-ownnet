@@ -2,7 +2,7 @@
   "name": "feathersjs-offline",
   "description": "FeathersJS offline-first realtime universe",
 
-  "version": "1.1.1",
+  "version": "2.0.0",
   "keywords": [
     "feathers",
     "feathersjs-offline",
@@ -58,6 +58,7 @@
     "npm-check-updates": "^11.0.0",
     "nyc": "^15.1.0",
     "parallel-webpack": "^2.6.0",
+    "shx": "^0.3.3",
     "tslint": "^6.1.3",
     "typescript": "^4.1.2",
     "webpack": "^5.10.0",
