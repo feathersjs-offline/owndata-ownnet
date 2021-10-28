@@ -8,6 +8,7 @@ import lf from '@feathersjs-offline/localforage';
 import { genUuid, to, OptionsProxy, stringsToDates } from '../common';
 import snapshot from '../snapshot';
 
+
 const debug = require('debug')('@feathersjs-offline:ownclass:service-base');
 
 const defaultOptions = {
