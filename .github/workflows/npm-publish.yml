@@ -36,8 +36,8 @@ jobs:
           node-version: 12.x
           registry-url: 'https://registry.npmjs.org/'
 
-      - run: cd packages/server && npm publish --access public
-      - run: cd packages/client && npm publish --access public
+      - run: cd packages/server && npm run webpack && npm publish --access public
+      - run: cd packages/client && npm run webpack && npm publish --access public
 
       # Publish to GitHub Packages
       - uses: actions/setup-node@v2
