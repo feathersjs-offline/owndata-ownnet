@@ -2,7 +2,7 @@
   "name": "feathersjs-offline",
   "description": "FeathersJS offline-first realtime universe",
 
-  "version": "2.0.1",
+  "version": "2.0.2",
   "keywords": [
     "feathers",
     "feathersjs-offline",
@@ -26,7 +26,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/feathersjs-offline.git"
+    "url": "git+https://github.com/feathersjs-offline/owndata-ownnet"
   },
   "engines": {
     "node": ">= 12"

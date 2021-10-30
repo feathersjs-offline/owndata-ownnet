@@ -1,6 +1,6 @@
 {
   "name": "@feathersjs-offline/server",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Server part of implementation of the own-data / own-net principles for supporting offline-first functionality for Feathers (mobile) applications.",
   "keywords": [
     "Feathersjs",
@@ -39,7 +39,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/feathersjs-offline/owndata-ownnet/packages/server.git"
+    "url": "git+https://github.com/feathersjs-offline/owndata-ownnet"
   },
   "engines": {
     "node": ">= 12"

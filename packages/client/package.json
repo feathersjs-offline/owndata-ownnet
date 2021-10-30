@@ -1,6 +1,6 @@
 {
   "name": "@feathersjs-offline/client",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Client part of implementation of the own-data / own-net principles for supporting offline-first functionality for Feathers (mobile) applications.",
   "keywords": [
     "feathers",
@@ -38,7 +38,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/feathersjs-offline/owndata-ownnet/packages/client.git"
+    "url": "git+https://github.com/feathersjs-offline/owndata-ownnet"
   },
   "engines": {
     "node": ">= 12"
