@@ -7,7 +7,7 @@ on:
 
 jobs:
   bump-version:
-    name: 'Bump version on master'
+    name: 'Bump version on main'
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +17,7 @@ jobs:
           ref: ${{ github.ref }}
       - name: 'Automated Version Bump'
         id: version-bump
-        uses: 'mhillerstrom/gh-action-bump-version-plus@master'
+        uses: 'mhillerstrom/gh-action-bump-version-plus@v2.0.3'
         with:
           tag-prefix: 'v'
         env:
