@@ -1,1 +1,26 @@
-{"ci":false,"packages":["packages/*"],"version":"2.0.2","useWorkspaces":false,"command":{"bootstrap":{"hoist":true},"publish":{"message":"chore(release): publish %s","conventionalCommits":true,"createRelease":"github"}},"ignoreChanges":["**/changelog.md","**/CHANGELOG.md","**/package-lock.json","**/yarn.lock","**/test/**","lerna.json"]}
+{
+  "ci": false,
+  "packages": [
+    "packages/*"
+  ],
+  "version": "2.0.3",
+  "useWorkspaces": false,
+  "command": {
+    "bootstrap": {
+      "hoist": true
+    },
+    "publish": {
+      "message": "chore(release): publish %s",
+      "conventionalCommits": true,
+      "createRelease": "github"
+    }
+  },
+  "ignoreChanges": [
+    "**/changelog.md",
+    "**/CHANGELOG.md",
+    "**/package-lock.json",
+    "**/yarn.lock",
+    "**/test/**",
+    "lerna.json"
+  ]
+}
