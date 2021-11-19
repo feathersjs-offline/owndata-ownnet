@@ -9,6 +9,7 @@ jobs:
   bump-version:
     name: 'Bump version on main'
     runs-on: ubuntu-latest
+    if: ${{ ! contains(github.issue.comment.body, 'dependabot') }}
 
     steps:
       - name: 'Checkout source code'
