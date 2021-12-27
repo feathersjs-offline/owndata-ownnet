@@ -6,7 +6,7 @@ const debug = require('debug')('utils:localstorage');
 // (no longer used keys) we avoid the long search times. If a key have not been referenced
 // within 2 * cleanupTimer milliseconds the item will be removed.
 
-const cleanupTimer = 1500;
+const cleanupTimer = 800;
 
 class LocalStorage {
   constructor (options = {}) {

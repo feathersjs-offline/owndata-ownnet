@@ -3,6 +3,12 @@ const { to, stripProps, isObject, genUuid, hash, hashOfRecord, OptionsProxy } = 
 const stringsToDatesTest = require('./own-common/helpers/strings-to-dates.test');
 
 describe('Utilities tests - test of common functions', () => {
+  before(async () => {
+    return await global.utilitiesGetStatus()
+  });
+
+  after(() => global.utilitiesSetStatus());
+
 
   beforeEach(() => {
   });
