@@ -35,6 +35,13 @@ function service4 (wrapper, options) {
   return app.service(path);
 }
 
+function service5 (wrapper, path, myUuid = 'uuid', myUpdatedAt = 'updatedAt', myOnServerAt = 'onServerAt', myDeletedAt = 'deletedAt…') {
+  app = feathers();
+  app.use(path, memory({ multi: true }));
+  let service = wrapper(app, path, {myUuid, myUpdatedAt, myOnServerAt, myDeletedAt});
+  return service;
+}
+
 function fromServiceNonPaginatedConfig (wrapper, path) {
   app = feathers();
   app.use(path, memory({ multi: true }));
@@ -42,4 +49,4 @@ function fromServiceNonPaginatedConfig (wrapper, path) {
   return app.service(path);
 }
 
-module.exports = { newServicePath, service1, service2, service3, service4, fromServiceNonPaginatedConfig };
+module.exports = { newServicePath, service1, service2, service3, service4, service5, fromServiceNonPaginatedConfig };

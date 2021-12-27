@@ -10,8 +10,12 @@ import stringsToDates from './strings-to-dates';
 const debug = require('debug')('@feathersjs-offline:server:index');
 
 const defOptions = {
-  useShortUuid: true,
-  adapterTest: false
+  'useShortUuid': true,
+  'adapterTest': false,
+  'myUpdatedAt': 'updatedAt',
+  'myOnServerAt': 'onServerAt',
+  'myDeletedAt': 'deletedAt',
+  'myUuid': 'uuid'
 };
 
 /**
@@ -30,6 +34,8 @@ class RealtimeClass extends AdapterService {
 
     this.type = 'realtime-class';
 
+    _adapterTestStrip = [ this.myUuid, this.myUpdatedAt, this.myOnServerAt, this.myDeletedAt ];
+
     debug('  Done.');
   }
 
@@ -45,6 +51,11 @@ class RealtimeClass extends AdapterService {
     this._setupPerformed = true;
 
     this.options = this.wrapperOptions;
+
+    this.myUuid = this.options.myUuid;
+    this.myUpdatedAt = this.options.myUpdatedAt;
+    this.myOnServerAt = this.options.myOnServerAt;
+    this.myDeletedAt = this.options.myDeletedAt;
 
     let self = this;
 
@@ -118,7 +129,7 @@ class RealtimeClass extends AdapterService {
   }
 
   async _get (id, params) {
-    const { newParams, offline } = fixParams(params);
+    const { newParams, offline } = fixParams(params, this);
     debug(`Calling _get(${id}, ${JSON.stringify(newParams)}) params=${JSON.stringify(params)}`);
     return this.wrappedService.get(id, newParams)
       .then(this._strip)
@@ -127,7 +138,7 @@ class RealtimeClass extends AdapterService {
     }
 
   async _find (params) {
-    const { newParams, offline } = fixParams(params);
+    const { newParams, offline } = fixParams(params, this);
     debug(`params.query = ${JSON.stringify(params.query)}, newParams = ${JSON.stringify(newParams)}`);
     debug(`Calling _find(${JSON.stringify(newParams)})`);
     return this.wrappedService.find(newParams)
@@ -141,7 +152,7 @@ class RealtimeClass extends AdapterService {
     }
 
   async _create (data, params = {}, ts = null) {
-    const { newParams, offline } = fixParams(params);
+    const { newParams, offline } = fixParams(params, this);
     debug(`Calling _create(${JSON.stringify(data)}, ${JSON.stringify(params)}),  newParams=${JSON.stringify(newParams)}`);
     if (Array.isArray(data)) {
       const ts = new Date();
@@ -153,15 +164,15 @@ class RealtimeClass extends AdapterService {
     let newData = clone(data);
 
     // We require a 'uuid' attribute along with 'updatedAt' and 'onServerAt'
-    if (!('uuid' in newData)) {
-      newData.uuid = genUuid(this.options.useShortUuid);
+    if (!([this.myUuid] in newData)) {
+      newData[this.myUuid] = genUuid(this.options.useShortUuid);
     }
 
-    if (!('updatedAt' in newData)) {
-      newData.updatedAt = ts;
+    if (!(this.myUpdatedAt in newData)) {
+      newData[this.myUpdatedAt] = ts;
     }
 
-    newData.onServerAt = ts;
+    newData[this.myOnServerAt] = ts;
 
     let myParams = Object.assign({}, params, { dummy: 123});
 
@@ -173,22 +184,22 @@ class RealtimeClass extends AdapterService {
 
   async _update (id, data, params) {
     debug(`Calling _update(${id}, ${JSON.stringify(data)}, ${JSON.stringify(params)})`);
-    const { newParams, offline } = fixParams(params);
+    const { newParams, offline } = fixParams(params, this);
     let newData = clone(data);
     let active = await this.wrappedService.get(id, newParams);
 
-    if (!('uuid' in newData)) {
-      newData.uuid = active.uuid;
+    if (!(this.myUuid in newData)) {
+      newData[this.myUuid] = active.uuid;
     }
-    if (!('updatedAt' in newData)) {
-      newData.updatedAt = active.updatedAt;
+    if (!(this.myUpdatedAt in newData)) {
+      newData[this.myUpdatedAt] = active[this.myUpdatedAt];
     }
     debug(`newData: ${JSON.stringify(newData)}`);
-    if (new Date(active.onServerAt).getTime() > newData.updatedAt) { // Newest on server always win
+    if (new Date(active[this.myOnServerAt]).getTime() > newData[this.myUpdatedAt]) { // Newest on server always win
       return Promise.resolve(active)
         .then(this._strip);
     } else {
-      newData.onServerAt = new Date();
+      newData[this.myOnServerAt] = new Date();
       return this.wrappedService.update(id, newData, newParams)
         .then(this._strip)
         .then(this._select(newParams))
@@ -197,7 +208,7 @@ class RealtimeClass extends AdapterService {
   }
 
   async _patch (id, data, params = {}, ts = null) {
-    const { newParams, offline } = fixParams(params);
+    const { newParams, offline } = fixParams(params, this);
     debug(`Calling _patch(${id}, ${JSON.stringify(data)}, ${JSON.stringify(newParams)})`);
     if (id === null) {
       const multi = this.allowsMulti('patch');
@@ -216,12 +227,12 @@ class RealtimeClass extends AdapterService {
 
     let newData = clone(data);
     let active = await this.wrappedService.get(id, newParams);
-    if (new Date(active.onServerAt).getTime() > newData.updatedAt) {
+    if (new Date(active[this.myOnServerAt]).getTime() > newData[this.myUpdatedAt]) {
       return Promise.resolve(active)
         .then(this._strip)
         .then(this._select(newParams));
       } else {
-      newData.onServerAt = ts || new Date();
+      newData[this.myOnServerAt] = ts || new Date();
       return this.wrappedService.patch(id, newData, newParams)
         .then(this._strip)
         .then(this._select(params))
@@ -230,7 +241,7 @@ class RealtimeClass extends AdapterService {
   }
 
   async _remove (id, params = {}, ts = null) {
-    const { newParams, offline } = fixParams(params);
+    const { newParams, offline } = fixParams(params,this);
     debug(`Calling _remove(${id}, ${JSON.stringify(newParams)})`);
     if (id === null) {
       const multi = this.allowsMulti('remove');
@@ -254,7 +265,7 @@ class RealtimeClass extends AdapterService {
         .then(this._strip)
         .then(this._select(newParams));
       } else {
-      return this.wrappedService.patch(id, { deletedAt: ts }, newParams)
+      return this.wrappedService.patch(id, { [this.myDeletedAt]: ts }, newParams)
         .then(res => {
           return res;
         })
@@ -330,7 +341,7 @@ function clone (obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-const _adapterTestStrip = ['uuid', 'updatedAt', 'onServerAt', 'deletedAt'];
+let _adapterTestStrip = ['uuid', 'updatedAt', 'onServerAt', 'deletedAt'];
 
 const attrStrip = (...attrToStrip) => {
   const removeProperty = (target, propertyToRemove) => {
@@ -362,9 +373,10 @@ const attrStrip = (...attrToStrip) => {
  * regardless of their deletion status.
  *
  * @param {object} params A normal params object with possible `offline` query
+ * @param {object} parent Reference to the server wrapper
  * @return {object} Returns `{ newParams, offline }`
  */
-const fixParams = function (params) {
+const fixParams = function (params, parent) {
   if (!params)
     return { newParams: { query: {} }, offline: {} };
 
@@ -376,16 +388,16 @@ const fixParams = function (params) {
 
   if (offline) {
     if ('_forceAll' in offline && offline._forceAll) {
-      let { deletedAt, ...rest } = query;
+      let { [parent.myDeletedAt]: _, ...rest } = query;
       query = rest;
-      query.onServerAt = { $gte: new Date(query.onServerAt || 0).getTime() };
+      query[parent.myOnServerAt] = { $gte: new Date(query[parent.myOnServerAt] || 0).getTime() };
     }
     else {
-      query.deletedAt = null;
+      query[parent.myDeletedAt] = null;
     }
   }
   else {
-    query = Object.assign(query, { 'deletedAt': null });
+    query = Object.assign(query, { [parent.myDeletedAt]: null });
   }
 
   newParams.query = query;

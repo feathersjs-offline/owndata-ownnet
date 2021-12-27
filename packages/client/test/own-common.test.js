@@ -9,13 +9,14 @@ const syncTests = require('./own-common/helpers/sync-test');
 const eventsTests = require('./own-common/helpers/events-test');
 const localStorageTests = require('./own-common/helpers/local-storage-test');
 const asyncStorageTests = require('./own-common/helpers/async-storage-test');
+const renameTests = require('./own-common/helpers/rename-test');
 const restTests = require('./own-common/helpers/rest-test');
 const socketioTests = require('./own-common/helpers/socket-io-test');
 
 const OwnClass = require('../src/own-common');
 
-let package = 'ownclass';
-let verbose = false;
+const package = 'ownclass';
+const verbose = false;
 let app;
 
 // OwnClass is not as such expected to be used as a wrapper,
@@ -37,14 +38,14 @@ function ownclassWrapper (app, path, options = {}) {
     throw new errors.Unavailable(`The FeathersJS app must be supplied as first argument`);
   }
 
-  let location = stripSlashes(path);
+  const location = stripSlashes(path);
 
-  let old = app.service(location);
+  const old = app.service(location);
   if (typeof old === 'undefined') {
     throw new errors.Unavailable(`No prior service registered on path '${location}'`);
   }
 
-  let opts = Object.assign({}, old.options, options);
+  const opts = Object.assign({}, old.options, options);
   app.use(location, new OwnclassClass(opts, true));
   app.service(location).options = opts;
   app.service(location)._listenOptions();
@@ -56,8 +57,14 @@ const init = options => {return new OwnclassClass(options)};
 init.Service = OwnclassClass;
 
 describe(`${package}Wrapper tests`, () => {
+  before(async () => {
+    return await global.ownCommonGetStatus
+  });
+
+  after(() => global.ownCommonSetStatus());
+
   app = feathers();
-  let testTitle = `${package}Wrapper adapterTests`
+  const testTitle = `${package}Wrapper adapterTests`
   adapterTests(testTitle, app, errors, ownclassWrapper, 'people');
   adapterTests(testTitle, app, errors, ownclassWrapper, 'people-customId', 'customId');
   adapterTests(testTitle, app, errors, ownclassWrapper, 'people-uuid', 'uuid');
@@ -68,6 +75,7 @@ describe(`${package}Wrapper tests`, () => {
   eventsTests(`${package}Wrapper events functionality`, app, errors, ownclassWrapper, 'wrapperEvents', verbose);
   localStorageTests(`${package}Wrapper localStorage functionality`, app, errors, ownclassWrapper, 'wrapperLocalStorage', verbose);
   asyncStorageTests(`${package}Wrapper asyncStorage functionality`, app, errors, ownclassWrapper, 'wrapperAsyncStorage', verbose);
+  renameTests(`${package}Wrapper rename functionality`, app, errors, ownclassWrapper, 'wrapperRename', verbose, true);
   restTests(`${package}Wrapper REST functionality`, app, errors, ownclassWrapper, 'wrapperREST', verbose, 7886, true);
   socketioTests(`${package}Wrapper socket.io functionality`, app, errors, ownclassWrapper, 'wrapperSocketIo', verbose, 7886, true);
 

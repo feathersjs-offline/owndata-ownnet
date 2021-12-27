@@ -39,6 +39,12 @@ function fromServicePaginatedConfig () {
 }
 
 describe('snapshotutils-copy:', () => {
+  before(async () => {
+    return await global.snapshotGetStatus()
+  });
+
+  after(() => global.snapshotSetStatus());
+
   beforeEach(() => {
     const app = feathers()
       .configure(services1);

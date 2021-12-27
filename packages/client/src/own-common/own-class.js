@@ -21,14 +21,19 @@ const defaultOptions = {
   'matcher': sift,
   sorter,
   'fixedName': '',
-  dates: false
+  dates: false,
+  'myUpdatedAt': 'updatedAt',
+  'myOnServerAt': 'onServerAt',
+  'myDeletedAt': 'deletedAt',
+  'myUuid': 'uuid'
+
 };
 
 const BOT = new Date(0);
 
 const syncDB = '___SyncDB___';
 
-const _adapterTestStrip = ['uuid', 'updatedAt', 'onServerAt', 'deletedAt'];
+let _adapterTestStrip = ['uuid', 'updatedAt', 'onServerAt', 'deletedAt'];
 
 let nameIx = 0;
 
@@ -51,7 +56,7 @@ const attrStrip = (...attrToStrip) => {
 
 class OwnClass extends AdapterService {
   constructor (opts) {
-    let newOpts = Object.assign({}, defaultOptions, opts);
+    const newOpts = Object.assign({}, defaultOptions, opts);
 
     debug(`Constructor started, newOpts = ${JSON.stringify(newOpts)}`);
     super(newOpts);
@@ -60,6 +65,8 @@ class OwnClass extends AdapterService {
     debug(`Constructor ended, options = ${JSON.stringify(this.options)}`);
 
     this.type = 'own-class';
+
+    _adapterTestStrip = [ this.myUuid, this.myUpdatedAt, this.myOnServerAt, this.myDeletedAt ];
 
     debug('  Done.');
     return this;
@@ -78,6 +85,12 @@ class OwnClass extends AdapterService {
     this._setupPerformed = true;
 
     this.options = this.wrapperOptions;
+
+    this.myUuid = this.options.myUuid;
+    this.myUpdatedAt = this.options.myUpdatedAt;
+    this.myOnServerAt = this.options.myOnServerAt;
+    this.myDeletedAt = this.options.myDeletedAt;
+
 
     let self = this;
     this.thisName = this.options.fixedName !== '' ? this.options.fixedName : `${this.type}_offline_${nameIx++}_${path}`;
@@ -302,19 +315,19 @@ class OwnClass extends AdapterService {
 
     // As we do not know if the server is connected we have to make sure the important
     // values are set with reasonable values
-    if (!('uuid' in newData)) {
-      newData.uuid = genUuid(this.options.useShortUuid);
+    if (!(this.myUuid in newData)) {
+      newData[this.myUuid] = genUuid(this.options.useShortUuid);
     }
 
-    if (!('updatedAt' in newData)) {
-      newData.updatedAt = ts;
+    if (!(this.myUpdatedAt in newData)) {
+      newData[this.myUpdatedAt] = ts;
     }
 
     // We do not allow the client to set the onServerAt attribute to other than default '0'
-    newData.onServerAt = BOT;
+    newData[this.myOnServerAt] = BOT;
 
     // Is uuid unique?
-    let [err, res] = await to(this.localService.find({ query: { 'uuid': newData.uuid } }));
+    let [err, res] = await to(this.localService.find({ query: { [this.myUuid]: newData[this.myUuid] } }));
     if (res && res.length) {
       throw new errors.BadRequest(`Optimistic create requires unique uuid. (${this.type}) res=${JSON.stringify(res)}`);
     }
@@ -329,7 +342,7 @@ class OwnClass extends AdapterService {
     if (res) {
       this.remoteService.create(res, clone(params))
         .then(async rres => {
-          await to(self._removeQueuedEvent('_create0', queueId, newData, newData.updatedAt));
+          await to(self._removeQueuedEvent('_create0', queueId, newData, newData[this.myUpdatedAt]));
           await self._patchIfNotRemoved(rres[self.id], rres);
 
           // Ok, we have connection - empty queue if we have any items queued
@@ -341,7 +354,7 @@ class OwnClass extends AdapterService {
             // Let's silently ignore missing connection to server -
             // we'll catch-up next time we get a connection
             // In all other cases do the following:
-            await to(self._removeQueuedEvent('_create1', queueId, rerr.message/*newData*/, newData.updatedAt));
+            await to(self._removeQueuedEvent('_create1', queueId, rerr.message/*newData*/, newData[this.myUpdatedAt]));
             await to(self.localService.remove(res[self.id], params));
           }
 
@@ -349,7 +362,7 @@ class OwnClass extends AdapterService {
         });
     }
     else {
-      await to(this._removeQueuedEvent('_create2', queueId, newData, newData.updatedAt));
+      await to(this._removeQueuedEvent('_create2', queueId, newData, newData[this.myUpdatedAt]));
       this.allowInternalProcessing('_create2');
       throw err;
     }
@@ -388,12 +401,12 @@ class OwnClass extends AdapterService {
 
     // We don't want our uuid to change type if it can be coerced
     const beforeRecord = clone(res);
-    const beforeUuid = beforeRecord.uuid;
+    const beforeUuid = beforeRecord[this.myUuid];
 
     let newData = clone(data);
-    newData.uuid = beforeUuid; // eslint-disable-line
-    newData.updatedAt = new Date();
-    newData.onServerAt = BOT;
+    newData[this.myUuid] = beforeUuid; // eslint-disable-line
+    newData[this.myUpdatedAt] = new Date();
+    newData[this.myOnServerAt] = BOT;
 
     // Optimistic mutation
     this.disallowInternalProcessing('_update');
@@ -404,7 +417,7 @@ class OwnClass extends AdapterService {
     if (!err) {
       this.remoteService.update(id, res, clone(params))
         .then(async rres => {
-          await to(self._removeQueuedEvent('_update0', queueId, newData, res.updatedAt));
+          await to(self._removeQueuedEvent('_update0', queueId, newData, res[this.myUpdatedAt]));
           await self._patchIfNotRemoved(rres[self.id], rres)
 
           self.allowInternalProcessing('_update0');
@@ -417,14 +430,14 @@ class OwnClass extends AdapterService {
             // We'll catch-up next time we get a connection
           } else {
             debug(`_update ERROR: ${rerr.name}, ${rerr.message}`);
-            await to(self._removeQueuedEvent('_update1', queueId, newData, res.updatedAt));
+            await to(self._removeQueuedEvent('_update1', queueId, newData, res[this.myUpdatedAt]));
             await to(self.localService.patch(id, beforeRecord));
           }
           self.allowInternalProcessing('_update1');
         });
     }
     else {
-      await to(this._removeQueuedEvent('_update2', queueId, newData, newData.updatedAt));
+      await to(this._removeQueuedEvent('_update2', queueId, newData, newData[this.myUpdatedAt]));
       this.allowInternalProcessing('_update2');
       throw err;
     }
@@ -476,8 +489,8 @@ class OwnClass extends AdapterService {
     // Optimistic mutation
     const beforeRecord = clone(res);
     const newData = Object.assign({}, beforeRecord, data);
-    newData.onServerAt = BOT;
-    newData.updatedAt = ts;
+    newData[this.myOnServerAt] = BOT;
+    newData[this.myUpdatedAt] = ts;
     this.disallowInternalProcessing('_patch');
     const queueId = await this._addQueuedEvent('patch', newData, id, clone(newData), params);
 
@@ -486,7 +499,7 @@ class OwnClass extends AdapterService {
     if (res) {
       this.remoteService.patch(id, res, clone(params))
         .then(async rres => {
-          await to(self._removeQueuedEvent('_patch0', queueId, rres, res.updatedAt));
+          await to(self._removeQueuedEvent('_patch0', queueId, rres, res[this.myUpdatedAt]));
           await self._patchIfNotRemoved(rres[self.id], rres);
 
           self.allowInternalProcessing('_patch0');
@@ -499,14 +512,14 @@ class OwnClass extends AdapterService {
             // We'll catch-up next time we get a connection
           } else {
             debug(`_patch ERROR: ${rerr.name}, ${rerr.message}`);
-            await to(self._removeQueuedEvent('_patch1', queueId, newData, res.updatedAt));
+            await to(self._removeQueuedEvent('_patch1', queueId, newData, res[this.myUpdatedAt]));
             await to(self.localService.patch(id, beforeRecord));
           }
           self.allowInternalProcessing('_patch1');
         });
     }
     else {
-      await to(this._removeQueuedEvent('_patch2', queueId, newData, newData.updatedAt));
+      await to(this._removeQueuedEvent('_patch2', queueId, newData, newData[this.myUpdatedAt]));
       this.allowInternalProcessing('_patch2');
       throw err;
     }
@@ -731,8 +744,8 @@ class OwnClass extends AdapterService {
     await Promise.all(snap.map(async (v) => {
       let [err, res] = await to( self.localService.get(v[self.id]) );
       if (res) {
-        syncTS = syncTS < v.onServerAt ? v.onServerAt : syncTS;
-        if (v.deletedAt) {
+        syncTS = syncTS < v[this.myOnServerAt] ? v[this.myOnServerAt] : syncTS;
+        if (v[this.myDeletedAt]) {
           [err, res] = await to( self.localService.remove(v[self.id]));
         }
         else {
@@ -741,8 +754,8 @@ class OwnClass extends AdapterService {
         if (err) { result = false; }
       }
       else {
-        if (!v.deletedAt) {
-          syncTS = syncTS < v.onServerAt ? v.onServerAt : syncTS;
+        if (!v[this.myDeletedAt]) {
+          syncTS = syncTS < v[this.myOnServerAt] ? v[this.myOnServerAt] : syncTS;
           [err, res] = await to( self.localService.create(v));
           if (err) { result = false; }
         }
@@ -777,10 +790,10 @@ class OwnClass extends AdapterService {
    */
   async _getSyncOptions (bAll, bTesting) {
     let offline = bTesting ? {} : { _forceAll: bAll };
-    let query = Object.assign({}, { offline }, { $sort: {onServerAt: 1}});
+    let query = Object.assign({}, { offline }, { $sort: {[this.myOnServerAt]: 1}});
     let ts = bAll ? new Date(0).toISOString() : this.syncedAt;
 
-    query.onServerAt = bTesting ? { $gte: new Date(ts).getTime() } : ts;
+    query[this.myOnServerAt] = bTesting ? { $gte: new Date(ts).getTime() } : ts;
 
     return query;
   }
