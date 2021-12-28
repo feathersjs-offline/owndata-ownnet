@@ -3,9 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.6](http://github.com/feathersjs-offline/owndata-ownnet/packages/client/compare/v2.0.0...v2.0.6) (2021-12-28)
+
+Renaming of control attributes (`uuid`, `updatedAt`, `onServerAt`, and `deletedAt`) implemented.
+
 ## [2.0.0](http://github.com/feathersjs-offline/owndata-ownnet/packages/server/compare/v1.1.1...v2.0.0) (2021-10-28)
 
-Version bumped.
+Code clean-up and support for `dates` option ensuring ISO-formatted strings in
+results sets always are returned as Date's.
+
+Version bumped so client and server share same version.
 ## [1.1.1](http://github.com/feathersjs-offline/compare/v1.1.0...v1.1.1) (2021-08-01)
 
 **Note:** Version bump only for package feathersjs-offline
@@ -23,17 +30,9 @@ Version bumped.
 
 **Note:** Version bump only for package feathersjs-offline
 
-
-
-
-
 ## [1.0.6](http://github.com/feathersjs-offline/compare/v1.0.3...v1.0.6) (2020-12-24)
 
 **Note:** Version bump only for package feathersjs-offline
-
-
-
-
 
 ## [1.0.3](http://github.com/feathersjs-offline/compare/v1.0.2...v1.0.3)
 setup() of wrapped services will now be called.
