@@ -10,6 +10,7 @@ Renaming of control attributes (`uuid`, `updatedAt`, `onServerAt`, and `deletedA
 ## [2.0.0](http://github.com/feathersjs-offline/owndata-ownnet/packages/client/compare/v2.0.0...v2.0.3) (2021-10-28)
 
 No change. Auto-bump CI implemented.
+
 # [2.0.0](http://github.com/feathersjs-offline/owndata-ownnet/packages/client/compare/v1.1.1...v2.0.0) (2021-10-28)
 
 `@feathers-offline/client` now use `@feathers-offline/localforage` as storage
