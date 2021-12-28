@@ -7,15 +7,23 @@ function createConfig (name, isProduction = false) {
   const entry = 'index';
   const commons = {
     entry: `./packages/${name}/lib/${entry}.js`,
-    resolve: {
-      fallback: { 
-        "util": false,
-        "fs": false,
-        "assert": false,
-        "stream": false,
-        "constants": false,
-        "path": false
-      }
+    // resolve: { // webpack ^5.0.0 syntax
+    //   fallback: { 
+    //     "util": false,
+    //     "fs": false,
+    //     "assert": false,
+    //     "stream": false,
+    //     "constants": false,
+    //     "path": false
+    //   }
+    // },
+    node: { 
+      "util": 'empty',
+      "fs": 'empty',
+      "assert": 'empty',
+      "stream": 'empty',
+      "constants": 'empty',
+      "path": 'empty'
     },
     output: {
       library: `feathersjsOffline${name.substr(0,1).toUpperCase()}${name.substr(1)}`,
