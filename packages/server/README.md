@@ -23,8 +23,13 @@ All options available for the wrapped adapter can be used in addition to:
 
 - `useShortUuid` (optional, default `true`) - Generate short `uuid`s. If `false` long `uuid`s are generated. This option should match whatever you choose on the client.
 - `dates` (*optional*, default `false`) - Generate short `uuid`'s. If false long `uuid`'s are generated. This option should match whatever you choose on the server.
-- `adapterTest` (optional, default `false`) - This is usually only used for running adapter tests as it suppresses the generation of `uuid`, and updating of `onServerAt`.
+- `adapterTest` (*optional*, default `false`) - This is usually only used for running adapter tests as it suppresses returning the control attributes - `updatedAt,` `onServerAt,` `deletedAt,` and `uuid` (or what ever you chose to call them) in results.
+- `myUuid` (*optional*, default `'uuid'`) - Rename control attribute `uuid` to suit your model.
+- `myUpdatedAt` (*optional*, default `'updatedAt'`) - Rename control attribute `updatedAt` to suit your model.
+- `myOnServerAt` (*optional*, default `'onServerAt'`) - Rename control attribute `onServerAt` to suit your model.
+- `myDeletedAt` (*optional*, default `'deletedAt'`) - Rename control attribute `deletedAt` to suit your model.
 
+> Please note, when renaming control attributes ***you must*** do it on both the client and the server side.
 ## Documentation
 
 You can read the original docs [here](https://auk.docs.feathersjs.com/guides/offline-first/readme.html) discussing the theories behind it all. The new and updated documentation is available [here](https://feathersjs-offline.github.io/docs).

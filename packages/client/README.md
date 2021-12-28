@@ -48,8 +48,13 @@ All options available for the wrapped adapter can be used in addition to:
 - `fixedName` (*optional*, default: `null`) - Force the prefix name of the local DB and queue DB. This is useful when several apps on the same device use `@feathersjs-offline` and the same service name (e.g. `'/messages'`).
 - `useShortUuid` (*optional*, default `true`) - Generate short `uuid`'s. If false long `uuid`'s are generated. This option should match whatever you choose on the server.
 - `dates` (*optional*, default `false`) - Generate short `uuid`'s. If false long `uuid`'s are generated. This option should match whatever you choose on the server.
-- `adapterTest` (*optional*, default `false`) - This is usually only used for running adapter tests as it suppresses returning `updatedAt,` `onServerAt,` `deletedAt,` and `uuid` in results.
+- `adapterTest` (*optional*, default `false`) - This is usually only used for running adapter tests as it suppresses returning the control attributes - `updatedAt,` `onServerAt,` `deletedAt,` and `uuid` (or what ever you chose to call them) in results.
+- `myUuid` (*optional*, default `'uuid'`) - Rename control attribute `uuid` to suit your model.
+- `myUpdatedAt` (*optional*, default `'updatedAt'`) - Rename control attribute `updatedAt` to suit your model.
+- `myOnServerAt` (*optional*, default `'onServerAt'`) - Rename control attribute `onServerAt` to suit your model.
+- `myDeletedAt` (*optional*, default `'deletedAt'`) - Rename control attribute `deletedAt` to suit your model.
 
+> Please note, when renaming control attributes ***you must*** do it on both the client and the server side.
 ### Methods
 
 The services under `owndataWrapper` control all implement the standard service methods as described in Services. In addition to this there are a couple of other methods to be used at your discretion.

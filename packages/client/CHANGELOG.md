@@ -3,13 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.0.0](http://github.com/feathersjs-offline/owndata-ownnet/packages/client/compare/v2.0.0...v2.0.3) (2021-12-27)
+## [2.0.6](http://github.com/feathersjs-offline/owndata-ownnet/packages/client/compare/v2.0.0...v2.0.6) (2021-12-28)
 
 Renaming of control attributes (`uuid`, `updatedAt`, `onServerAt`, and `deletedAt`) implemented.
 
 ## [2.0.0](http://github.com/feathersjs-offline/owndata-ownnet/packages/client/compare/v2.0.0...v2.0.3) (2021-10-28)
 
 No change. Auto-bump CI implemented.
+
 # [2.0.0](http://github.com/feathersjs-offline/owndata-ownnet/packages/client/compare/v1.1.1...v2.0.0) (2021-10-28)
 
 `@feathers-offline/client` now use `@feathers-offline/localforage` as storage
