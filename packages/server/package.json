@@ -63,7 +63,7 @@
   "devDependencies": {
     "@feathersjs/adapter-tests": "^4.5.11",
     "@feathersjs/client": "^4.5.11",
-    "@feathersjs/express": "^4.5.11",
+    "@feathersjs/express": "^5.0.0",
     "@feathersjs/feathers": "^4.5.11",
     "@feathersjs/socketio": "^4.5.11",
     "@feathersjs/socketio-client": "^4.5.11",
