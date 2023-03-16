@@ -62,7 +62,7 @@
     "sift": "^16.0.0"
   },
   "devDependencies": {
-    "@feathersjs/adapter-tests": "^4.5.11",
+    "@feathersjs/adapter-tests": "^5.0.1",
     "@feathersjs/express": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
     "@feathersjs/socketio": "^4.5.11",
