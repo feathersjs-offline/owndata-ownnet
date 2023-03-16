@@ -65,7 +65,7 @@
     "@feathersjs/adapter-tests": "^4.5.11",
     "@feathersjs/express": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
-    "@feathersjs/socketio": "^4.5.11",
+    "@feathersjs/socketio": "^5.0.1",
     "@feathersjs/socketio-client": "^4.5.11",
     "@types/debug": "^4.1.5",
     "@types/mocha": "^9.0.0",
